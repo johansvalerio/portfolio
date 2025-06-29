@@ -1,0 +1,36 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"] // Add this line
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  user_id         Int       @id @default(autoincrement())
+  user_name       String
+  user_created_on DateTime  @default(now())
+  user_email      String    @unique
+  user_image      String?
+  user_provider   String
+  roleId          Int?      @default(2)
+  mensaje         Mensaje[] @relation("UserMensaje")
+  role            Role?     @relation("UserRole", fields: [roleId], references: [role_id])
+}
+
+model Role {
+  role_id   Int    @id @default(autoincrement())
+  role_name String @unique
+  users     User[] @relation("UserRole")
+}
+
+model Mensaje {
+  mensaje_id          Int      @id @default(autoincrement())
+  mensaje_description String
+  mensaje_created_on  DateTime @default(now())
+  userId              Int?
+  mensaje_status      String   @default("Enviado")
+  user                User?    @relation("UserMensaje", fields: [userId], references: [user_id], onDelete: Cascade)
+}
