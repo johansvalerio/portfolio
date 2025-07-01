@@ -12,13 +12,13 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Mail, MapPin, MessageCircle } from "lucide-react";
-import { signIn, useSession } from "next-auth/react";
-import GoogleIcon from "../svg/GoogleIcon";
+import { useSession } from "next-auth/react";
 import { createContact } from "@/app/actions/contact/contact-actions";
 import PedingButton from "./PedingButton";
 import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
+import GoogleButton from "./GoogleButton";
 
 interface ContactInfo {
   icon: React.ReactNode;
@@ -56,7 +56,6 @@ interface FormState {
 export default function Contact() {
   const { data: session } = useSession();
   const name = session?.user?.name || "";
-  const email = session?.user?.email || "";
 
   const initialState: FormState = {};
   const [state, formAction] = useActionState<FormState, FormData>(
@@ -78,30 +77,6 @@ export default function Contact() {
       });
     }
   }, [state]); // Solo se ejecutará cuando state cambie
-
-  // Mostrar toast cuando el usuario inicia sesión
-  useEffect(() => {
-    // Mostrar mensaje de bienvenida si es necesario
-    if (session && !localStorage.getItem("welcomeShown")) {
-      toast(`¡Bienvenido de vuelta, ${session?.user?.name || "usuario"}!`, {
-        icon: "👋",
-        style: {
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          textAlign: "center",
-          width: "full",
-        },
-      });
-      localStorage.setItem("welcomeShown", "true");
-    }
-  }, [session]);
-
-  const handleGoogleSignIn = () => {
-    const currentUrl = new URL(window.location.href);
-    currentUrl.hash = "contact";
-    signIn("google", { redirect: false, callbackUrl: currentUrl.toString() });
-  };
 
   return (
     <section id="contact" className="py-20">
@@ -218,24 +193,17 @@ export default function Contact() {
                   </CardHeader>
                   <CardContent>
                     <Button
-                      className="w-full group relative overflow-hidden"
-                      size="lg"
                       asChild
+                      className="w-full relative overflow-hidden"
+                      size="lg"
                     >
                       <a href="mailto:johans.valerio@hotmail.com">
                         <motion.span
                           className="relative z-10 flex items-center justify-center gap-2"
-                          whileHover={{ color: "#fff" }}
                         >
                           <Mail className="h-4 w-4" />
                           Enviar mensaje directo
                         </motion.span>
-                        <motion.span
-                          className="absolute inset-0 bg-primary/90 rounded-md z-0"
-                          initial={{ x: "-100%" }}
-                          whileHover={{ x: 0 }}
-                          transition={{ duration: 0.3 }}
-                        />
                       </a>
                     </Button>
                   </CardContent>
@@ -246,7 +214,8 @@ export default function Contact() {
             {/* Form */}
 
             <div
-              className={`relative group ${!session ? "hover:p-4 hover:translate-y-[-10px] hover:rounded-lg hover:shadow-xl" : ""} transition-all duration-300 overflow-hidden`}
+              className={`relative group ${!session ? " hover:px-4 hover:rounded-lg hover:shadow-xl"
+                : ""} transition-all duration-300 overflow-hidden`}
             >
               {/* Fondo con blur al hacer hover */}
               {!session && (
@@ -260,14 +229,7 @@ export default function Contact() {
                   initial={{ opacity: 0 }}
                   whileHover={{ opacity: 1 }}
                 >
-                  <Button
-                    variant="outline"
-                    onClick={handleGoogleSignIn}
-                    className="gap-2 px-6 py-6 text-base cursor-pointer flex items-center hover:scale-105 transition-all duration-300"
-                  >
-                    <GoogleIcon />
-                    Iniciar con Google
-                  </Button>
+                  <GoogleButton />
                 </motion.div>
               )}
 
@@ -313,15 +275,12 @@ export default function Contact() {
                     }}
                     viewport={{ once: true }}
                   >
-                    <Label htmlFor="email">Correo electrónico</Label>
+                    <Label htmlFor="title">Título</Label>
                     <Input
-                      name="email"
-                      id="email"
-                      type="email"
-                      placeholder="tucorreo@ejemplo.com"
+                      name="title"
+                      id="title"
+                      placeholder="Título de mi idea"
                       className="h-12"
-                      disabled
-                      defaultValue={session ? email : ""}
                     />
                   </motion.div>
 
@@ -340,7 +299,7 @@ export default function Contact() {
                       name="message"
                       required
                       id="message"
-                      placeholder="Cuéntame sobre tu proyecto..."
+                      placeholder="Cuéntame más..."
                       className="min-h-[150px]"
                     />
                   </motion.div>

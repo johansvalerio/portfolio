@@ -1,5 +1,4 @@
 "use client";
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,10 +13,11 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import UserDropdown from "./UserDropdown";
-import { signIn, useSession } from "next-auth/react";
 import UserMobileDropdown from "./UserMobileDropdown";
-import GoogleIcon from "../svg/GoogleIcon";
 import { ThemeToggle } from "./ThemeToggle";
+import Link from "next/link";
+import { Session } from "next-auth";
+import GoogleSpan from "./GoogleSpan";
 
 interface navItems {
   href: string;
@@ -26,39 +26,40 @@ interface navItems {
 }
 
 const navItems = [
-  { href: "#home", label: "Inicio", icon: <Home className="h-4 w-4 mr-2" /> },
+  { href: "/#home", label: "Inicio", icon: <Home className="h-4 w-4 mr-2" /> },
   {
-    href: "#about",
+    href: "/#about",
     label: "Sobre mí",
     icon: <User className="h-4 w-4 mr-2" />,
   },
   {
-    href: "#studies",
+    href: "/#studies",
     label: "Estudios",
     icon: <GraduationCap className="h-4 w-4 mr-2" />,
   },
   {
-    href: "#skills",
+    href: "/#skills",
     label: "Skills",
     icon: <Code2 className="h-4 w-4 mr-2" />,
   },
   {
-    href: "#projects",
+    href: "/#projects",
     label: "Proyectos",
     icon: <Layers className="h-4 w-4 mr-2" />,
   },
   {
-    href: "#contact",
+    href: "/#contact",
     label: "Contacto",
     icon: <Mail className="h-4 w-4 mr-2" />,
   },
 ];
 
-export default function Header() {
+export default function Header({ session }: { session: Session | null }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { data: session } = useSession();
 
+  // Si baja el scroll más de 50px, cambia el estado isScrolled
+  // para aplicar estilos al header
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
@@ -67,9 +68,6 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleGoogleSignIn = () => {
-    signIn("google", { callbackUrl: window.location.href });
-  };
 
   return (
     <header
@@ -83,34 +81,31 @@ export default function Header() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex-shrink-0">
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
-              Johans Valerio
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-primary/30 to-primary/40 bg-clip-text text-transparent">
+              <Link href="/#home">
+                Johans Valerio
+              </Link>
+
             </h1>
           </div>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:block">
-            <div className="ml-10 flex items-center space-x-8">
+            <div className="flex items-center space-x-8">
               {navItems.map((item) => (
-                <a
+                <Link
                   key={item.href}
                   href={item.href}
                   className="text-muted-foreground hover:text-foreground transition-colors duration-200"
                 >
                   {item.label}
-                </a>
+                </Link>
               ))}
               <ThemeToggle />
               {!session ? (
-                <span
-                  onClick={handleGoogleSignIn}
-                  className="gap-2 py-6 text-base text-muted-foreground hover:text-foreground cursor-pointer flex items-center hover:scale-105 transition-all duration-300"
-                >
-                  <GoogleIcon />
-                  Iniciar sesión
-                </span>
+                <GoogleSpan />
               ) : (
-                <UserDropdown />
+                <UserDropdown session={session} />
               )}
             </div>
           </nav>
@@ -118,6 +113,7 @@ export default function Header() {
           {/* Mobile menu button */}
           <div className="md:hidden">
             <Button
+              className="p-2 rounded-md text-muted-foreground hover:text-foreground transition-colors duration-200"
               variant="ghost"
               size="icon"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -136,7 +132,7 @@ export default function Header() {
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-background/95 backdrop-blur-md rounded-lg mt-2">
               {navItems.map((item) => (
-                <a
+                <Link
                   key={item.href}
                   href={item.href}
                   className="flex items-center px-3 py-2 text-muted-foreground hover:text-foreground transition-colors duration-200"
@@ -144,7 +140,7 @@ export default function Header() {
                 >
                   {item.icon}
                   <span className="ml-2">{item.label}</span>
-                </a>
+                </Link>
               ))}
 
               <ThemeToggle showLabel={true} />
@@ -152,15 +148,9 @@ export default function Header() {
               {/* Mobile User Section */}
               <div className="border-t border-border mt-4 pt-4">
                 {!session ? (
-                  <span
-                    onClick={handleGoogleSignIn}
-                    className="ml-2 gap-2 py-4 text-base text-muted-foreground hover:text-foreground cursor-pointer flex items-center hover:scale-105 transition-all duration-300"
-                  >
-                    <GoogleIcon />
-                    Iniciar sesión
-                  </span>
+                  <GoogleSpan />
                 ) : (
-                  <UserMobileDropdown />
+                  <UserMobileDropdown session={session} />
                 )}
               </div>
             </div>

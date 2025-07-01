@@ -1,6 +1,5 @@
 "use client";
-
-import { useSession, signOut } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -9,23 +8,27 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogOut } from "lucide-react";
+import { LogOut, LightbulbIcon } from "lucide-react";
+import { redirect } from "next/navigation";
 import { useRouter } from "next/navigation";
+import { Session } from "next-auth";
 
-export default function UserDropdown() {
-  const { data: session } = useSession();
+export default function UserDropdown({ session }: { session: Session | null }) {
   const router = useRouter();
 
   if (!session) return null;
 
-  const userName = session.user?.name || "";
-  const userEmail = session.user?.email || "";
-  const userImage = session.user?.image || "";
+  const userName = session?.user?.name || "";
+  const userEmail = session?.user?.email || "";
+  const userImage = session?.user?.image || "";
+
 
   const handleSignOut = async () => {
     try {
       await signOut({ redirect: false });
-      router.push(window.location.href);
+      router.refresh();
+      // Eliminar el mensaje de bienvenida del localStorage
+      localStorage.removeItem("welcomeShown");
     } catch (error) {
       console.error("Error al cerrar sesión:", error);
     }
@@ -56,10 +59,17 @@ export default function UserDropdown() {
         </div>
         <DropdownMenuSeparator />
         <DropdownMenuItem
+          onClick={() => redirect("/misIdeas")}
+          className="cursor-pointer"
+        >
+          <LightbulbIcon className="h-4 w-4 mr-2" />
+          <span className="text-sm font-medium">Mis ideas</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem
           onClick={handleSignOut}
           className="cursor-pointer text-destructive focus:text-destructive"
         >
-          <LogOut className=" h-4 w-4" />
+          <LogOut className=" h-4 w-4 mr-2" />
           <span className="text-sm font-medium">Cerrar sesión</span>
         </DropdownMenuItem>
       </DropdownMenuContent>

@@ -218,7 +218,7 @@ export default function Skills() {
                       >
                         <Badge
                           variant="secondary"
-                          className="text-sm py-2 px-4 text-blue-500 bg-blue-50 hover:bg-blue-100 transition-all duration-200 cursor-pointer"
+                          className="text-sm py-2 px-4 bg-blue-50 text-blue-500 dark:bg-background dark:text-foreground transition-all duration-200 cursor-pointer"
                         >
                           {tech}
                         </Badge>

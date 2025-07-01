@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Github, Linkedin, Mail, Instagram } from "lucide-react";
+import Link from "next/link";
 
 const currentYear = new Date().getFullYear();
 
@@ -34,12 +35,12 @@ const socialLinks: SocialLinks[] = [
 ];
 
 const quickLinks: QuickLinks[] = [
-  { href: "#home", label: "Inicio" },
-  { href: "#about", label: "Sobre mí" },
-  { href: "#studies", label: "Estudios" },
-  { href: "#skills", label: "Skills" },
-  { href: "#projects", label: "Proyectos" },
-  { href: "#contact", label: "Contacto" },
+  { href: "/#home", label: "Inicio" },
+  { href: "/#about", label: "Sobre mí" },
+  { href: "/#studies", label: "Estudios" },
+  { href: "/#skills", label: "Skills" },
+  { href: "/#projects", label: "Proyectos" },
+  { href: "/#contact", label: "Contacto" },
 ];
 
 export default function Footer() {
@@ -49,7 +50,7 @@ export default function Footer() {
         <div className="grid md:grid-cols-3 gap-8">
           {/* Brand */}
           <div className="space-y-4">
-            <h3 className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+            <h3 className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/5 bg-clip-text text-transparent">
               Johans Valerio
             </h3>
             <p className="text-muted-foreground">
@@ -59,14 +60,14 @@ export default function Footer() {
             <div className="flex space-x-2">
               {socialLinks.map((social, index) => (
                 <Button key={index} variant="ghost" size="icon" asChild>
-                  <a
+                  <Link
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={social.label}
                   >
                     {social.icon}
-                  </a>
+                  </Link>
                 </Button>
               ))}
             </div>
@@ -77,13 +78,13 @@ export default function Footer() {
             <h4 className="text-lg font-semibold">Enlaces rápidos</h4>
             <nav className="flex flex-col space-y-2">
               {quickLinks.map((link, index) => (
-                <a
+                <Link
                   key={index}
                   href={link.href}
                   className="text-muted-foreground hover:text-foreground transition-colors"
                 >
                   {link.label}
-                </a>
+                </Link>
               ))}
             </nav>
           </div>

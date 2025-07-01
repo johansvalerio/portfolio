@@ -78,9 +78,17 @@ const projects: Project[] = [
     description:
       "Sitio web de portafolio personal con diseño moderno y animaciones suaves.",
     image: "/placeholder.svg?height=300&width=500",
-    technologies: ["Next.js", "Tailwind CSS", "Framer Motion"],
-    liveUrl: "#",
-    githubUrl: "#",
+    technologies: [
+      "Next.js",
+      "TypeScript",
+      "NextAuth",
+      "Tailwind CSS",
+      "PostgreSQL",
+      "Prisma",
+      "Vercel",
+    ],
+    liveUrl: "https://johansvalerio.vercel.app",
+    githubUrl: "https://github.com/johansvalerio/portfolio",
     featured: false,
   },
 ];
@@ -221,7 +229,7 @@ export default function Projects() {
               Otros Proyectos
             </motion.h3>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {otherProjects.slice(0, 2).map((project, index) => (
+              {otherProjects.slice(0, 3).map((project, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, x: -20 }}

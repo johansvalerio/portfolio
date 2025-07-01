@@ -18,6 +18,7 @@ model User {
   roleId          Int?      @default(2)
   mensaje         Mensaje[] @relation("UserMensaje")
   role            Role?     @relation("UserRole", fields: [roleId], references: [role_id])
+  response        Response[] @relation("UserResponse")
 }
 
 model Role {
@@ -28,9 +29,22 @@ model Role {
 
 model Mensaje {
   mensaje_id          Int      @id @default(autoincrement())
+  mensaje_title       String
   mensaje_description String
   mensaje_created_on  DateTime @default(now())
   userId              Int?
   mensaje_status      String   @default("Enviado")
   user                User?    @relation("UserMensaje", fields: [userId], references: [user_id], onDelete: Cascade)
+  response          Response[] @relation("MensajeResponse")
+  
+}
+
+model Response {
+  response_id    Int      @id @default(autoincrement())
+  response_description  String
+  response_created_on  DateTime @default(now())
+  mensajeId      Int
+  mensaje        Mensaje  @relation("MensajeResponse",fields: [mensajeId], references: [mensaje_id], onDelete: Cascade)
+  userId         Int?
+  user           User?    @relation("UserResponse", fields: [userId], references: [user_id], onDelete: Cascade)
 }

@@ -26,6 +26,7 @@ export const authOptions: NextAuthOptions = {
                             user_provider: account.provider,
                         },
                     });
+                    console.log("Nuevo usuario creado:", newUser);
                 }
             }
             return true;
@@ -34,16 +35,19 @@ export const authOptions: NextAuthOptions = {
             if (session?.user) {
                 session.user.id = token.sub as string;
                 session.user.role = token.role as number;
+                session.user.name = token.name as string;
+                session.user.email = token.email as string;
+                session.user.image = token.picture as string;
             }
             return session;
         },
-        async jwt({ token, user }: { token: JWT, user?: Session["user"] })   {
+        async jwt({ token, user }: { token: JWT, user?: Session["user"] }) {
             if (token.email) {
                 const dbUser = await db.user.findUnique({
                     where: { user_email: token.email },
                     include: { role: true }
                 });
-        
+
                 if (dbUser) {
                     return {
                         ...token,
@@ -51,16 +55,16 @@ export const authOptions: NextAuthOptions = {
                         role: dbUser.role?.role_id,
                         name: dbUser.user_name,
                         email: dbUser.user_email,
-                        image: dbUser.user_image
+                        picture: dbUser.user_image
                     };
                 }
             }
-        
+
             // Si no encuentra el usuario pero hay un user (primer inicio de sesión)
             if (user) {
                 token.sub = user.id;
             }
-        
+
             return token;
         },
     },

@@ -1,13 +1,12 @@
 "use client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { LogOut } from "lucide-react";
+import { LightbulbIcon, LogOut } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { Session } from "next-auth";
 
-export default function UserMobileDropdown() {
-  const { data: session } = useSession();
+export default function UserMobileDropdown({ session }: { session: Session | null }) {
   const router = useRouter();
 
   if (!session) return null;
@@ -19,7 +18,9 @@ export default function UserMobileDropdown() {
   const handleSignOut = async () => {
     try {
       await signOut({ redirect: false });
-      router.push(window.location.href);
+      router.refresh();
+      // Eliminar el mensaje de bienvenida del localStorage
+      localStorage.removeItem("welcomeShown");
     } catch (error) {
       console.error("Error al cerrar sesión:", error);
     }
@@ -28,7 +29,7 @@ export default function UserMobileDropdown() {
   return (
     <>
       <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2 ">
           <Avatar className="h-8 w-8 border border-border">
             <AvatarImage src={userImage} alt={userName} />
             <AvatarFallback className="bg-primary text-primary-foreground text-xs">
@@ -48,6 +49,17 @@ export default function UserMobileDropdown() {
         >
           <LogOut className="h-4 w-4" />
         </Button>
+      </div>
+      <div className="mt-4">
+        <a
+          className="flex items-center px-3 py-2 text-muted-foreground hover:text-foreground transition-colors duration-200"
+          href="/misIdeas"
+        >
+          <span className="flex items-center gap-2">
+            <LightbulbIcon className="h-4 w-4" />
+            Mis ideas
+          </span>
+        </a>
       </div>
     </>
   );
