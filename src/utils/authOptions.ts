@@ -27,6 +27,9 @@ export const authOptions: NextAuthOptions = {
                         },
                     });
                     console.log("Nuevo usuario creado:", newUser);
+                    user.id = newUser.user_id.toString()
+                } else {
+                    user.id = userFound.user_id.toString()
                 }
             }
             return true;

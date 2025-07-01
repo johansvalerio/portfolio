@@ -199,7 +199,8 @@ export default function MisMensajesPage({ messages, session }: { messages: Mensa
                                 {openMessageId && openMessageId === message.mensaje_id && (
                                     <ResponseList
                                         myMessages={myMessages}
-                                        openMessageId={openMessageId} />
+                                        openMessageId={openMessageId}
+                                        setOpenMessageId={() => setOpenMessageId(null)} />
                                 )}
                             </div>
                         ))}

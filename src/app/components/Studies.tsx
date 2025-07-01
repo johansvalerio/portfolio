@@ -103,7 +103,7 @@ export default function Studies() {
               viewport={{ once: true }}
             >
               <h3 className="text-2xl font-bold mb-6 text-center md:text-left">
-                Educación
+                Académico
               </h3>
               <div className="space-y-6">
                 {education.map((item) => (

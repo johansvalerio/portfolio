@@ -5,8 +5,8 @@ import { Calendar1Icon } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import React from "react";
 
-export default function ResponseList({ myMessages, openMessageId }: { myMessages: MensajeWithUser[], openMessageId: number | null }) {
 
+export default function ResponseList({ myMessages, openMessageId, setOpenMessageId }: { myMessages: MensajeWithUser[], openMessageId: number | null, setOpenMessageId: () => void }) {
     console.log(myMessages.map(m => m.mensaje_id));
 
     //obtenemos el mensaje por su id
@@ -18,8 +18,11 @@ export default function ResponseList({ myMessages, openMessageId }: { myMessages
 
     console.log(getMyMessageById.response.map(r => r.response_id));
 
+
     return (
-        <div className="w-full mt-4">
+        <div className="w-full mt-4 transition-all duration-300 cursor-pointer"
+            onClick={() => setOpenMessageId()}
+        >
             <div
                 className="p-6 bg-primary/5 rounded-lg"
             >
@@ -46,4 +49,7 @@ export default function ResponseList({ myMessages, openMessageId }: { myMessages
         </div >
 
     );
+
+
+
 }
