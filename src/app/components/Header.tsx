@@ -17,7 +17,7 @@ import UserMobileDropdown from "./UserMobileDropdown";
 import { ThemeToggle } from "./ThemeToggle";
 import Link from "next/link";
 import { Session } from "next-auth";
-import GoogleSpan from "./GoogleSpan";
+import GoogleSpan from "./GoogleSpanSignIn";
 
 interface navItems {
   href: string;

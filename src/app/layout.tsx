@@ -5,6 +5,7 @@ import AuthProvider from "./providers/auth-provider";
 import { Toaster } from "sonner";
 import Footer from "./components/Footer";
 import HeaderServer from "./components/HeaderServer";
+import WelcomeToast from "./components/WelcomeToast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -79,6 +80,7 @@ export default function RootLayout({
       >
         <AuthProvider>
           <HeaderServer />
+          <WelcomeToast />
           {children}
           <Toaster richColors position="bottom-center" />
           <Footer />

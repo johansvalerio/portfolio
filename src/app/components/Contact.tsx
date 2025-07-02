@@ -11,14 +11,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Mail, MapPin, MessageCircle } from "lucide-react";
+import { Mail, MessageCircle, PhoneIncoming } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { createContact } from "@/app/actions/contact/contact-actions";
 import PedingButton from "./PedingButton";
 import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
-import GoogleButton from "./GoogleButton";
+import GoogleButton from "./GoogleButtonSignIn";
 
 interface ContactInfo {
   icon: React.ReactNode;
@@ -35,17 +35,11 @@ const contactInfo: ContactInfo[] = [
     href: "mailto:johans.valerio@hotmail.com",
   },
   {
-    icon: <MessageCircle className="h-6 w-6 text-primary" />,
-    title: "Whatsapp",
+    icon: <PhoneIncoming className="h-6 w-6 text-primary" />,
+    title: "Teléfono",
     value: "+506 7236 7648",
-    href: "https://wa.me/50672367648",
-  },
-  {
-    icon: <MapPin className="h-6 w-6 text-primary" />,
-    title: "Ubicación",
-    value: "Guanacaste, Costa Rica",
-    href: "#contact",
-  },
+    href: "tel:+50672367648",
+  }
 ];
 
 interface FormState {
@@ -139,9 +133,10 @@ export default function Contact() {
                 </h3>
                 <div className="space-y-4">
                   {contactInfo.map((info, index) => (
-                    <motion.div
+                    <motion.a
                       key={index}
-                      className="flex items-center space-x-4 group"
+                      href={info.href}
+                      className="text-muted-foreground flex items-center space-x-4 group hover:text-primary transition-colors"
                       initial={{ opacity: 0, x: -20 }}
                       whileInView={{
                         opacity: 1,
@@ -154,21 +149,20 @@ export default function Contact() {
                       viewport={{ once: true }}
                       whileHover={{ x: 5 }}
                     >
+
                       <motion.div className="flex-shrink-0 group-hover:scale-[1.1] transition-all">
+
                         <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+
                           {info.icon}
                         </div>
                       </motion.div>
                       <div>
                         <p className="font-medium">{info.title}</p>
-                        <a
-                          href={info.href}
-                          className="text-muted-foreground hover:text-primary transition-colors"
-                        >
-                          {info.value}
-                        </a>
+                        {info.value}
                       </div>
-                    </motion.div>
+
+                    </motion.a>
                   ))}
                 </div>
               </motion.div>
@@ -197,12 +191,12 @@ export default function Contact() {
                       className="w-full relative overflow-hidden"
                       size="lg"
                     >
-                      <a href="mailto:johans.valerio@hotmail.com">
+                      <a href="https://wa.me/50672367648">
                         <motion.span
                           className="relative z-10 flex items-center justify-center gap-2"
                         >
-                          <Mail className="h-4 w-4" />
-                          Enviar mensaje directo
+                          <MessageCircle className="h-4 w-4" />
+                          Enviar mensaje directo por Whatsapp
                         </motion.span>
                       </a>
                     </Button>
@@ -214,7 +208,7 @@ export default function Contact() {
             {/* Form */}
 
             <div
-              className={`relative group ${!session ? " hover:px-4 hover:rounded-lg hover:shadow-xl"
+              className={`relative group ${!session ? " hover:px-4 hover:rounded-lg hover:shadow-xl hover:translate-y-[-20px] hover:py-4"
                 : ""} transition-all duration-300 overflow-hidden`}
             >
               {/* Fondo con blur al hacer hover */}
