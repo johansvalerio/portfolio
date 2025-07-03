@@ -6,9 +6,9 @@ interface Status {
 }
 
 const statusIcons: Status[] = [
-    { status: "Enviado", icon: <CheckCheckIcon className="w-5 h-5" /> },
-    { status: "En revisión", icon: <EyeIcon className="w-5 h-5" /> },
-    { status: "Visto bueno", icon: <SparkleIcon className="w-5 h-5" /> },
+    { status: "Enviado", icon: <CheckCheckIcon className="w-5 h-5 text-amber-600 dark:text-amber-300" /> },
+    { status: "En revisión", icon: <EyeIcon className="w-5 h-5 text-blue-600 dark:text-blue-500" /> },
+    { status: "Visto bueno", icon: <SparkleIcon className="w-5 h-5 text-green-600 dark:text-green-500" /> },
 ];
 
 export default function StatusWay() {
@@ -21,11 +21,6 @@ export default function StatusWay() {
                     <p key={index} className=" flex items-center gap-4 ">
                         <span
                             className={`transition-all duration-300 ease-in-out p-2 rounded-full bg-primary/10
-    ${status.status === "Enviado" ? "text-green-500 scale-110"
-                                    : status.status === "En revisión" ? "text-blue-500 scale-110"
-                                        : status.status === "Visto bueno" ? "text-yellow-500 scale-110"
-                                            : "text-gray-400"
-                                }
   `}
                         >
                             {status.icon}

@@ -61,10 +61,10 @@ export default function MessageDetails({ selectedMessage, setSelectedMessage, se
                     />
                 </div>
 
-
             </CardHeader>
             <CardContent className="flex-1 flex flex-col p-6">
                 <div className="flex-1 mb-6">
+                    <h2 className="text-lg font-medium px-4">{selectedMessage.mensaje_title}</h2>
                     <div className="bg-muted/30 rounded-lg p-4 mb-4">
                         <p className="mb-2">{selectedMessage.mensaje_description}</p>
                         <div className="flex items-center gap-2 text-xs text-muted-foreground">

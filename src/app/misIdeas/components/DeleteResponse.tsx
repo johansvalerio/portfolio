@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
 import { deleteResponse } from "@/app/actions/contact/contact-actions"
+import { useSession } from "next-auth/react";
 
 interface FormState {
     error?: string;
@@ -12,6 +13,8 @@ interface FormState {
 }
 
 export default function DeleteResponse({ responseId }: { responseId: number }) {
+    const { data: session } = useSession()
+    const roleSession = session?.user.role === 1
     const router = useRouter()
     const initialState = {};
     const [state, formAction] = useActionState<FormState, FormData>(
@@ -26,6 +29,7 @@ export default function DeleteResponse({ responseId }: { responseId: number }) {
 
             toast(state.success, {
                 icon: <ThumbsUpIcon className="w-5 h-5" />,
+                position: "bottom-right",
                 style: {
                     display: "flex",
                     alignItems: "center",
@@ -39,18 +43,20 @@ export default function DeleteResponse({ responseId }: { responseId: number }) {
 
     }, [state, router]); // Solo se ejecutará cuando state cambie o router cambie
 
-    return (
-        <form action={formAction}>
-            <input type="hidden" name="response_id" value={responseId} />
-            <Button
-                type="submit"
-                variant="ghost"
-                size="icon"
-                className="cursor-pointer"
-            >
-                <TrashIcon className="h-4 w-4" />
-            </Button>
-        </form>
+    if (roleSession) {
+        return (
+            <form action={formAction}>
+                <input type="hidden" name="response_id" value={responseId} />
+                <Button
+                    type="submit"
+                    variant="ghost"
+                    size="icon"
+                    className="cursor-pointer"
+                >
+                    <TrashIcon className="h-4 w-4" />
+                </Button>
+            </form>
 
-    )
+        )
+    }
 }

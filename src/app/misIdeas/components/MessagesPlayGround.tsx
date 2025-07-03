@@ -16,7 +16,7 @@ export default function MessagesPlayGround({ messages, session }: { messages: Me
         : null;
 
     return (
-        <div className="min-h-screen py-20">
+        <div className="min-h-screen py-10">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="grid lg:grid-cols-3 gap-8">
                     <div className="col-span-1 mb-8">

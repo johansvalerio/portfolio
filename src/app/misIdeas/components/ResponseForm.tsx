@@ -27,8 +27,9 @@ export default function ResponseForm({ selectedMessage }: { selectedMessage: Men
             toast.error(state.error);
         } else if (state?.success) {
 
-            toast(state.success, {
+            toast.success(state.success, {
                 icon: <ThumbsUpIcon className="w-5 h-5" />,
+                position: "bottom-right",
                 style: {
                     display: "flex",
                     alignItems: "center",

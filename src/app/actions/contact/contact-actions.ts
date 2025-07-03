@@ -7,6 +7,13 @@ interface FormState {
   success?: string;
 }
 
+//iterar entre estados, buscar el valor siguiente
+const statusMap: Record<string, string> = {
+  'Enviado': 'En revisión',
+  'En revisión': 'Visto bueno',
+  'Visto bueno': 'Enviado', // o el estado que corresponda como "default"
+};
+
 export async function createContact(prevState: FormState | undefined, formData: FormData) {
 
   try {
@@ -61,7 +68,7 @@ export async function getContactMessages() {
   })
 }
 
-export async function patchToSeen(prevState: FormState | undefined, formData: FormData): Promise<FormState> {
+export async function patchStatus(prevState: FormState | undefined, formData: FormData): Promise<FormState> {
   try {
     const session = await authSession()
     if (!session) {
@@ -81,23 +88,14 @@ export async function patchToSeen(prevState: FormState | undefined, formData: Fo
       }
     })
 
-    if (messageSent?.mensaje_status === 'Enviado') {
-      // Actualizar el mensaje a "En revisión"
-      const newStatus = await db.mensaje.update({
-        where: { mensaje_id },
-        data: { mensaje_status: 'En revisión' },
-      })
+    const nextStatus = statusMap[messageSent?.mensaje_status ?? ''] || 'Enviado';
 
-      return { success: 'Estado de la idea actualizado {' + newStatus.mensaje_status + '}' }
-    } else {
-      // Actualizar el mensaje a "Enviado"
-      const newStatus = await db.mensaje.update({
-        where: { mensaje_id },
-        data: { mensaje_status: 'Enviado' },
-      })
+    const newStatus = await db.mensaje.update({
+      where: { mensaje_id },
+      data: { mensaje_status: nextStatus },
+    });
 
-      return { success: 'Estado de la idea actualizado {' + newStatus.mensaje_status + '}' }
-    }
+    return { success: 'Estado de la idea actualizado {' + newStatus.mensaje_status + '}' }
 
   } catch (error) {
     console.error('Error al actualizar el estado de la idea:', error)
@@ -106,6 +104,37 @@ export async function patchToSeen(prevState: FormState | undefined, formData: Fo
 
 }
 
+export async function readMessage(prevState: FormState | undefined, formData: FormData): Promise<FormState> {
+  try {
+    const session = await authSession()
+    if (!session) {
+      return { error: 'No se encontró una sesión' }
+    }
+
+    // Obtener el mensaje_id del formulario
+    const mensaje_id = Number(formData.get('mensaje_id'))
+
+    const messageSent = await db.mensaje.findFirst({
+      where: {
+        mensaje_id: mensaje_id,
+      }
+    })
+
+    if (messageSent?.mensaje_isRead === false) {
+      // Ver el mensaje / marcar como visto
+      const isRead = await db.mensaje.update({
+        where: { mensaje_id },
+        data: { mensaje_isRead: true },
+      })
+      return { success: 'Idea vista {' + isRead.mensaje_isRead + '}' }
+    }
+    return {}
+  } catch (error) {
+    console.error('Error al ver la idea:', error)
+    return { error: 'Eror al ver la idea' }
+  }
+
+}
 
 //Lógica para las respuestas, mover a otro archivo recordatorio
 export async function createResponse(prevState: FormState | undefined, formData: FormData): Promise<FormState> {

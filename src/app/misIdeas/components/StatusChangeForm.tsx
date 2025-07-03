@@ -3,7 +3,7 @@ import type { Session } from "next-auth"
 import { type MensajeWithUser } from "@/app/types/mensaje";
 import { useActionState, useEffect } from "react";
 
-import { patchToSeen } from "@/app/actions/contact/contact-actions";
+import { patchStatus } from "@/app/actions/contact/contact-actions";
 import { toast } from "sonner";
 import { CheckCheckIcon, EyeIcon, SparkleIcon, ThumbsUpIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -17,17 +17,17 @@ export default function StatusChangeForm({ message, session }: { message: Mensaj
     const router = useRouter();
     const initialState: FormState = {};
     const [state, formAction] = useActionState<FormState, FormData>(
-        patchToSeen,
+        patchStatus,
         initialState
     );
     const checks = (status: string) => {
         switch (status) {
             case "Enviado":
-                return <CheckCheckIcon className="w-4 h-4" />;
+                return <CheckCheckIcon className="w-4 h-4 text-amber-600 dark:text-amber-300" />;
             case "En revisión":
-                return <EyeIcon className="w-4 h-4" />;
+                return <EyeIcon className="w-4 h-4 text-blue-600 dark:text-blue-500" />;
             case "Visto bueno":
-                return <SparkleIcon className="w-4 h-4" />;
+                return <SparkleIcon className="w-4 h-4 text-green-600 dark:text-green-500" />;
             default:
                 return "bg-gray-100 text-gray-800"; // Valor por defecto si no coincide con ningún caso     
         }
@@ -60,13 +60,8 @@ export default function StatusChangeForm({ message, session }: { message: Mensaj
                         e.stopPropagation();
                     }}
                     type={session?.user.role === 1 ? "submit" : "button"}
-                    className={`transition-all duration-300 ease-in-out bg-primary/10 hover:bg-primary/20 p-2 rounded-full
-                                    ${session?.user.role === 1 ? "cursor-pointer" : "cursor-default"}
-                                                ${message.mensaje_status === "Enviado" ? "text-green-500 scale-110"
-                            : message.mensaje_status === "En revisión" ? "text-blue-500 scale-110"
-                                : message.mensaje_status === "Visto bueno" ? "text-yellow-500 scale-110"
-                                    : "text-gray-400"
-                        }
+                    className={`transition-all duration-300 ease-in-out bg-primary/10  p-2 rounded-full
+                                    ${session?.user.role === 1 ? "cursor-pointer hover:bg-primary/20" : "cursor-default"}
   `}
                 >
                     {checks(message.mensaje_status)}

@@ -34,9 +34,9 @@ model Mensaje {
   mensaje_created_on  DateTime @default(now())
   userId              Int?
   mensaje_status      String   @default("Enviado")
+  mensaje_isRead      Boolean  @default(false)
   user                User?    @relation("UserMensaje", fields: [userId], references: [user_id], onDelete: Cascade)
-  response          Response[] @relation("MensajeResponse")
-  
+  response          Response[] @relation("MensajeResponse") 
 }
 
 model Response {
