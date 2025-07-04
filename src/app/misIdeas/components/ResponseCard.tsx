@@ -26,7 +26,8 @@ export default function MessageDetails({ selectedMessage, setSelectedMessage, se
     if (!message) return null
 
     return (
-        <Card className="h-full flex flex-col shadow-md">
+        <Card className={`flex flex-col shadow-md h-[110vh]
+        `}>
             <CardHeader className="border-b flex flex-row justify-between gap-4">
                 <div className="flex gap-2">
                     <Button

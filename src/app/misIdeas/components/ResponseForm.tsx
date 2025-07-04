@@ -45,7 +45,7 @@ export default function ResponseForm({ selectedMessage }: { selectedMessage: Men
     }, [state, router]); // Solo se ejecutará cuando state cambie o router cambie
 
     return (
-        <form action={formAction} className="border-t pt-6 mt-6">
+        <form action={formAction} className="border-t pt-6 ">
             <input type="hidden" name="mensaje_id" value={selectedMessage?.mensaje_id} />
             <label htmlFor="reply" className="text-base font-medium">
                 Responder a {selectedMessage?.user?.user_name || "usuario"}
@@ -58,7 +58,7 @@ export default function ResponseForm({ selectedMessage }: { selectedMessage: Men
                     value={replyText}
                     onChange={(e) => setReplyText(e.target.value)}
                     rows={4}
-                    className="resize-none"
+                    className="overflow-y-auto resize-none h-28"
                 />
                 <div className="flex gap-3">
                     <Button

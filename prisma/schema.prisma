@@ -43,6 +43,7 @@ model Response {
   response_id    Int      @id @default(autoincrement())
   response_description  String
   response_created_on  DateTime @default(now())
+  response_isRead      Boolean  @default(false)
   mensajeId      Int
   mensaje        Mensaje  @relation("MensajeResponse",fields: [mensajeId], references: [mensaje_id], onDelete: Cascade)
   userId         Int?

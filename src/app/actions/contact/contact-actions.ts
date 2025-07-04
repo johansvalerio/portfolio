@@ -111,24 +111,50 @@ export async function readMessage(prevState: FormState | undefined, formData: Fo
       return { error: 'No se encontró una sesión' }
     }
 
-    // Obtener el mensaje_id del formulario
-    const mensaje_id = Number(formData.get('mensaje_id'))
+    if (session.user.role === 1) {
+      // Obtener el mensaje_id del formulario
+      const mensaje_id = Number(formData.get('mensaje_id'))
+      if (!mensaje_id) return { error: 'No se encontró el mensaje' }
 
-    const messageSent = await db.mensaje.findFirst({
-      where: {
-        mensaje_id: mensaje_id,
-      }
-    })
-
-    if (messageSent?.mensaje_isRead === false) {
-      // Ver el mensaje / marcar como visto
-      const isRead = await db.mensaje.update({
-        where: { mensaje_id },
-        data: { mensaje_isRead: true },
+      const messageSent = await db.mensaje.findFirst({
+        where: {
+          mensaje_id: mensaje_id,
+        }
       })
-      return { success: 'Idea vista {' + isRead.mensaje_isRead + '}' }
+
+      if (messageSent?.mensaje_isRead === false) {
+        // Ver el mensaje y marcar como visto
+        const isRead = await db.mensaje.update({
+          where: { mensaje_id },
+          data: { mensaje_isRead: true },
+        })
+        return { success: 'Idea vista {' + isRead.mensaje_isRead + '}' }
+      }
+      return {}
+    } else {
+      // Obtener todos los response_id enviados (pueden ser varios)
+      const responseIds = formData.getAll('response_id').map(Number);
+
+      if (responseIds.length < 0) return { error: 'No se encontraron las respuestas' }
+
+      const responses = await db.response.findMany({
+        where: { response_id: { in: responseIds } }
+      })
+
+      const responseIsRead = responses.filter((res) => res.response_isRead)
+
+      if (!responseIsRead) {
+        return {}
+      } else {
+        const update_isRead = await db.response.updateMany({
+          where: { response_id: { in: responseIds } },
+          data: { response_isRead: true }
+        })
+        console.log(update_isRead)
+      }
+      return { success: 'Respuestas leídas correctamente' }
     }
-    return {}
+
   } catch (error) {
     console.error('Error al ver la idea:', error)
     return { error: 'Eror al ver la idea' }

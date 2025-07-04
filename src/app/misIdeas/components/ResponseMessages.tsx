@@ -11,32 +11,36 @@ export default function ResponseMessages({ selectedMessage }: { selectedMessage:
     }
 
     return (
-        <div className="mt-4">
+        <>
             <h4 className="font-bold mb-2">Respuestas</h4>
-            {selectedMessage.response.map((res, idx, arr) => (
-                <div key={res.response_id}>
+            <div className={`mt-4
+                 ${selectedMessage.response.length <= 1 ? "h-auto overflow-y-auto" : "h-[30vh] overflow-y-auto"}  `}>
 
-                    <div className="p-3 bg-primary/10 rounded mb-2 w-full">
-                        <div className="flex justify-between items-center">
-                            <div>
-                                <p className="mb-1">{res.response_description}</p>
-                                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                                    <Reply className="h-3 w-3" />
-                                    {formatDate(res.response_created_on.toString())}
+                {selectedMessage.response.map((res, idx, arr) => (
+                    <div key={res.response_id}>
+
+                        <div className="p-3 bg-primary/10 rounded mb-2 w-full">
+                            <div className="flex justify-between items-center">
+                                <div>
+                                    <p className="mb-1">{res.response_description}</p>
+                                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                                        <Reply className="h-3 w-3" />
+                                        {formatDate(res.response_created_on.toString())}
+                                    </div>
+                                </div>
+                                <div>
+                                    <DeleteResponse responseId={res.response_id} />
                                 </div>
                             </div>
-                            <div>
-                                <DeleteResponse responseId={res.response_id} />
-                            </div>
+
                         </div>
 
+                        {idx < arr.length - 1 && (
+                            <Separator className="h-0.5 bg-gray-400" />
+                        )}
                     </div>
-
-                    {idx < arr.length - 1 && (
-                        <Separator className="h-0.5 bg-gray-400" />
-                    )}
-                </div>
-            ))}
-        </div>
+                ))}
+            </div>
+        </>
     )
 }
