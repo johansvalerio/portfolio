@@ -13,6 +13,7 @@ export const authOptions: NextAuthOptions = {
     callbacks: {
         async signIn({ user, account, profile }) {
             if (account?.provider === "google") {
+                console.log(profile)
                 const userFound = await db.user.findUnique({
                     where: { user_email: user.email! },
                 });
