@@ -68,7 +68,6 @@ export default function Header({ session }: { session: Session | null }) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-
   return (
     <header
       className={cn(
@@ -82,10 +81,7 @@ export default function Header({ session }: { session: Session | null }) {
         <div className="flex items-center justify-between h-16">
           <div className="flex-shrink-0">
             <h1 className="text-2xl font-bold bg-gradient-to-r from-primary/30 to-primary/40 bg-clip-text text-transparent">
-              <Link href="/#home">
-                Johans Valerio
-              </Link>
-
+              <Link href="/#home">Johans Valerio</Link>
             </h1>
           </div>
 
@@ -102,11 +98,7 @@ export default function Header({ session }: { session: Session | null }) {
                 </Link>
               ))}
               <ThemeToggle />
-              {!session ? (
-                <GoogleSpan />
-              ) : (
-                <UserDropdown session={session} />
-              )}
+              {!session ? <GoogleSpan /> : <UserDropdown session={session} />}
             </div>
           </nav>
 
