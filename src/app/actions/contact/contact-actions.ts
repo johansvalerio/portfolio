@@ -57,7 +57,8 @@ export async function createContact(prevState: FormState | undefined, formData: 
 }
 
 export async function getContactMessages() {
-  return await db.mensaje.findMany({
+  try{
+    const messages = await db.mensaje.findMany({
     include: {
       user: true,
       response: true
@@ -66,6 +67,15 @@ export async function getContactMessages() {
       mensaje_created_on: 'desc',
     },
   })
+  if (messages) {
+    return messages
+  }else {
+    return []
+  }
+} catch (error) {
+  console.error('Error al obtener las ideas:', error)
+  return { error: 'Error al obtener las ideas' }
+}
 }
 
 export async function patchStatus(prevState: FormState | undefined, formData: FormData): Promise<FormState> {
