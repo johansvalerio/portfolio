@@ -10,32 +10,22 @@ interface ThemeToggleProps {
 export function ThemeToggle({ showLabel = false }: ThemeToggleProps) {
   const [isDark, setIsDark] = useState(false);
 
+  // Sincronizar con el tema actual al cargar
   useEffect(() => {
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme === "dark") {
-      document.documentElement.classList.add("dark");
-      setIsDark(true);
-    } else {
-      document.documentElement.classList.remove("dark");
-      setIsDark(false);
-    }
+    const savedTheme = localStorage.getItem("theme") || "dark";
+    setIsDark(savedTheme === "dark");
   }, []);
 
   const toggleTheme = () => {
-    if (document.documentElement.classList.contains("dark")) {
-      document.documentElement.classList.remove("dark");
-      localStorage.setItem("theme", "light");
-      setIsDark(false);
-    } else {
-      document.documentElement.classList.add("dark");
-      localStorage.setItem("theme", "dark");
-      setIsDark(true);
-    }
+    const newTheme = isDark ? "light" : "dark";
+    // Actualizar el tema
+    document.documentElement.classList.toggle("dark", newTheme === "dark");
+    localStorage.setItem("theme", newTheme);
+    setIsDark(!isDark);
   };
 
   return (
-
-    <a
+    <button
       onClick={toggleTheme}
       className="cursor-pointer px-3 py-2 flex items-center text-muted-foreground hover:text-foreground transition-colors duration-200 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
       aria-label={`Cambiar a modo ${isDark ? "claro" : "oscuro"}`}
@@ -50,6 +40,6 @@ export function ThemeToggle({ showLabel = false }: ThemeToggleProps) {
           {isDark ? "Light mode" : "Dark mode"}
         </span>
       )}
-    </a>
+    </button>
   );
 }

@@ -74,7 +74,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" suppressHydrationWarning className="dark">
+    <html lang="es" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                // Verificar el tema guardado o usar dark por defecto
+                const savedTheme = localStorage.getItem('theme') || 'dark';
+                document.documentElement.classList.toggle('dark', savedTheme === 'dark');
+              })();
+            `,
+          }}
+        />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} 
         antialiased `}
