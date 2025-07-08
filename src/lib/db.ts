@@ -1,11 +1,6 @@
-import { Pool, PoolConfig } from '@neondatabase/serverless';
-import { PrismaNeon } from '@prisma/adapter-neon';
+// src/lib/db.ts
+import { neon } from '@neondatabase/serverless';
 import { PrismaClient } from '@prisma/client';
-import ws from 'ws';
-import { neonConfig } from '@neondatabase/serverless';
-
-// Configuración de WebSocket para Neon DB
-neonConfig.webSocketConstructor = ws;
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -17,24 +12,22 @@ const createPrismaClient = () => {
       throw new Error('❌ DATABASE_URL is required in production environment');
     }
     
-    const pool = new Pool({ connectionString });
-    const adapter = new PrismaNeon(pool as unknown as PoolConfig);
+    // Para consultas SQL directas
+    const sql = neon(connectionString);
+    console.log(sql)
     
-    console.log('🔌 Using Neon DB in production mode');
+    // Para Prisma
     return new PrismaClient({
-      adapter,
+      datasourceUrl: connectionString,
       log: ['error', 'warn'],
     });
   } else {
     console.log('💻 Using local database in development mode');
     return new PrismaClient({
-      log: [
-        { level: 'query', emit: 'event' },
-        { level: 'error', emit: 'stdout' },
-        { level: 'warn', emit: 'stdout' },
-      ],
+      log: ['error', 'warn'],
     });
   }
 };
 
 export const db = createPrismaClient();
+export const sql = neon(process.env.DATABASE_URL!);

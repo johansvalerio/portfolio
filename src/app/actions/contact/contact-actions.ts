@@ -2,7 +2,6 @@
 import {db} from '@/lib/db'
 import authSession from '@/app/providers/auth-session';
 import { revalidatePath } from 'next/cache';
-import { MensajeWithUser } from '@/app/types/mensaje';
 interface FormState {
   error?: string;
   success?: string;
@@ -57,7 +56,7 @@ export async function createContact(prevState: FormState | undefined, formData: 
   }
 }
 
-export async function getContactMessages(): Promise<MensajeWithUser[]> {
+export async function getMessages() {
   try {
     const messages = await db.mensaje.findMany({
       include: {

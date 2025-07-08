@@ -3,20 +3,11 @@ import GoogleProvider from "next-auth/providers/google";
 import {db} from '@/lib/db';
 import { JWT } from 'next-auth/jwt';
 
-const isProduction = process.env.NODE_ENV === 'production';
-
 export const authOptions: NextAuthOptions = {
     providers: [
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID as string,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-            authorization: {
-                params: {
-                    prompt: 'consent',
-                    access_type: 'offline',
-                    response_type: 'code'
-                }
-            }
         }),
     ],
     callbacks: {
@@ -83,36 +74,8 @@ export const authOptions: NextAuthOptions = {
     },
     pages: {
         signIn: '/',
-        error: '/auth/error', // Custom error page
-    },
-    debug: !isProduction,
-    logger: {
-        error(code, metadata) {
-            console.error('Auth error:', { code, metadata });
-        },
-        warn(code) {
-            console.warn('Auth warning:', code);
-        },
-        debug(code, metadata) {
-            console.log('Auth debug:', { code, metadata });
-        }
     },
     session: {
         strategy: 'jwt',
-        maxAge: 30 * 24 * 60 * 60, // 30 days
     },
-    cookies: {
-      sessionToken: {
-        name: `__Secure-next-auth.session-token`,
-        options: {
-          httpOnly: true,
-          sameSite: 'lax',
-          path: '/',
-          secure: process.env.NODE_ENV === 'production',
-          domain: process.env.NODE_ENV === 'production' ? 'https://johansvalerio.vercel.app' : undefined,
-        },
-      },
-    },
-    useSecureCookies: process.env.NODE_ENV === 'production',
-    secret: process.env.NEXTAUTH_SECRET,
 };
