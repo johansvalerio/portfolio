@@ -76,21 +76,28 @@ export default function RootLayout({
   return (
     <html lang="es" suppressHydrationWarning>
       <head>
+        <link rel="manifest" href="/site.webmanifest" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
-                // Verificar el tema guardado o usar dark por defecto
-                const savedTheme = localStorage.getItem('theme') || 'dark';
-                document.documentElement.classList.toggle('dark', savedTheme === 'dark');
+                // Forzar tema oscuro inicialmente
+                if (!localStorage.getItem('theme')) {
+                  localStorage.setItem('theme', 'dark');
+                }
+                const savedTheme = localStorage.getItem('theme');
+                if (savedTheme === 'dark') {
+                  document.documentElement.classList.add('dark');
+                } else {
+                  document.documentElement.classList.remove('dark');
+                }
               })();
             `,
           }}
         />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} 
-        antialiased `}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AuthProvider>
           <HeaderServer />
