@@ -1,6 +1,6 @@
 import { NextAuthOptions, Session } from 'next-auth';
 import GoogleProvider from "next-auth/providers/google";
-import db from '@/lib/db';
+import {db} from '@/lib/db';
 import { JWT } from 'next-auth/jwt';
 
 const isProduction = process.env.NODE_ENV === 'production';
