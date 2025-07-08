@@ -1,5 +1,5 @@
 'use server'
-import db from '@/lib/db'
+import {db} from '@/lib/db'
 import authSession from '@/app/providers/auth-session';
 import { revalidatePath } from 'next/cache';
 import { MensajeWithUser } from '@/app/types/mensaje';
@@ -62,17 +62,21 @@ export async function getContactMessages(): Promise<MensajeWithUser[]> {
     const messages = await db.mensaje.findMany({
       include: {
         user: true,
-        response: true
+        response: {
+          include: {
+            user: true
+          }
+        }
       },
       orderBy: {
         mensaje_created_on: 'desc',
       },
     });
     
-    return messages || [];
+    return messages;
   } catch (error) {
-    console.error('Error al obtener las ideas:', error);
-    return []; // Retornamos un array vacío en caso de error
+    console.error('Error al obtener los mensajes:', error);
+    return [];
   }
 }
 
