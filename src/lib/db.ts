@@ -1,6 +1,6 @@
-
+import { Pool, PoolConfig } from '@neondatabase/serverless';
 import { PrismaNeon } from '@prisma/adapter-neon';
-import { PrismaClient } from '@prisma/client/edge';
+import { PrismaClient } from '@prisma/client';
 import ws from 'ws';
 import { neonConfig } from '@neondatabase/serverless';
 
@@ -17,8 +17,8 @@ const createPrismaClient = () => {
       throw new Error('❌ DATABASE_URL is required in production environment');
     }
     
-
-    const adapter = new PrismaNeon({connectionString});
+    const pool = new Pool({ connectionString });
+    const adapter = new PrismaNeon(pool as unknown as PoolConfig);
     
     console.log('🔌 Using Neon DB in production mode');
     return new PrismaClient({
