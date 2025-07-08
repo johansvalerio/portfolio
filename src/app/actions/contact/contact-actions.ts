@@ -2,6 +2,7 @@
 import db from '@/lib/db'
 import authSession from '@/app/providers/auth-session';
 import { revalidatePath } from 'next/cache';
+import { MensajeWithUser } from '@/app/types/mensaje';
 interface FormState {
   error?: string;
   success?: string;
@@ -56,26 +57,23 @@ export async function createContact(prevState: FormState | undefined, formData: 
   }
 }
 
-export async function getContactMessages() {
-  try{
+export async function getContactMessages(): Promise<MensajeWithUser[]> {
+  try {
     const messages = await db.mensaje.findMany({
-    include: {
-      user: true,
-      response: true
-    },
-    orderBy: {
-      mensaje_created_on: 'desc',
-    },
-  })
-  if (messages) {
-    return messages
-  }else {
-    return []
+      include: {
+        user: true,
+        response: true
+      },
+      orderBy: {
+        mensaje_created_on: 'desc',
+      },
+    });
+    
+    return messages || [];
+  } catch (error) {
+    console.error('Error al obtener las ideas:', error);
+    return []; // Retornamos un array vacío en caso de error
   }
-} catch (error) {
-  console.error('Error al obtener las ideas:', error)
-  return { error: 'Error al obtener las ideas' }
-}
 }
 
 export async function patchStatus(prevState: FormState | undefined, formData: FormData): Promise<FormState> {
