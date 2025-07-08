@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { PrismaNeon } from '@prisma/adapter-neon';
-import { Pool, PoolConfig, neonConfig } from '@neondatabase/serverless';
-import ws from 'ws'
+import { Pool, neonConfig, type PoolConfig } from '@neondatabase/serverless';
+import ws from 'ws';
 
 // Configuración de WebSocket para Neon DB
 neonConfig.webSocketConstructor = ws;
@@ -12,11 +12,11 @@ declare global {
 
 // Validar variables de entorno
 const requiredEnvVars = ['NODE_ENV', 'DATABASE_URL'];
-//recorremos las variables de entorno y buscamos si hay alguna que no se encuentre
 const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
 
 if (missingVars.length > 0) {
-  throw new Error(`❌ Missing required environment variables: ${missingVars.join(', ')}`);
+  console.error(`❌ Missing required environment variables: ${missingVars.join(', ')}`);
+  process.exit(1);
 }
 
 const isProduction = process.env.NODE_ENV === 'production';
@@ -24,37 +24,84 @@ const isProduction = process.env.NODE_ENV === 'production';
 // Crear el cliente de Prisma con la configuración adecuada según el entorno
 const createPrismaClient = (): PrismaClient => {
   try {
+    console.log('🔌 Creating Prisma client...');
+    console.log(`🌐 Environment: ${isProduction ? 'Production' : 'Development'}`);
+    
     if (isProduction) {
-      // Configuración para producción (Neon DB en la nube)
       const connectionString = process.env.DATABASE_URL;
+      console.log('🔗 Database URL:', connectionString ? '✅ Set' : '❌ Not set');
       
       if (!connectionString) {
-        throw new Error('❌ DATABASE_URL is required in production environment');
+        throw new Error('DATABASE_URL is not defined in environment variables');
       }
 
-      const pool = new Pool({ connectionString });
+      console.log('🌐 Creating connection pool...');
+      const poolConfig: PoolConfig = {
+        connectionString,
+        ssl: {
+          rejectUnauthorized: false
+        }
+      };
+      const pool = new Pool(poolConfig);
+      
+      console.log('🔌 Creating PrismaNeon adapter...');
       const adapter = new PrismaNeon(pool as unknown as PoolConfig);
       
-      console.log('🔌 Using Neon DB in production mode');
-      return new PrismaClient({
+      console.log('🚀 Initializing Prisma client...');
+      const prisma = new PrismaClient({
         adapter,
-        log: isProduction 
-          ? ['error', 'warn'] 
-          : ['query', 'error', 'warn'],
+        log: [
+          { level: 'warn', emit: 'event' },
+          { level: 'error', emit: 'event' },
+          { level: 'query', emit: 'event' }
+        ],
       });
+      
+      // Add event listeners for better debugging
+      prisma.$on('warn', (e) => {
+        console.warn('Prisma Warning:', e);
+      });
+      
+      prisma.$on('error', (e) => {
+        console.error('Prisma Error:', e);
+      });
+      
+      prisma.$on('query', (e) => {
+        console.log('Query:', e.query);
+        console.log('Params:', e.params);
+        console.log('Duration:', e.duration, 'ms');
+      });
+      
+      return prisma;
     } else {
       // Configuración para desarrollo (local)
       console.log('💻 Using local database in development mode');
-      return new PrismaClient({
+      const prisma = new PrismaClient({
         log: [
           { level: 'query', emit: 'event' },
           { level: 'error', emit: 'stdout' },
           { level: 'warn', emit: 'stdout' },
         ],
       });
+      
+      // Add event listeners for better debugging
+      prisma.$on('query', (e) => {
+        console.log('Query:', e.query);
+        console.log('Params:', e.params);
+        console.log('Duration:', e.duration, 'ms');
+      });
+      
+      return prisma;
     }
   } catch (error) {
     console.error('❌ Error creating Prisma client:', error);
+    if (error instanceof Error) {
+      console.error('Error details:', {
+        name: error.name,
+        message: error.message,
+        stack: error.stack?.split('\n').slice(0, 3).join('\n') + '...'
+      });
+    }
     throw error;
   }
 };
