@@ -39,7 +39,7 @@ const contactInfo: ContactInfo[] = [
     title: "Teléfono",
     value: "+506 7236 7648",
     href: "tel:+50672367648",
-  }
+  },
 ];
 
 interface FormState {
@@ -149,11 +149,8 @@ export default function Contact() {
                       viewport={{ once: true }}
                       whileHover={{ x: 5 }}
                     >
-
                       <motion.div className="flex-shrink-0 group-hover:scale-[1.1] transition-all">
-
                         <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-
                           {info.icon}
                         </div>
                       </motion.div>
@@ -161,7 +158,6 @@ export default function Contact() {
                         <p className="font-medium">{info.title}</p>
                         {info.value}
                       </div>
-
                     </motion.a>
                   ))}
                 </div>
@@ -189,13 +185,11 @@ export default function Contact() {
                     <Button
                       asChild
                       className="w-full relative overflow-hidden"
-                      size="lg"
+                      size="default"
                     >
                       <a href="https://wa.me/50672367648">
-                        <motion.span
-                          className="relative z-10 flex items-center justify-center gap-2"
-                        >
-                          <MessageCircle className="h-4 w-4" />
+                        <motion.span className="relative z-10 flex items-center justify-center gap-2">
+                          <MessageCircle className="h-5 w-5" />
                           Enviar mensaje directo por Whatsapp
                         </motion.span>
                       </a>
@@ -208,8 +202,11 @@ export default function Contact() {
             {/* Form */}
 
             <div
-              className={`relative group ${!session ? " hover:px-4 hover:rounded-lg hover:shadow-xl hover:translate-y-[-20px] hover:py-4"
-                : ""} transition-all duration-300 overflow-hidden`}
+              className={`relative group ${
+                !session
+                  ? " hover:px-4 hover:rounded-lg hover:shadow-xl hover:translate-y-[-20px] hover:py-4"
+                  : ""
+              } transition-all duration-300 overflow-hidden`}
             >
               {/* Fondo con blur al hacer hover */}
               {!session && (

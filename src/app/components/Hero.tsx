@@ -30,7 +30,7 @@ export default function Hero() {
   return (
     <section
       id="home"
-      className="min-h-screen flex items-center justify-center relative overflow-hidden"
+      className="min-h-screen w-full flex items-center justify-center relative overflow-hidden"
     >
       {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-blue-500/5 to-purple-500/10" />
@@ -39,15 +39,18 @@ export default function Hero() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center max-w-4xl mx-auto">
           <motion.div
+            className="m-auto overflow-hidden"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <Badge variant="secondary" className="mb-4 text-sm">
-              👋 Listo para nuevos retos profesionales y freelancing
+            <Badge
+              variant="secondary"
+              className="mb-4 text-xs sm:text-sm px-3 py-1 whitespace-nowrap"
+            >
+              👋 Listo para nuevos retos
             </Badge>
           </motion.div>
-
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -64,7 +67,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.8 }}
-            className="text-xl sm:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed"
+            className="text-xl sm:text-2xl text-muted-foreground mb-8 max-w-4xl mx-auto leading-relaxed"
           >
             Apasionado por crear soluciones web innovadoras con tecnologías
             modernas full-stack. Comprometido con el aprendizaje continuo y la

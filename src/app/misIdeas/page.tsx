@@ -36,7 +36,7 @@ export default async function MisIdeasPage() {
   }
 
   return (
-    <main className="min-h-screen py-20 bg-gradient-to-br from-primary/5 to-blue-600/5">
+    <main className="min-h-screen w-full py-20 bg-gradient-to-br from-primary/5 to-blue-600/5">
       <MessagesPlayGround messages={messages} session={session} />
     </main>
   );

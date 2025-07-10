@@ -100,7 +100,7 @@ export default function Projects() {
   return (
     <section
       id="projects"
-      className="py-20 relative bg-gradient-to-br from-primary/5 to-blue-600/5"
+      className="py-20 w-full relative bg-gradient-to-br from-primary/5 to-blue-600/5"
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 z-10">
         <div className="max-w-6xl mx-auto">

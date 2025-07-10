@@ -12,7 +12,7 @@ export default function PedingButton() {
       type="submit"
       disabled={pending}
       className="w-full group relative overflow-hidden cursor-pointer"
-      size="lg"
+      size="default"
     >
       {pending ? (
         "Enviando..."
