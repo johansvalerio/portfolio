@@ -18,51 +18,54 @@ const skillCategories: SkillCategories[] = [
   {
     title: "Frontend",
     skills: [
-      { name: "React/Next.js", level: 85 },
-      { name: "TypeScript (Frontend & Backend)", level: 83 },
-      { name: "Tailwind CSS", level: 85 },
-      { name: "Shadcn UI", level: 82 },
+      { name: "React / Next.js", level: 86 },
+      { name: "TypeScript", level: 83 },
+      { name: "UI/UX (Tailwind CSS, Shadcn UI)", level: 85 },
+      { name: "Animations (Framer Motion)", level: 80 },
     ],
   },
   {
     title: "Backend",
     skills: [
-      { name: "JWT/OAuth (NextAuth)", level: 83 },
-      { name: "C#", level: 80 },
-      { name: "PostgreSQL", level: 82 },
-      { name: "API Rest", level: 85 },
+      { name: "APIs RESTful (TypeScript/Node.js, C#/.NET)", level: 85 },
+      { name: "Bases de Datos (PostgreSQL, SQL Server)", level: 83 },
+      { name: "ORMs (Prisma, Entity Framework)", level: 85 },
+      { name: "Autenticación (NextAuth.js, OAuth, JWT)", level: 83 },
     ],
   },
   {
     title: "DevOps & Tools",
     skills: [
-      { name: "Vercel (Deploy & DB Storage)", level: 83 },
-      { name: "CI/CD", level: 80 },
-      { name: "Git/GitHub", level: 85 },
-      { name: "Prisma ORM", level: 85 },
+      { name: "CI/CD y Despliegue (Vercel)", level: 83 },
+      { name: "Control de Versiones (Git, GitHub)", level: 84 },
+      { name: "Calidad de código (ESLint, Prettier)", level: 85 },
+      { name: "Testing básico (Jest, React Testing Library)", level: 50 },
     ],
   },
 ];
 
 const technologies: string[] = [
   "React",
-  "Next.js",
   "TypeScript",
-  "Shadcn UI",
+  "Next.js",
   "JWT/OAuth",
-  "C#",
   "PostgreSQL",
-  "SQL Server",
-  "Tailwind CSS",
   "Prisma ORM",
-  "Git/GitHub",
+  "Tailwind CSS",
+  "Shadcn UI",
+  "Framer Motion",
+  "C#",
+  "Razor",
   ".NET",
+  "SQL Server",
+  "Entity Framework",
+  "Git/GitHub",
   "Vercel",
 ];
 
 export default function Skills() {
   return (
-    <section id="skills" className="py-20 w-full">
+    <section id="skills" className="py-20 w-full relative overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
@@ -218,7 +221,7 @@ export default function Skills() {
                       >
                         <Badge
                           variant="secondary"
-                          className="text-sm py-2 px-4 bg-blue-50 text-blue-500 dark:bg-background dark:text-foreground transition-all duration-200 cursor-pointer"
+                          className="text-sm py-2 px-4 bg-blue-50 text-blue-500 dark:bg-background dark:text-foreground transition-all duration-200 cursor-default"
                         >
                           {tech}
                         </Badge>

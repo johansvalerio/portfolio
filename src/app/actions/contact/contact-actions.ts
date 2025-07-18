@@ -47,7 +47,7 @@ export async function createContact(prevState: FormState | undefined, formData: 
     console.log('Nueva idea creada:', newMessage)
 
     // Revalidar la ruta si es necesario
-    // revalidatePath('/')
+     revalidatePath('/')
 
     return { success: 'Idea enviada correctamente' }
   } catch (error) {
@@ -71,7 +71,7 @@ export async function getMessages() {
         mensaje_created_on: 'desc',
       },
     });
-    
+   
     return messages;
   } catch (error) {
     console.error('Error al obtener los mensajes:', error);
@@ -106,6 +106,7 @@ export async function patchStatus(prevState: FormState | undefined, formData: Fo
       data: { mensaje_status: nextStatus },
     });
 
+    revalidatePath('/misIdeas')
     return { success: 'Estado de la idea actualizado {' + newStatus.mensaje_status + '}' }
 
   } catch (error) {
@@ -139,8 +140,10 @@ export async function readMessage(prevState: FormState | undefined, formData: Fo
           where: { mensaje_id },
           data: { mensaje_isRead: true },
         })
+        revalidatePath('/misIdeas')
         return { success: 'Idea vista {' + isRead.mensaje_isRead + '}' }
       }
+      revalidatePath('/misIdeas')
       return {}
     } else {
       // Obtener todos los response_id enviados (pueden ser varios)
@@ -163,6 +166,7 @@ export async function readMessage(prevState: FormState | undefined, formData: Fo
         })
         console.log(update_isRead)
       }
+      revalidatePath('/misIdeas')
       return { success: 'Respuestas leídas correctamente' }
     }
 
@@ -215,8 +219,6 @@ export async function createResponse(prevState: FormState | undefined, formData:
     console.log('Nueva respuesta creada:', newResponse)
 
     revalidatePath('/misIdeas')
-
-
     return { success: 'Idea respondida correctamente' }
   } catch (error) {
     console.error('Error al responder la idea:', error)
@@ -253,6 +255,7 @@ export async function deleteResponse(prevState: FormState | undefined, formData:
 
     console.log('Respuesta eliminada', deleteRes)
 
+    revalidatePath('/misIdeas')
     return { success: 'Respuesta eliminada correctamente' }
   } catch (error) {
     console.error('Error al eliminar la respuesta:', error)

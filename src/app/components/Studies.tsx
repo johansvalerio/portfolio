@@ -42,6 +42,18 @@ const studiesData: StudiesData[] = [
   },
   {
     id: 5,
+    institution: "Oracle & Alura LATAM",
+    degree: [
+      "Git y GitHub: repositorio, commit y versiones",
+      "Lógica de programación con JavaScript",
+      "Desarrollo personal G6 - ONE",
+      "Programación principiante G6 - ONE",
+    ],
+    year: "2024",
+    type: "course",
+  },
+  {
+    id: 6,
     institution: "Universidad Técnica Nacional",
     degree: "English III",
     year: "2022",
@@ -50,16 +62,25 @@ const studiesData: StudiesData[] = [
 ];
 
 export default function Studies() {
-  const education = studiesData.filter((item) => item.type === "education");
-  const courses = studiesData.filter((item) => item.type === "course");
+  // Ordenar educación por año de forma descendente (más reciente primero)
+  const education = studiesData
+    .filter((item) => item.type === "education")
+    .sort((a, b) => Number(b.year) - Number(a.year));
+  // Ordenar cursos por año de forma descendente (más reciente primero)
+  const courses = studiesData
+    .filter((item) => item.type === "course")
+    .sort((a, b) => Number(b.year) - Number(a.year));
 
   return (
-    <section
-      id="studies"
-      className="py-20 w-full relative overflow-hidden bg-gradient-to-br from-primary/5 via-background to-primary/10"
-    >
-      {/* Efecto de partículas sutiles */}
-      <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] opacity-10" />
+    <section id="studies" className="py-20 w-full relative overflow-hidden">
+      {/* Patrón de cuadrícula sutil */}
+      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDQwIDQwIj48cmVjdCB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2QxZDVkOSIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtZGFzaGFycmF5PSIxIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48L3N2Zz4=')] opacity-50 dark:opacity-5" />
+
+      {/* Gradiente de acento */}
+      <div className="absolute -left-1/4 -bottom-1/4 w-1/2 h-1/2 bg-sky-500/20 dark:bg-sky-500/10 rounded-full mix-blend-multiply dark:mix-blend-screen blur-3xl" />
+      {/* Gradiente de acento */}
+      <div className="absolute -right-1/4 -top-1/4 w-1/2 h-1/2 bg-blue-500/20 dark:bg-blue-500/10 rounded-full mix-blend-multiply dark:mix-blend-screen blur-3xl" />
+
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
@@ -117,7 +138,7 @@ export default function Studies() {
                     }}
                     viewport={{ once: true }}
                   >
-                    <Card className="bg-background/80 backdrop-blur-sm border border-border/20 hover:border-primary/30 hover:shadow-lg transition-all duration-300 group">
+                    <Card className="bg-primary/5 backdrop-blur-sm border border-border/20 hover:border-primary/30 hover:shadow-lg transition-all duration-300 group">
                       <CardHeader className="pb-2 relative z-10">
                         <div className="flex items-start gap-3">
                           <div className="p-2 rounded-full bg-primary/10 text-primary mt-1">
@@ -138,9 +159,9 @@ export default function Studies() {
                         </div>
                       </CardHeader>
                       <CardContent>
-                        <p className="text-sm text-muted-foreground/90 group-hover:text-foreground/90 transition-colors duration-300">
-                          {item.degree}
-                        </p>
+                        <ul className="text-sm list-disc list-inside text-muted-foreground/90 group-hover:text-foreground/90 transition-colors duration-300">
+                          <li>{item.degree}</li>
+                        </ul>
                       </CardContent>
                     </Card>
                   </motion.div>
@@ -172,7 +193,7 @@ export default function Studies() {
                     }}
                     viewport={{ once: true }}
                   >
-                    <Card className="bg-background/80 backdrop-blur-sm border border-border/20 hover:border-primary/30 hover:shadow-lg transition-all duration-300 group">
+                    <Card className="bg-primary/5 backdrop-blur-sm border border-border/20 hover:border-primary/30 hover:shadow-lg transition-all duration-300 group">
                       <CardHeader className="pb-2 relative z-10">
                         <div className="flex items-start gap-3">
                           <div className="p-2 rounded-full bg-primary/10 text-primary mt-1">
@@ -195,17 +216,17 @@ export default function Studies() {
                       <CardContent className="space-y-2">
                         {Array.isArray(item.degree) ? (
                           item.degree.map((degree, index) => (
-                            <p
+                            <ul
                               key={index}
-                              className="text-sm text-muted-foreground/90 group-hover:text-foreground/90 transition-colors duration-300"
+                              className="text-sm list-disc list-inside text-muted-foreground/90 group-hover:text-foreground/90 transition-colors duration-300"
                             >
-                              {degree}
-                            </p>
+                              <li>{degree}</li>
+                            </ul>
                           ))
                         ) : (
-                          <p className="text-sm text-muted-foreground/90 group-hover:text-foreground/90 transition-colors duration-300">
-                            {item.degree}
-                          </p>
+                          <ul className="text-sm list-disc list-inside text-muted-foreground/90 group-hover:text-foreground/90 transition-colors duration-300">
+                            <li>{item.degree}</li>
+                          </ul>
                         )}
                       </CardContent>
                     </Card>

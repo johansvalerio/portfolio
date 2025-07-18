@@ -30,9 +30,11 @@ export default function Hero() {
   return (
     <section
       id="home"
-      className="min-h-screen w-full flex items-center justify-center relative overflow-hidden"
+      className="min-h-screen w-full flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-muted/20 to-background dark:from-muted/10 dark:to-background"
     >
       {/* Background gradient */}
+
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-blue-500/5 to-purple-500/10" />
       <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-blue-500/5 to-purple-500/10" />
       <div className="absolute inset-0 bg-grid-black/[0.05] bg-[size:50px_50px]" />
 

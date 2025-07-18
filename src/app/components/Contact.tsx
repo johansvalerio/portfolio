@@ -19,6 +19,8 @@ import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
 import GoogleButton from "./GoogleButtonSignIn";
+import { FormState } from "@/app/types/formState";
+import { useRouter } from "next/navigation";
 
 interface ContactInfo {
   icon: React.ReactNode;
@@ -42,14 +44,10 @@ const contactInfo: ContactInfo[] = [
   },
 ];
 
-interface FormState {
-  error?: string;
-  success?: string;
-}
-
 export default function Contact() {
   const { data: session } = useSession();
   const name = session?.user?.name || "";
+  const router = useRouter();
 
   const initialState: FormState = {};
   const [state, formAction] = useActionState<FormState, FormData>(
@@ -63,6 +61,7 @@ export default function Contact() {
       toast.error(state.error);
     } else if (state?.success) {
       toast.success(state.success);
+      router.push("/misIdeas");
       // confetti
       confetti({
         particleCount: 100,
@@ -70,10 +69,10 @@ export default function Contact() {
         origin: { y: 0.6 },
       });
     }
-  }, [state]); // Solo se ejecutará cuando state cambie
+  }, [state, router]); // Solo se ejecutará cuando state cambie
 
   return (
-    <section id="contact" className="py-20">
+    <section id="contact" className="py-20 w-full relative overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           className="max-w-4xl mx-auto"
@@ -190,7 +189,7 @@ export default function Contact() {
                       <a href="https://wa.me/50672367648">
                         <motion.span className="relative z-10 flex items-center justify-center gap-2">
                           <MessageCircle className="h-5 w-5" />
-                          Enviar mensaje directo por Whatsapp
+                          Enviar mensaje por Whatsapp
                         </motion.span>
                       </a>
                     </Button>

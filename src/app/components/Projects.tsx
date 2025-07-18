@@ -1,299 +1,156 @@
 "use client";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { ExternalLink, Github } from "lucide-react";
-import Image from "next/image";
+
+import React from "react";
+import Carousel3D, { CarouselCard } from "@/components/lightswind/carousel-3d"; // Adjust import path as needed
+import { Bot, Code, Server, Smartphone, User } from "lucide-react";
 import { motion } from "framer-motion";
 
-interface Project {
-  title: string;
-  description: string;
-  image: string;
-  technologies: string[];
-  liveUrl: string;
-  githubUrl: string;
-  featured: boolean;
-}
+function Projects() {
+  const projectCards: CarouselCard[] = [
+    {
+      id: "p1",
+      category: "APLICACIÓN PARA PEDIDO DE COMIDAS",
+      title: "El Tamalito",
+      icon: <Smartphone />,
+      preview:
+        "Plataforma de pedidos de comida típica con autenticación, catálogo interactivo y seguimiento en tiempo real. ¡Sabores auténticos a un clic de distancia!",
+      content:
+        "Aplicación web moderna que permite explorar y pedir comidas típicas. Incluye autenticación de usuarios, catálogo interactivo y sistema de pedidos, todo con un diseño responsive. Construida con TypeScript y Prisma para un rendimiento óptimo y fácil escalamiento.",
+      imageUrl: "/img/eltamalito.jpg",
+      technologies: [
+        "Next.js",
+        "TypeScript",
+        "NextAuth",
+        "Tailwind CSS",
+        "PostgreSQL",
+        "Prisma",
+      ],
+      githubUrl: "https://github.com/johansvalerio/comidas-tipicas",
+      liveUrl: "https://eltamalito.vercel.app",
+    },
+    {
+      id: "p2",
+      category: "APLICACIÓN PARA AGENDAR CITAS",
+      title: "XSbel Studio",
+      icon: <Code />,
+      preview:
+        "Sistema integral para gestión de citas en centros de belleza. Agendamiento fácil, recordatorios y control total para los profesionales.",
+      content:
+        "Es una solución todo-en-uno para la gestión de citas en centros de belleza, desarrollada con tecnologías modernas. Esta aplicación web ofrece una experiencia de usuario fluida además de segura, permitiendo a los clientes reservar citas de forma intuitiva y a los profesionales gestionar sus citas con facilidad.",
+      imageUrl: "/img/xsbelstudio.jpg",
+      technologies: [
+        "Next.js",
+        "TypeScript",
+        "NextAuth",
+        "Tailwind CSS",
+        "PostgreSQL",
+        "Prisma",
+      ],
+      githubUrl: "https://github.com/johansvalerio/beauty-space",
+      liveUrl: "https://xsbelstudio.vercel.app/",
+    },
+    {
+      id: "p3",
+      category: "APLICACIÓN INTERACTIVA CON IA",
+      title: "Chat PDF",
+      icon: <Bot />,
+      preview:
+        "Revoluciona cómo interactúas con documentos. Haz preguntas y obtén respuestas precisas de cualquier PDF usando IA avanzada.",
+      content:
+        "Aplicación interactiva con IA para hacerle consultas a tus PDFs. Permite subir documentos PDF y hacer preguntas sobre su contenido utilizando inteligencia artificial para proporcionar respuestas precisas.",
+      imageUrl: "/img/chatpdf.jpg",
+      technologies: ["Astro", "Svelte", "Tailwind CSS", "IA"],
+      githubUrl: "https://github.com/johansvalerio/chatpdf",
+      liveUrl: "#",
+    },
+    {
+      id: "p4",
+      category: "APLICACIÓN PARA SERVICIOS DE TAXI",
+      title: "ASOTAGUA",
+      icon: <Server />,
+      preview:
+        "Solución completa para gestión de taxis: reservas, mensajes con conductores, seguimiento de viajes y administración de flota. Eficiencia sobre ruedas.",
+      content:
+        "Aplicación web desarrollada para la gestión de reservas de la cooperativa de taxis ASOTAGUA. Incluye módulos para registro de conductores, control de cobros, vehículos, rutas, seguimiento de viajes, puntuación de conductores, mensajería y mucho más.",
+      imageUrl: "/img/asotagua2.jpg",
+      technologies: ["C#", "Razor", "SQL Server", "Bootstrap"],
+      githubUrl: "https://github.com/johansvalerio/asotagua",
+      liveUrl: "#",
+    },
+    {
+      id: "p5",
+      category: "APLICACION CON CONTROL DE MENSAJES",
+      title: "Mi Portafolio",
+      icon: <User />,
+      preview:
+        "Mi espacio digital con carrusel 3D, mensajería en tiempo real y panel de control. Tecnología de punta con un toque personal.",
+      content:
+        "Portafolio profesional desarrollado con Next.js 14 y TypeScript. Incluye gestión de ideas y mensajería, autenticación con NextAuth, panel de administración, diseño responsive, modo oscuro y animaciones con Framer Motion. Destaca por su carrusel 3D interactivo y está optimizado para SEO.",
+      imageUrl: "/img/portfolio.jpg",
+      technologies: [
+        "Next.js",
+        "TypeScript",
+        "Tailwind CSS",
+        "Framer Motion",
+        "NextAuth",
+        "Prisma",
+        "PostgreSQL",
+      ],
+      githubUrl: "https://github.com/johansvalerio/portfolio",
+      liveUrl: "https://johansvalerio.vercel.app",
+    },
+  ];
 
-const projects: Project[] = [
-  {
-    title: "El Tamalito",
-    description:
-      "Aplicación web moderna que permite explorar y pedir comidas típicas. Incluye autenticación de usuarios, catálogo interactivo y sistema de pedidos, todo con un diseño responsive. Construida con TypeScript y Prisma para un rendimiento óptimo y fácil escalamiento.",
-    image: "/img/eltamalito.jpg",
-    technologies: [
-      "Next.js",
-      "TypeScript",
-      "NextAuth",
-      "Tailwind CSS",
-      "PostgreSQL",
-      "Prisma",
-      "Vercel",
-    ],
-    liveUrl: "https://eltamalito.vercel.app",
-    githubUrl: "https://github.com/johansvalerio/comidas-tipicas",
-    featured: true,
-  },
-  {
-    title: "XSbel Studio",
-    description:
-      "Es una solución todo-en-uno para la gestión de citas en centros de belleza, desarrollada con tecnologías modernas. Esta aplicación web ofrece una experiencia de usuario fluida además de segura, permitiendo a los clientes reservar citas de forma intuitiva y a los profesionales gestionar sus citas con facilidad.",
-    image: "/img/xsbelstudio.jpg",
-    technologies: [
-      "Next.js",
-      "TypeScript",
-      "NextAuth",
-      "Tailwind CSS",
-      "PostgreSQL",
-      "Prisma",
-      "Vercel",
-    ],
-    liveUrl: "https://xsbelstudio.vercel.app/",
-    githubUrl: "https://github.com/johansvalerio/beauty-space",
-    featured: true,
-  },
-  {
-    title: "Chat PDF",
-    description:
-      "Aplicación interactiva con IA para hacerle consultas a tus PDFs.",
-    image: "/placeholder.svg?height=300&width=500",
-    technologies: ["Astro", "Svelte", "Tailwind CSS"],
-    liveUrl: "#",
-    githubUrl: "https://github.com/johansvalerio/chatpdf",
-    featured: false,
-  },
-  {
-    title: "ASOTAGUA Taxis",
-    description:
-      "Aplicación para gestionar reservas de taxis en la compañía ASOTAGUA.",
-    image: "/placeholder.svg?height=300&width=500",
-    technologies: ["C#", "Razor", "SQL Server", "Bootstrap"],
-    liveUrl: "#",
-    githubUrl: "#",
-    featured: false,
-  },
-  {
-    title: "Portfolio Website",
-    description:
-      "Sitio web de portafolio personal con diseño moderno y animaciones suaves.",
-    image: "/placeholder.svg?height=300&width=500",
-    technologies: [
-      "Next.js",
-      "TypeScript",
-      "NextAuth",
-      "Tailwind CSS",
-      "PostgreSQL",
-      "Prisma",
-      "Vercel",
-    ],
-    liveUrl: "https://johansvalerio.vercel.app",
-    githubUrl: "https://github.com/johansvalerio/portfolio",
-    featured: false,
-  },
-];
-
-const featuredProjects = projects.filter((project) => project.featured);
-const otherProjects = projects.filter((project) => !project.featured);
-
-export default function Projects() {
   return (
-    <section
-      id="projects"
-      className="py-20 w-full relative bg-gradient-to-br from-primary/5 to-blue-600/5"
-    >
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 z-10">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{
-                opacity: 1,
-                y: 0,
-                transition: { duration: 0.6 },
-              }}
-              viewport={{ once: true, margin: "-50px" }}
-              className="text-3xl sm:text-4xl font-bold mb-4"
-            >
-              Mis{" "}
-              <span className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
-                Proyectos
-              </span>
-            </motion.h2>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{
-                opacity: 1,
-                y: 0,
-                transition: { duration: 0.6, delay: 0.1 },
-              }}
-              viewport={{ once: true }}
-              className="text-muted-foreground text-lg"
-            >
-              Una selección de mis trabajos más destacados
-            </motion.p>
-          </div>
-
-          {/* Featured Projects */}
-          <div className="mb-16">
-            <div className="grid md:grid-cols-2 gap-8">
-              {featuredProjects.map((project, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{
-                    opacity: 1,
-                    y: 0,
-                    transition: {
-                      duration: 0.6,
-                      delay: 0.3 + index * 0.1,
-                      ease: [0.4, 0, 0.2, 1],
-                    },
-                  }}
-                  viewport={{ once: true }}
-                  whileHover={{ y: -5 }}
-                >
-                  <Card className="p-0 pb-6 group flex flex-col h-full border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-background to-muted/50">
-                    <div className="relative overflow-hidden rounded-t-lg">
-                      <Image
-                        src={project.image || "/placeholder.svg"}
-                        alt={project.title}
-                        width={500}
-                        height={300}
-                        className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    </div>
-                    <CardContent className="flex flex-col flex-grow">
-                      <div>
-                        <h3 className="text-xl font-semibold mb-2">
-                          {project.title}
-                        </h3>
-                        <p className="text-muted-foreground mb-4">
-                          {project.description}
-                        </p>
-                        <div className="flex flex-wrap gap-2 mb-4">
-                          {project.technologies.map((tech, techIndex) => (
-                            <Badge key={techIndex} variant="secondary">
-                              {tech}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-                      <div className="flex gap-3 mt-auto pt-4">
-                        <Button
-                          size="sm"
-                          className="flex-1 cursor-pointer"
-                          asChild
-                        >
-                          <a
-                            href={project.liveUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <ExternalLink className="w-4 h-4 mr-2" />
-                            Ver proyecto
-                          </a>
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="cursor-pointer"
-                          asChild
-                        >
-                          <a
-                            href={project.githubUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <Github className="w-4 h-4" />
-                          </a>
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-
-          {/* Other Projects */}
-          <div>
-            <motion.h3
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              className="text-2xl font-semibold mb-8 text-center"
-            >
-              Otros Proyectos
-            </motion.h3>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {otherProjects.slice(0, 3).map((project, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{
-                    opacity: 1,
-                    x: 0,
-                    transition: {
-                      duration: 0.5,
-                      delay: 0.2 + index * 0.1,
-                    },
-                  }}
-                  viewport={{ once: true }}
-                  whileHover={{ y: -5 }}
-                >
-                  <Card
-                    key={index}
-                    className="group flex flex-col h-full border-0 shadow-md hover:shadow-lg transition-all duration-300"
-                  >
-                    <CardContent className="flex flex-col flex-grow">
-                      <div>
-                        <h3 className="text-lg font-semibold mb-2">
-                          {project.title}
-                        </h3>
-                        <p className="text-muted-foreground text-sm mb-4">
-                          {project.description}
-                        </p>
-                        <div className="flex flex-wrap gap-2 mb-4">
-                          {project.technologies
-                            .slice(0, 4)
-                            .map((tech, techIndex) => (
-                              <Badge
-                                key={techIndex}
-                                variant="outline"
-                                className="text-xs"
-                              >
-                                {tech}
-                              </Badge>
-                            ))}
-                        </div>
-                      </div>
-                      <div className="flex justify-center gap-2 mt-auto pt-4">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="cursor-pointer"
-                          asChild
-                        >
-                          <a
-                            href={project.githubUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <Github className="w-4 h-4" />
-                          </a>
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
-            </div>
+    <section id="projects" className="md:py-10 w-full">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{
+            opacity: 1,
+            y: 0,
+            transition: { duration: 0.6 },
+          }}
+          viewport={{ once: true, margin: "-50px" }}
+          className="text-3xl sm:text-4xl font-bold py-15 text-center"
+        >
+          Mis{" "}
+          <span className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+            Proyectos
+          </span>
+        </motion.h2>
+        <div className="md:py-20 py-10">
+          <div
+            className="border rounded-lg p-8 bg-gradient-to-br from-muted/20 to-muted/30
+          dark:bg-gradient-to-br dark:from-background dark:to-muted/10"
+          >
+            <Carousel3D
+              cards={projectCards}
+              cardWidth={300}
+              cardHeight={400}
+              radius={400}
+              enableGlitchEffect={true}
+              enableGlowEffect={true}
+              showControls={true}
+              showThemeToggle={false}
+              onCardClick={(card, index) =>
+                console.log("Card clicked:", card.title, index)
+              }
+              onCardFlip={(card, index, isFlipped) =>
+                console.log("Card flipped:", card.title, isFlipped)
+              }
+              onRotate={(currentIndex) =>
+                console.log("Rotated to index:", currentIndex)
+              }
+              autoRotate={true}
+              autoRotateInterval={4000}
+              pauseOnHover={true}
+            />
           </div>
         </div>
       </div>
     </section>
   );
 }
+
+export default Projects;

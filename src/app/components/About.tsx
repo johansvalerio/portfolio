@@ -12,11 +12,13 @@ const highlights: string[] = [
 
 export default function About() {
   return (
-    <section id="about" className="py-20 bg-muted/30 w-full">
+    <section id="about" className="relative md:py-20 py-10  w-full">
+      {/* Efecto de partículas sutiles */}
+      <div className="absolute inset-0 bg-[radial-gradient(#6b7280_1px,transparent_1px)] dark:bg-[radial-gradient(#9ca3af_1px,transparent_1px)] [background-size:16px_16px] opacity-30 dark:opacity-15" />
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
           <motion.div
-            className="text-center mb-16"
+            className="text-center py-10"
             initial={{ opacity: 0, y: -20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -39,7 +41,7 @@ export default function About() {
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
             >
-              <Card className="border-0 shadow-lg bg-gradient-to-br from-background to-muted/50">
+              <Card className="relative border-0 shadow-lg bg-gradient-to-br from-background to-muted/50">
                 <CardContent className="p-8">
                   <motion.div
                     className="w-32 h-32 bg-gradient-to-br from-primary via-blue-600 to-purple-600 rounded-full mx-auto mb-6 flex items-center justify-center text-4xl font-bold text-white"
@@ -48,7 +50,11 @@ export default function About() {
                     viewport={{ once: true }}
                     transition={{ delay: 0.2, type: "spring" }}
                   >
-                    JS
+                    <img
+                      src="/img/johans.jpg"
+                      alt="Foto de Johans Valerio"
+                      className="rounded-full w-32 h-32"
+                    />
                   </motion.div>
                   <div className="flex flex-wrap gap-2 justify-center">
                     {highlights.map((highlight, index) => (

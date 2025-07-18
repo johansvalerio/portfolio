@@ -1,19 +1,14 @@
-import { getMessages } from "@/app/actions/contact/contact-actions";
-//import MessageList from "./components/MessageList";
 import MessagesPlayGround from "./components/MessagesPlayGround";
-import { type MensajeWithUser } from "@/app/types/mensaje";
 import authSession from "@/app/providers/auth-session";
 import { Session } from "next-auth";
 import GoogleButton from "../components/GoogleButtonSignIn";
 import { LightbulbIcon } from "lucide-react";
+import { getMessages } from "@/app/actions/contact/contact-actions";
+import { MensajeWithUser } from "@/app/types/mensaje";
 
 export default async function MisIdeasPage() {
-  const messages: MensajeWithUser[] = await getMessages();
   const session: Session | null = await authSession();
-
-  if (!messages) {
-    return null;
-  }
+  const messages: MensajeWithUser[] = await getMessages();
 
   if (!session) {
     return (

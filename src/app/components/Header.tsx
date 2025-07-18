@@ -28,6 +28,11 @@ interface navItems {
 const navItems = [
   { href: "/#home", label: "Inicio", icon: <Home className="h-4 w-4 mr-2" /> },
   {
+    href: "/#projects",
+    label: "Proyectos",
+    icon: <Layers className="h-4 w-4 mr-2" />,
+  },
+  {
     href: "/#about",
     label: "Sobre mí",
     icon: <User className="h-4 w-4 mr-2" />,
@@ -41,11 +46,6 @@ const navItems = [
     href: "/#skills",
     label: "Skills",
     icon: <Code2 className="h-4 w-4 mr-2" />,
-  },
-  {
-    href: "/#projects",
-    label: "Proyectos",
-    icon: <Layers className="h-4 w-4 mr-2" />,
   },
   {
     href: "/#contact",
@@ -80,7 +80,7 @@ export default function Header({ session }: { session: Session | null }) {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex-shrink-0">
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-primary/30 to-primary/40 bg-clip-text text-transparent">
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-primary bg-clip-text text-transparent">
               <Link href="/#home">Johans Valerio</Link>
             </h1>
           </div>

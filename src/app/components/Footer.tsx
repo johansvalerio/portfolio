@@ -36,10 +36,10 @@ const socialLinks: SocialLinks[] = [
 
 const quickLinks: QuickLinks[] = [
   { href: "/#home", label: "Inicio" },
+  { href: "/#projects", label: "Proyectos" },
   { href: "/#about", label: "Sobre mí" },
   { href: "/#studies", label: "Estudios" },
   { href: "/#skills", label: "Skills" },
-  { href: "/#projects", label: "Proyectos" },
   { href: "/#contact", label: "Contacto" },
 ];
 
@@ -50,7 +50,7 @@ export default function Footer() {
         <div className="grid md:grid-cols-3 gap-8">
           {/* Brand */}
           <div className="space-y-4">
-            <h3 className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/5 bg-clip-text text-transparent">
+            <h3 className="text-2xl font-bold bg-gradient-to-r from-primary/30 to-primary/40 bg-clip-text text-transparent">
               Johans Valerio
             </h3>
             <p className="text-muted-foreground">
