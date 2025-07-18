@@ -11,8 +11,10 @@ import {
 import { LogOut, LightbulbIcon } from "lucide-react";
 import { redirect } from "next/navigation";
 import { Session } from "next-auth";
+import { useRouter } from "next/navigation";
 
 export default function UserDropdown({ session }: { session: Session | null }) {
+  const router = useRouter();
   if (!session) return null;
 
   const userName = session?.user?.name || "";
@@ -22,8 +24,8 @@ export default function UserDropdown({ session }: { session: Session | null }) {
   const handleSignOut = async () => {
     try {
       console.log("handleSignOut called");
-      console.log("signOut es:", signOut);
       await signOut({ redirect: false });
+      router.refresh();
       // Eliminar el mensaje de bienvenida del localStorage
       localStorage.removeItem("welcomeShown");
     } catch (error) {

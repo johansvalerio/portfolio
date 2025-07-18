@@ -1,3 +1,4 @@
+  // @ts-expect-error - This is a workaround for Next.js 15
 import { NextAuthOptions, Session } from 'next-auth';
 import GoogleProvider from "next-auth/providers/google";
 import {db} from '@/lib/db';
