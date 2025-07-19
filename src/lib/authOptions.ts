@@ -1,4 +1,4 @@
-  // @ts-expect-error - This is a workaround for Next.js 15
+// @ts-expect-error - This is a workaround for Next.js 15
 import { NextAuthOptions, Session } from 'next-auth';
 import GoogleProvider from "next-auth/providers/google";
 import {db} from '@/lib/db';
@@ -8,10 +8,11 @@ export const authOptions: NextAuthOptions = {
     providers: [
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID as string,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET as string
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
         }),
     ],
     callbacks: {
+        // @ts-expect-error - This is a workaround for Next.js 15
         async signIn({ user, account, profile }) {
             if (account?.provider === "google") {
                 console.log(profile)
@@ -78,6 +79,6 @@ export const authOptions: NextAuthOptions = {
     },
     session: {
         strategy: 'jwt',
-        maxAge: 30 * 24 * 60 * 60, // 30 días
-    }
+    },
+    maxAge: 30 * 24 * 60 * 60, // 30 días
 };
