@@ -265,15 +265,15 @@ const Carousel3D = ({ cards = [],
     useEffect(() => {
         document.addEventListener("mousemove", handleDrag, { passive: true });
         document.addEventListener("touchmove", handleDrag, { passive: true });
-        document.addEventListener("mouseup", handleDragEnd);
-        document.addEventListener("touchend", handleDragEnd);
-        document.addEventListener("keydown", handleKeyDown);
+        document.addEventListener("mouseup", handleDragEnd, { passive: true });
+        document.addEventListener("touchend", handleDragEnd, { passive: true });
+        document.addEventListener("keydown", handleKeyDown, { passive: true });
         return () => {
             document.removeEventListener("mousemove", handleDrag, { passive: true });
             document.removeEventListener("touchmove", handleDrag, { passive: true });
-            document.removeEventListener("mouseup", handleDragEnd);
-            document.removeEventListener("touchend", handleDragEnd);
-            document.removeEventListener("keydown", handleKeyDown);
+            document.removeEventListener("mouseup", handleDragEnd, { passive: true });
+            document.removeEventListener("touchend", handleDragEnd, { passive: true });
+            document.removeEventListener("keydown", handleKeyDown, { passive: true });
         };
     }, [handleDrag, handleDragEnd, handleKeyDown]);
     // Resize handler to re-arrange cards and adjust rotation
