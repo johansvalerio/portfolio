@@ -131,18 +131,17 @@ function Projects() {
               viewport={{ once: true, margin: "-50px" }}
             >
               <div
-                className="border rounded-lg p-8 bg-gradient-to-br from-muted/20 to-muted/30
+                className="border rounded-lg md:p-4 bg-gradient-to-br from-muted/20 to-muted/30
           dark:bg-gradient-to-br dark:from-background dark:to-muted/10"
               >
                 <Carousel3D
                   cards={projectCards}
                   radius={400}
                   className="h-[600px]" // Altura del contenedor
-                  cardClassName="w-[275px] h-[400px] md:w-[300px] md:h-[400px]" // Tamaño de las tarjetas
+                  cardClassName="w-[250px] h-[400px] md:w-[300px] md:h-[375px]" // Tamaño de las tarjetas
                   enableGlitchEffect={true}
                   enableGlowEffect={true}
                   showControls={true}
-                  showThemeToggle={false}
                   onCardClick={(card, index) =>
                     console.log("Card clicked:", card.title, index)
                   }
@@ -152,7 +151,7 @@ function Projects() {
                   onRotate={(currentIndex) =>
                     console.log("Rotated to index:", currentIndex)
                   }
-                  autoRotate={true}
+                  autoRotate={false}
                   autoRotateInterval={4000}
                   pauseOnHover={true}
                 />

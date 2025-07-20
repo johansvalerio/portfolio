@@ -36,7 +36,7 @@
     ".next/types/**/*.ts",
     "src/lib/db.ts",
     "next-auth.d.ts"
-  ],
+, "src/components/lightswind/carousel-3d.tsx"  ],
   "exclude": [
     "node_modules"
   ]

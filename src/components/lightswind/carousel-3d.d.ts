@@ -23,7 +23,6 @@ interface Carousel3DProps {
     enableGlitchEffect?: boolean;
     enableGlowEffect?: boolean;
     showControls?: boolean;
-    showThemeToggle?: boolean;
     dragSensitivity?: number;
     transitionDuration?: number;
     onCardClick?: (card: CarouselCard, index: number) => void;
@@ -34,4 +33,4 @@ declare const Carousel3D: React.FC<Carousel3DProps>;
 
 export default Carousel3D;
 
-export type { CarouselCard };
+export type { CarouselCard, Carousel3DProps };
