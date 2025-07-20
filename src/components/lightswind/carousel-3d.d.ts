@@ -14,8 +14,8 @@ export interface CarouselCard {
 }
 interface Carousel3DProps {
     cards: CarouselCard[];
-    cardWidth?: number;
-    cardHeight?: number;
+    cardClassName?: string;
+    className?: string;
     radius?: number;
     autoRotate?: boolean;
     autoRotateInterval?: number;
@@ -26,7 +26,6 @@ interface Carousel3DProps {
     showThemeToggle?: boolean;
     dragSensitivity?: number;
     transitionDuration?: number;
-    className?: string;
     onCardClick?: (card: CarouselCard, index: number) => void;
     onCardFlip?: (card: CarouselCard, index: number, isFlipped: boolean) => void;
     onRotate?: (currentIndex: number) => void;
