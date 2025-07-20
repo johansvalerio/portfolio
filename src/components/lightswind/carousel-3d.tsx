@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { cn } from "../lib/utils";
 import { ChevronLeft, ChevronRight, Github, ExternalLink } from "lucide-react";
-import type { Carousel3DProps } from "./carousel-3d.d";
+import type { Carousel3DProps } from "@/components/lightswind/carousel-3d.d";
 
 const Carousel3D: React.FC<Carousel3DProps> = ({
   cards = [],

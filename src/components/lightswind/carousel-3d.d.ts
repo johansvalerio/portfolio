@@ -12,7 +12,7 @@ export interface CarouselCard {
     githubUrl?: string;
     liveUrl?: string;
 }
-interface Carousel3DProps {
+export interface Carousel3DProps {
     cards: CarouselCard[];
     cardClassName?: string;
     className?: string;

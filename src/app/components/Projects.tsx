@@ -1,7 +1,9 @@
 "use client";
 
 import React from "react";
-import Carousel3D, { CarouselCard } from "@/components/lightswind/carousel-3d"; // Adjust import path as needed
+import type { CarouselCard } from "@/components/lightswind/carousel-3d.d";
+import Carousel3D from "@/components/lightswind/carousel-3d";
+
 import { Bot, Code, Server, Smartphone, User } from "lucide-react";
 import { motion } from "framer-motion";
 
