@@ -25,7 +25,7 @@ export function ThemeToggle({ showLabel = false }: ThemeToggleProps) {
   };
 
   return (
-    <button
+    <a
       onClick={toggleTheme}
       className="cursor-pointer px-3 py-2 flex items-center text-muted-foreground hover:text-foreground transition-colors duration-200 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
       aria-label={`Cambiar a modo ${isDark ? "claro" : "oscuro"}`}
@@ -40,6 +40,6 @@ export function ThemeToggle({ showLabel = false }: ThemeToggleProps) {
           {isDark ? "Light mode" : "Dark mode"}
         </span>
       )}
-    </button>
+    </a>
   );
 }

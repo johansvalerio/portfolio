@@ -102,50 +102,62 @@ function Projects() {
   ];
 
   return (
-    <section id="projects" className="md:py-10 w-full">
+    <section id="projects" className="md:py-10 w-full ">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{
-            opacity: 1,
-            y: 0,
-            transition: { duration: 0.6 },
-          }}
-          viewport={{ once: true, margin: "-50px" }}
-          className="text-3xl sm:text-4xl font-bold py-15 text-center"
-        >
-          Mis{" "}
-          <span className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
-            Proyectos
-          </span>
-        </motion.h2>
-        <div className="md:py-20 py-10">
-          <div
-            className="border rounded-lg p-8 bg-gradient-to-br from-muted/20 to-muted/30
-          dark:bg-gradient-to-br dark:from-background dark:to-muted/10"
+        <div className="max-w-8xl mx-auto">
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{
+              opacity: 1,
+              y: 0,
+              transition: { duration: 0.6 },
+            }}
+            viewport={{ once: true, margin: "-50px" }}
+            className="text-3xl sm:text-4xl font-bold py-15 text-center"
           >
-            <Carousel3D
-              cards={projectCards}
-              cardWidth={300}
-              cardHeight={400}
-              radius={400}
-              enableGlitchEffect={true}
-              enableGlowEffect={true}
-              showControls={true}
-              showThemeToggle={false}
-              onCardClick={(card, index) =>
-                console.log("Card clicked:", card.title, index)
-              }
-              onCardFlip={(card, index, isFlipped) =>
-                console.log("Card flipped:", card.title, isFlipped)
-              }
-              onRotate={(currentIndex) =>
-                console.log("Rotated to index:", currentIndex)
-              }
-              autoRotate={true}
-              autoRotateInterval={4000}
-              pauseOnHover={true}
-            />
+            Mis{" "}
+            <span className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+              Proyectos
+            </span>
+          </motion.h2>
+          <div className="md:py-20 py-10">
+            <motion.div
+              initial={{ opacity: 0, y: -40 }}
+              whileInView={{
+                opacity: 1,
+                y: 0,
+                transition: { duration: 1 },
+              }}
+              viewport={{ once: true, margin: "-50px" }}
+            >
+              <div
+                className="border rounded-lg p-8 bg-gradient-to-br from-muted/20 to-muted/30
+          dark:bg-gradient-to-br dark:from-background dark:to-muted/10"
+              >
+                <Carousel3D
+                  cards={projectCards}
+                  radius={400}
+                  className="h-[600px]" // Altura del contenedor
+                  cardClassName="w-[275px] h-[400px] md:w-[300px] md:h-[400px]" // Tamaño de las tarjetas
+                  enableGlitchEffect={true}
+                  enableGlowEffect={true}
+                  showControls={true}
+                  showThemeToggle={false}
+                  onCardClick={(card, index) =>
+                    console.log("Card clicked:", card.title, index)
+                  }
+                  onCardFlip={(card, index, isFlipped) =>
+                    console.log("Card flipped:", card.title, isFlipped)
+                  }
+                  onRotate={(currentIndex) =>
+                    console.log("Rotated to index:", currentIndex)
+                  }
+                  autoRotate={true}
+                  autoRotateInterval={4000}
+                  pauseOnHover={true}
+                />
+              </div>
+            </motion.div>
           </div>
         </div>
       </div>

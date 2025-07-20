@@ -36,10 +36,10 @@ const socialLinks: SocialLinks[] = [
 
 const quickLinks: QuickLinks[] = [
   { href: "/#home", label: "Inicio" },
-  { href: "/#projects", label: "Proyectos" },
   { href: "/#about", label: "Sobre mí" },
-  { href: "/#studies", label: "Estudios" },
+  { href: "/#projects", label: "Proyectos" },
   { href: "/#skills", label: "Skills" },
+  { href: "/#studies", label: "Estudios" },
   { href: "/#contact", label: "Contacto" },
 ];
 

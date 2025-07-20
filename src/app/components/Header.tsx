@@ -11,7 +11,7 @@ import {
   Layers,
   Mail,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/components/lib/utils";
 import UserDropdown from "./UserDropdown";
 import UserMobileDropdown from "./UserMobileDropdown";
 import { ThemeToggle } from "./ThemeToggle";
@@ -26,11 +26,10 @@ interface navItems {
 }
 
 const navItems = [
-  { href: "/#home", label: "Inicio", icon: <Home className="h-4 w-4 mr-2" /> },
   {
-    href: "/#projects",
-    label: "Proyectos",
-    icon: <Layers className="h-4 w-4 mr-2" />,
+    href: "/#home",
+    label: "Inicio",
+    icon: <Home className="h-4 w-4 mr-2" />,
   },
   {
     href: "/#about",
@@ -38,14 +37,19 @@ const navItems = [
     icon: <User className="h-4 w-4 mr-2" />,
   },
   {
-    href: "/#studies",
-    label: "Estudios",
-    icon: <GraduationCap className="h-4 w-4 mr-2" />,
+    href: "/#projects",
+    label: "Proyectos",
+    icon: <Layers className="h-4 w-4 mr-2" />,
   },
   {
     href: "/#skills",
     label: "Skills",
     icon: <Code2 className="h-4 w-4 mr-2" />,
+  },
+  {
+    href: "/#studies",
+    label: "Estudios",
+    icon: <GraduationCap className="h-4 w-4 mr-2" />,
   },
   {
     href: "/#contact",
