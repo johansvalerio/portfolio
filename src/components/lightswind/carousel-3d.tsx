@@ -413,7 +413,7 @@ const Carousel3D: React.FC<Carousel3DProps> = ({
             <div
               key={card.id ?? index}
               className={cn(
-                "carousel-card absolute cursor-pointer",
+                "w-full h-full carousel-card absolute cursor-pointer",
                 cardClassName
               )}
               style={{
@@ -537,11 +537,11 @@ const Carousel3D: React.FC<Carousel3DProps> = ({
                         </span>
                       ))}
                     </div>
-                    <div className="flex-grow overflow-auto">
-                      <p className="text-xs m text-muted-foreground leading-relaxed mb-4">
+                    <div className="flex flex-col overflow-auto h-full">
+                      <p className="text-xs m text-muted-foreground leading-relaxed">
                         {card.content}
                       </p>
-                      <div className="flex gap-3 pt-3 mt-auto border-t border-border">
+                      <div className="flex gap-3 border-t pt-2 border-border mt-auto">
                         {card.githubUrl && card.githubUrl !== "#" && (
                           <a
                             href={card.githubUrl}

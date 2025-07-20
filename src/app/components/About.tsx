@@ -12,13 +12,13 @@ const highlights: string[] = [
 
 export default function About() {
   return (
-    <section id="about" className="relative md:py-20 py-10  w-full">
+    <section id="about" className="relative py-20 w-full">
       {/* Efecto de partículas sutiles */}
       <div className="absolute inset-0 bg-[radial-gradient(#6b7280_1px,transparent_1px)] dark:bg-[radial-gradient(#9ca3af_1px,transparent_1px)] [background-size:16px_16px] opacity-30 dark:opacity-15" />
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
           <motion.div
-            className="text-center py-10"
+            className="text-center mb-10"
             initial={{ opacity: 0, y: -20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}

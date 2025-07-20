@@ -103,7 +103,7 @@ function Projects() {
   ];
 
   return (
-    <section id="projects" className="md:py-10 w-full ">
+    <section id="projects" className="relative w-full py-20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-8xl mx-auto">
           <motion.h2
@@ -114,14 +114,14 @@ function Projects() {
               transition: { duration: 0.6 },
             }}
             viewport={{ once: true, margin: "-50px" }}
-            className="text-3xl sm:text-4xl font-bold py-15 text-center"
+            className="text-3xl sm:text-4xl mb-10 font-bold text-center"
           >
             Mis{" "}
             <span className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
               Proyectos
             </span>
           </motion.h2>
-          <div className="md:py-20 py-10">
+          <div className="relative pt-10">
             <motion.div
               initial={{ opacity: 0, y: -40 }}
               whileInView={{
@@ -139,7 +139,7 @@ function Projects() {
                   cards={projectCards}
                   radius={400}
                   className="h-[600px]" // Altura del contenedor
-                  cardClassName="w-[250px] h-[400px] md:w-[300px] md:h-[375px]" // Tamaño de las tarjetas
+                  cardClassName="w-[260px] h-[400px] md:w-[300px] md:h-[375px]" // Tamaño de las tarjetas
                   enableGlitchEffect={true}
                   enableGlowEffect={true}
                   showControls={true}
