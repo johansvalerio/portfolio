@@ -1,8 +1,9 @@
-// @ts-expect-error - This is a workaround for Next.js 15
-import { NextAuthOptions, Session } from 'next-auth';
+import type { NextAuthOptions, Account, Profile, User } from "next-auth";
+import type { Session } from "next-auth";
+import type { JWT } from "next-auth/jwt";
 import GoogleProvider from "next-auth/providers/google";
 import {db} from '@/lib/db';
-import { JWT } from 'next-auth/jwt';
+import {AdapterUser} from 'next-auth/adapters';
 
 export const authOptions: NextAuthOptions = {
     providers: [
@@ -12,8 +13,8 @@ export const authOptions: NextAuthOptions = {
         }),
     ],
     callbacks: {
-        // @ts-expect-error - This is a workaround for Next.js 15
-        async signIn({ user, account, profile }) {
+        async signIn({ user, account, profile }: { user: User | AdapterUser, account: Account | null, profile?: Profile }) {
+            try{
             if (account?.provider === "google") {
                 console.log(profile)
                 const userFound = await db.user.findUnique({
@@ -36,7 +37,11 @@ export const authOptions: NextAuthOptions = {
                 }
             }
             return true;
-        },
+        }catch(error){
+            console.log(error)
+            return false
+        }
+    },
         async session({ session, token }: { session: Session, token: JWT }) {
             if (session?.user) {
                 session.user.id = token.sub as string;
@@ -65,12 +70,11 @@ export const authOptions: NextAuthOptions = {
                     };
                 }
             }
-
-            // Si no encuentra el usuario pero hay un user (primer inicio de sesión)
+            // si el usuario no existe en la base de datos
             if (user) {
                 token.sub = user.id;
             }
-
+            
             return token;
         },
     },
@@ -79,6 +83,5 @@ export const authOptions: NextAuthOptions = {
     },
     session: {
         strategy: 'jwt',
-    },
-    maxAge: 30 * 24 * 60 * 60, // 30 días
+    }
 };

@@ -19,7 +19,7 @@ import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
 import GoogleButton from "./GoogleButtonSignIn";
-import { FormState } from "@/app/types/formState";
+import { FormState } from "@/types/formState";
 import { useRouter } from "next/navigation";
 
 interface ContactInfo {
@@ -291,6 +291,8 @@ export default function Contact() {
                       id="message"
                       placeholder="Cuéntame más..."
                       className="min-h-[150px]"
+                      maxLength={500}
+                      minLength={10}
                     />
                   </motion.div>
 

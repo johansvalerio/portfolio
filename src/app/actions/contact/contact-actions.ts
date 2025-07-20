@@ -2,10 +2,7 @@
 import {db} from '@/lib/db'
 import authSession from '@/app/providers/auth-session';
 import { revalidatePath } from 'next/cache';
-interface FormState {
-  error?: string;
-  success?: string;
-}
+import { FormState } from '@/types/formState';
 
 //iterar entre estados, buscar el valor siguiente
 const statusMap: Record<string, string> = {

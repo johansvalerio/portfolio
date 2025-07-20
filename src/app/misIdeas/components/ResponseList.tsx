@@ -1,13 +1,16 @@
 import { formatDate } from "@/app/helpers/formatDate";
 import { Separator } from "@radix-ui/react-separator";
 import { Reply } from "lucide-react";
-import type { MensajeWithUser } from "@/app/types/mensaje";
+import type { MensajeWithUser } from "@/types/mensaje";
 import DeleteResponse from "./DeleteResponse";
+import { Session } from "next-auth";
 
 export default function ResponseMessages({
   selectedMessage,
+  session,
 }: {
   selectedMessage: MensajeWithUser | null;
+  session: Session | null;
 }) {
   if (!selectedMessage?.response || selectedMessage?.response.length <= 0) {
     return <p className="text-muted-foreground">No hay respuestas aún.</p>;
@@ -32,7 +35,10 @@ export default function ResponseMessages({
                   </div>
                 </div>
                 <div>
-                  <DeleteResponse responseId={res.response_id} />
+                  <DeleteResponse
+                    responseId={res.response_id}
+                    session={session}
+                  />
                 </div>
               </div>
             </div>

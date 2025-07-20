@@ -1,6 +1,6 @@
 "use client";
 import type { Session } from "next-auth";
-import { type MensajeWithUser } from "@/app/types/mensaje";
+import { type MensajeWithUser } from "@/types/mensaje";
 import { useActionState, useEffect } from "react";
 
 import { patchStatus } from "@/app/actions/contact/contact-actions";

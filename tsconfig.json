@@ -18,6 +18,8 @@
     "jsx": "preserve",
     "baseUrl": ".",
     "incremental": true,
+    "typeRoots": ["./node_modules/@types", "./src/types"],
+    "types": ["node", "next"],
     "plugins": [
       {
         "name": "next"
@@ -35,8 +37,8 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "src/lib/db.ts",
-    "next-auth.d.ts"
-, "src/components/lightswind/carousel-3d.tsx"  ],
+    "src/lib/authOptions.ts",
+    "src/types/next-auth.d.ts"],
   "exclude": [
     "node_modules"
   ]

@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef, useState, useCallback } from "react";
-import { cn } from "../lib/utils";
+import { cn } from "@/components/utils/ui/utils";
 import { ChevronLeft, ChevronRight, Github, ExternalLink } from "lucide-react";
 import type { Carousel3DProps } from "@/components/lightswind/carousel-3d.d";
 

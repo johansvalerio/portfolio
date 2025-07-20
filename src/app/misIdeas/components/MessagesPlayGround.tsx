@@ -6,7 +6,7 @@ import ResponseCard from "./ResponseCard";
 import Link from "next/link";
 import { LightbulbIcon } from "lucide-react";
 import { useState } from "react";
-import { MensajeWithUser } from "@/app/types/mensaje";
+import { MensajeWithUser } from "@/types/mensaje";
 
 export default function MessagesPlayGround({
   messages,

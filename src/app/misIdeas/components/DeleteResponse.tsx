@@ -5,16 +5,16 @@ import { useRouter } from "next/navigation";
 import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
 import { deleteResponse } from "@/app/actions/contact/contact-actions";
-import { useSession } from "next-auth/react";
+import { Session } from "next-auth";
+import { FormState } from "@/types/formState";
 
-interface FormState {
-  error?: string;
-  success?: string;
-}
-
-export default function DeleteResponse({ responseId }: { responseId: number }) {
-  const { data: session } = useSession();
-  // @ts-expect-error - This is a workaround for Next.js 15
+export default function DeleteResponse({
+  responseId,
+  session,
+}: {
+  responseId: number;
+  session: Session | null;
+}) {
   const roleSession = session?.user.role === 1;
   const router = useRouter();
   const initialState = {};

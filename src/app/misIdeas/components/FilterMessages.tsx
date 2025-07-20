@@ -1,5 +1,5 @@
 "use client";
-import { MensajeWithUser } from "@/app/types/mensaje";
+import { MensajeWithUser } from "@/types/mensaje";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import MessageList from "./MessageList";

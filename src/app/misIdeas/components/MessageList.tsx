@@ -1,6 +1,6 @@
 "use client";
 import { LightbulbIcon } from "lucide-react";
-import { MensajeWithUser } from "@/app/types/mensaje";
+import { MensajeWithUser } from "@/types/mensaje";
 import { Session } from "next-auth";
 import { formatDate } from "@/app/helpers/formatDate";
 import { Avatar, AvatarImage, AvatarFallback } from "@radix-ui/react-avatar";
@@ -8,7 +8,7 @@ import Loading from "./Loading";
 import StatusChangeForm from "./StatusChangeForm";
 import { useActionState, useEffect, useMemo, useRef, useState } from "react";
 import { useInView } from "react-intersection-observer";
-import { FormState } from "@/app/types/formState";
+import { FormState } from "@/types/formState";
 import { readMessage } from "@/app/actions/contact/contact-actions";
 import { useRouter } from "next/navigation";
 

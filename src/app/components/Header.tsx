@@ -11,7 +11,7 @@ import {
   Layers,
   Mail,
 } from "lucide-react";
-import { cn } from "@/components/lib/utils";
+import { cn } from "@/components/utils/ui/utils";
 import UserDropdown from "./UserDropdown";
 import UserMobileDropdown from "./UserMobileDropdown";
 import { ThemeToggle } from "./ThemeToggle";

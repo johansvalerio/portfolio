@@ -5,7 +5,7 @@ import { ArrowLeft, Calendar } from "lucide-react";
 import ResponseForm from "./ResponseForm";
 import ResponseList from "./ResponseList";
 import type { Session } from "next-auth";
-import { MensajeWithUser } from "@/app/types/mensaje";
+import { MensajeWithUser } from "@/types/mensaje";
 import StatusChangeForm from "./StatusChangeForm";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
@@ -83,7 +83,7 @@ export default function MessageDetails({
             </div>
           </div>
           {/* Respuestas */}
-          <ResponseList selectedMessage={selectedMessage} />
+          <ResponseList selectedMessage={selectedMessage} session={session} />
         </div>
         {session && session.user.role === 1 && (
           <ResponseForm selectedMessage={selectedMessage} />

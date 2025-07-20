@@ -86,7 +86,7 @@ function Projects() {
       preview:
         "Mi espacio digital con carrusel 3D, mensajería en tiempo real y panel de control. Tecnología de punta con un toque personal.",
       content:
-        "Portafolio profesional desarrollado con Next.js 14 y TypeScript. Incluye gestión de ideas y mensajería, autenticación con NextAuth, panel de administración, diseño responsive, modo oscuro y animaciones con Framer Motion. Destaca por su carrusel 3D interactivo y está optimizado para SEO.",
+        "Portafolio profesional desarrollado con Next.js 14 y TypeScript. Incluye gestión de ideas y mensajería, autenticación con NextAuth, panel de administración, diseño responsive, modo oscuro y animaciones con Framer Motion. Destaca por su carrusel 3D interactivo y la aplicación está optimizada para SEO.",
       imageUrl: "/img/portfolio.jpg",
       technologies: [
         "Next.js",
@@ -114,7 +114,7 @@ function Projects() {
               transition: { duration: 0.6 },
             }}
             viewport={{ once: true, margin: "-50px" }}
-            className="text-3xl sm:text-4xl mb-10 font-bold text-center"
+            className="text-3xl sm:text-4xl mb-16 font-bold text-center"
           >
             Mis{" "}
             <span className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">

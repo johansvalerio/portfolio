@@ -4,7 +4,7 @@ import { Session } from "next-auth";
 import GoogleButton from "../components/GoogleButtonSignIn";
 import { LightbulbIcon } from "lucide-react";
 import { getMessages } from "@/app/actions/contact/contact-actions";
-import { MensajeWithUser } from "@/app/types/mensaje";
+import { MensajeWithUser } from "@/types/mensaje";
 
 export default async function MisIdeasPage() {
   const session: Session | null = await authSession();
