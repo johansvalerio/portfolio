@@ -3,12 +3,9 @@ import authSession from "@/app/providers/auth-session";
 import { Session } from "next-auth";
 import GoogleButton from "../components/GoogleButtonSignIn";
 import { LightbulbIcon } from "lucide-react";
-import { getMessages } from "@/app/actions/contact/contact-actions";
-import { MensajeWithUser } from "@/types/mensaje";
 
 export default async function MisIdeasPage() {
   const session: Session | null = await authSession();
-  const messages: MensajeWithUser[] = await getMessages();
 
   if (!session) {
     return (
@@ -32,7 +29,7 @@ export default async function MisIdeasPage() {
 
   return (
     <main className="min-h-screen w-full py-20 bg-gradient-to-br from-primary/5 to-blue-600/5">
-      <MessagesPlayGround messages={messages} session={session} />
+      <MessagesPlayGround session={session} />
     </main>
   );
 }

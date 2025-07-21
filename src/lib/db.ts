@@ -3,35 +3,31 @@ import { neon, neonConfig } from '@neondatabase/serverless';
 import { PrismaClient } from '@prisma/client';
 import ws from 'ws';
 
-// Configuración de WebSocket para Neon DB
 neonConfig.webSocketConstructor = ws;
 
 const isProduction = process.env.NODE_ENV === 'production';
 
-const createPrismaClient = () => {
-  if (isProduction) {
-    const connectionString = process.env.DATABASE_URL;
-    
-    if (!connectionString) {
-      throw new Error('❌ DATABASE_URL is required in production environment');
-    }
-    
-    // Para consultas SQL directas
-    const sql = neon(connectionString);
-    console.log(sql)
-    
-    // Para Prisma
-    return new PrismaClient({
-      datasourceUrl: connectionString,
-      log: ['error', 'warn'],
-    });
-  } else {
-    console.log('💻 Using local database in development mode');
-    return new PrismaClient({
-      log: ['error', 'warn'],
-    });
-  }
-};
+// Extiende el tipo global para permitir la reutilización de PrismaClient
+declare global {
+  var prisma: PrismaClient | undefined;
+  var neonSql: ReturnType<typeof neon> | undefined;
+}
 
-export const db = createPrismaClient();
-export const sql = neon(process.env.DATABASE_URL!);
+// Crear PrismaClient solo si no existe
+const prismaClient = global.prisma ?? new PrismaClient({
+  log: ['error', 'warn'],
+  ...(isProduction && {
+    datasourceUrl: process.env.DATABASE_URL,
+  }),
+});
+
+// Solo en desarrollo, guardamos la instancia en global para evitar recargas múltiples
+if (!isProduction) global.prisma = prismaClient;
+
+// Neon SQL directo (puede que no lo uses, pero lo incluimos)
+const sqlInstance = global.neonSql ?? neon(process.env.DATABASE_URL!);
+if (!isProduction) global.neonSql = sqlInstance;
+
+// Exportar
+export const db = prismaClient;
+export const sql = sqlInstance;

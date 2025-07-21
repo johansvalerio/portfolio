@@ -1,5 +1,5 @@
 'use server'
-import {db} from '@/lib/db'
+import { db } from '@/lib/db'
 import authSession from '@/app/providers/auth-session';
 import { revalidatePath } from 'next/cache';
 import { FormState } from '@/types/formState';
@@ -36,19 +36,25 @@ export async function createContact(prevState: FormState | undefined, formData: 
     // Obtener el id del usuario mediante la sesión
     const userId = session.user.id
 
-    // Guardar en la base de datos
-    const newMessage = await db.mensaje.create({
-      data: {
-        userId: Number(userId),
-        mensaje_title: title,
-        mensaje_description: message,
+    // Llamar al API Route que crea el mensaje y emite el evento
+    const response = await fetch(`${process.env.NEXTAUTH_URL || "http://localhost:3000"}/api/messages/create`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
-    })
+      body: JSON.stringify({ title, message, userId: Number(userId) }),
+    });
 
-    console.log('Nueva idea creada:', newMessage)
+    if (!response.ok) {
+      const errorData = await response.json();
+      return { error: errorData.error || "Error al crear mensaje" };
+    }
 
-    // Revalidar la ruta si es necesario
-     revalidatePath('/')
+    // Si quieres, puedes obtener el mensaje creado
+    const newMessage = await response.json();
+    console.log('Nuevo mensaje creado:', newMessage);
+
+    revalidatePath('/misIdeas')
 
     return { success: 'Idea enviada correctamente' }
   } catch (error) {
@@ -72,7 +78,7 @@ export async function getMessages() {
         mensaje_created_on: 'desc',
       },
     });
-   
+
     return messages;
   } catch (error) {
     console.error('Error al obtener los mensajes:', error);
@@ -82,11 +88,11 @@ export async function getMessages() {
 
 export async function patchStatus(prevState: FormState | undefined, formData: FormData): Promise<FormState> {
   //iterar entre estados, buscar el valor siguiente
-const statusMap: Record<string, string> = {
-  'Enviado': 'En revisión',
-  'En revisión': 'Visto bueno',
-  'Visto bueno': 'Enviado', // o el estado que corresponda como "default"
-};
+  const statusMap: Record<string, string> = {
+    'Enviado': 'En revisión',
+    'En revisión': 'Visto bueno',
+    'Visto bueno': 'Enviado', // o el estado que corresponda como "default"
+  };
 
   try {
     const session = await authSession()

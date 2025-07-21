@@ -42,11 +42,14 @@ export default function MessageList({
   const handleIsOpen = (id: number) => {
     if (messageId === id) {
       setMessageId(null); // Cierra si ya está abierto
-      router.refresh();
+      formRefs.current[id]?.requestSubmit(); // Marca como leído
+      console.log("Cerrando mensaje con ID:", id);
+
     } else {
+      console.log("Abriendo mensaje con ID:", id);
       setMessageId(id); // Abre el nuevo mensaje
       formRefs.current[id]?.requestSubmit(); // Marca como leído
-      router.refresh();
+
     }
   };
 
@@ -98,15 +101,14 @@ export default function MessageList({
             <div
               key={message.mensaje_id}
               className={`p-4 cursor-pointer border-b transition-all duration-100 
-                                     ${
-                                       isSelected
-                                         ? "dark:bg-muted dark:hover:bg-muted/90 bg-primary/20 hover:bg-primary/10 border-l-4 border-l-muted-foreground"
-                                         : isResponseNotSeen
-                                           ? "bg-green-200/70 hover:bg-green-200 dark:bg-green-600/40 dark:hover:bg-green-500/20"
-                                           : isMessageNotSeen
-                                             ? "bg-blue-200/70 hover:bg-blue-200 dark:bg-indigo-600/40 dark:hover:bg-indigo-500/20  border-l-blue-400 dark:border-l-indigo-500"
-                                             : "hover:bg-primary/10 border-transparent dark:hover:bg-muted/50 dark:bg-muted"
-                                     }
+                                     ${isSelected
+                  ? "dark:bg-muted dark:hover:bg-muted/90 bg-primary/20 hover:bg-primary/10 border-l-4 border-l-muted-foreground"
+                  : isResponseNotSeen
+                    ? "bg-green-200/70 hover:bg-green-200 dark:bg-green-600/40 dark:hover:bg-green-500/20"
+                    : isMessageNotSeen
+                      ? "bg-blue-200/70 hover:bg-blue-200 dark:bg-indigo-600/40 dark:hover:bg-indigo-500/20  border-l-blue-400 dark:border-l-indigo-500"
+                      : "hover:bg-primary/10 border-transparent dark:hover:bg-muted/50 dark:bg-muted"
+                }
             `}
               onClick={() => handleIsOpen(message.mensaje_id)}
             >
@@ -188,10 +190,10 @@ export default function MessageList({
                   <p className="text-xs text-right text-muted-foreground">
                     {getResponseCountByMessageId(message.mensaje_id) === 1
                       ? getResponseCountByMessageId(message.mensaje_id) +
-                        " respuesta"
+                      " respuesta"
                       : getResponseCountByMessageId(message.mensaje_id) > 1
                         ? getResponseCountByMessageId(message.mensaje_id) +
-                          " respuestas"
+                        " respuestas"
                         : "Sin respuestas"}
                   </p>
                 </div>

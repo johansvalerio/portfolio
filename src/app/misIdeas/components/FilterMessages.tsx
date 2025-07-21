@@ -10,75 +10,39 @@ import {
   CheckCircleIcon,
   SearchIcon,
 } from "lucide-react";
-import { useState, useMemo } from "react";
-import { Session } from "next-auth";
+import { useMemo, type Dispatch, type SetStateAction } from "react";
+import type { Session } from "next-auth";
 import { Badge } from "@/components/ui/badge";
 
+type ActiveFilter = "unread" | "unanswered" | "responded" | null;
+
 interface FilterMessagesProps {
-  messages: MensajeWithUser[] | null;
+  allMessages: MensajeWithUser[];
+  filteredMessages: MensajeWithUser[];
   messageId: number | null;
   setMessageId: (messageId: number | null) => void;
   session: Session | null;
+  searchTerm: string;
+  setSearchTerm: (term: string) => void;
+  activeFilter: ActiveFilter;
+  setActiveFilter: Dispatch<SetStateAction<ActiveFilter>>;
 }
 
 export default function FilterMessages({
-  messages,
+  allMessages,
+  filteredMessages,
   messageId,
   setMessageId,
   session,
+  searchTerm,
+  setSearchTerm,
+  activeFilter,
+  setActiveFilter,
 }: FilterMessagesProps) {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [activeFilter, setActiveFilter] = useState<
-    "unread" | "unanswered" | "responded" | null
-  >(null);
-
-  //mensajes por usuario
-  const userMessages = useMemo(
-    () =>
-      messages?.filter(
-        (message) =>
-          message.userId === Number(session?.user.id) ||
-          session?.user.role === 1
-      ) || [],
-    [messages, session?.user.id, session?.user.role]
-  );
-  //mensajes filtrados con search params
-  const filteredMessages = useMemo(() => {
-    let result = userMessages;
-
-    if (activeFilter === "unread") {
-      result = result.filter((msg) => !msg.mensaje_isRead);
-    }
-
-    if (activeFilter === "unanswered") {
-      result = result.filter(
-        (msg) =>
-          Array.isArray(msg.response) &&
-          msg.response.some((res) => !res.response_isRead)
-      );
-    }
-
-    if (activeFilter === "responded") {
-      result = result.filter(
-        (msg) => Array.isArray(msg.response) && msg.response.length > 0
-      );
-    }
-
-    return result.filter(
-      (msg) =>
-        msg.mensaje_title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        msg.mensaje_description
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase()) ||
-        (msg.user?.user_name?.toLowerCase() || "").includes(
-          searchTerm.toLowerCase()
-        )
-    );
-  }, [userMessages, searchTerm, activeFilter]);
   //Total de mensajes sin ver
   const cantMessageNotSeen = useMemo(
-    () => userMessages.filter((message) => !message.mensaje_isRead).length,
-    [userMessages]
+    () => allMessages.filter((message) => !message.mensaje_isRead).length,
+    [allMessages]
   );
 
   //las respuesta pueden ser varias a un mismo mensaje, por eso verificamos si la
@@ -86,25 +50,25 @@ export default function FilterMessages({
   //Esta es la cantidad de mensajes que han sido respondidos
   const cantResponseMessages = useMemo(
     () =>
-      userMessages.filter(
+      allMessages.filter(
         (message) =>
           Array.isArray(message.response) && message.response.length > 0
       ).length,
-    [userMessages]
+    [allMessages]
   );
   //Total de respuestas sin ver
   const cantResponseNotSeen = useMemo(
     () =>
-      userMessages.filter(
+      allMessages.filter(
         (message) =>
           Array.isArray(message.response) &&
           message.response.some((res) => res.response_isRead === false)
       ).length,
-    [userMessages]
+    [allMessages]
   );
   // //El total de todas las respuestas de todos los mensajes
   // const allResponseMessages = useMemo(() =>
-  //     userMessages.reduce(
+  //     allMessages.reduce(
   //         (acc, message) =>
   //             acc + (Array.isArray(message.response) ? message.response.length : 0),
   //         0
@@ -210,9 +174,9 @@ export default function FilterMessages({
             </div>
             <Badge
               className="bg-slate-500 text-white px-2 py-1 text-xs rounded-full"
-              title={`${userMessages.length} ideas totales`}
+              title={`${allMessages.length} ideas totales`}
             >
-              {userMessages.length}
+              {allMessages.length}
             </Badge>
           </div>
         </div>
