@@ -3,26 +3,30 @@ import {db} from '@/lib/db'
 import authSession from '@/app/providers/auth-session';
 import { revalidatePath } from 'next/cache';
 import { FormState } from '@/types/formState';
-
-//iterar entre estados, buscar el valor siguiente
-const statusMap: Record<string, string> = {
-  'Enviado': 'En revisión',
-  'En revisión': 'Visto bueno',
-  'Visto bueno': 'Enviado', // o el estado que corresponda como "default"
-};
+import { createMessageSchema } from '@/app/helpers/validations/createMessageSchema';
+import { createResponseSchema } from '@/app/helpers/validations/createResponseSchema';
+import { deleteResponseSchema } from '@/app/helpers/validations/deleteResponseSchema';
+import { patchMessageStatusSchema } from '@/app/helpers/validations/patchMessageStatusSchema';
+import { FORM_FIELDS } from '@/app/helpers/form-fields';
 
 export async function createContact(prevState: FormState | undefined, formData: FormData) {
 
   try {
-    const title = formData.get('title') as string
-    const message = formData.get('message') as string
-
-    // Validación básica
-    if (!title || !message) {
-      return { error: 'Todos los campos son requeridos' }
+    const rawData = {
+      title: formData.get(FORM_FIELDS.CONTACT.TITLE),
+      message: formData.get(FORM_FIELDS.CONTACT.DESCRIPTION),
     }
-    console.log(title)
-    console.log(message)
+
+    const result = createMessageSchema.safeParse(rawData)
+
+    if (!result.success) {
+      const errors = result.error.flatten().fieldErrors;
+      return {
+        error: errors.title?.[0] || errors.message?.[0] || "Datos inválidos",
+      };
+    }
+
+    const { title, message } = result.data;
 
     const session = await authSession()
     if (!session) {
@@ -77,6 +81,13 @@ export async function getMessages() {
 }
 
 export async function patchStatus(prevState: FormState | undefined, formData: FormData): Promise<FormState> {
+  //iterar entre estados, buscar el valor siguiente
+const statusMap: Record<string, string> = {
+  'Enviado': 'En revisión',
+  'En revisión': 'Visto bueno',
+  'Visto bueno': 'Enviado', // o el estado que corresponda como "default"
+};
+
   try {
     const session = await authSession()
     if (!session) {
@@ -88,18 +99,32 @@ export async function patchStatus(prevState: FormState | undefined, formData: Fo
     }
 
     // Obtener el mensaje_id del formulario
-    const mensaje_id = Number(formData.get('mensaje_id'))
+    const rawData = {
+      mensajeId: formData.get(FORM_FIELDS.MESSAGE_STATUS.MENSAJE_ID),
+    }
+
+    // Validar el mensaje_id
+    const result = patchMessageStatusSchema.safeParse(rawData)
+
+    if (!result.success) {
+      const errors = result.error.flatten().fieldErrors;
+      return {
+        error: errors.mensajeId?.[0] || "Datos inválidos",
+      };
+    }
+
+    const { mensajeId } = result.data;
 
     const messageSent = await db.mensaje.findFirst({
       where: {
-        mensaje_id: mensaje_id,
+        mensaje_id: mensajeId,
       }
     })
 
     const nextStatus = statusMap[messageSent?.mensaje_status ?? ''] || 'Enviado';
 
     const newStatus = await db.mensaje.update({
-      where: { mensaje_id },
+      where: { mensaje_id: mensajeId },
       data: { mensaje_status: nextStatus },
     });
 
@@ -122,19 +147,31 @@ export async function readMessage(prevState: FormState | undefined, formData: Fo
 
     if (session.user.role === 1) {
       // Obtener el mensaje_id del formulario
-      const mensaje_id = Number(formData.get('mensaje_id'))
-      if (!mensaje_id) return { error: 'No se encontró el mensaje' }
+      const rawData = {
+        mensajeId: formData.get(FORM_FIELDS.IS_READ.MENSAJE_ID),
+      }
+
+      const result = patchMessageStatusSchema.safeParse(rawData)
+
+      if (!result.success) {
+        const errors = result.error.flatten().fieldErrors;
+        return {
+          error: errors.mensajeId?.[0] || "Datos inválidos",
+        };
+      }
+
+      const { mensajeId } = result.data;
 
       const messageSent = await db.mensaje.findFirst({
         where: {
-          mensaje_id: mensaje_id,
+          mensaje_id: mensajeId,
         }
       })
 
       if (messageSent?.mensaje_isRead === false) {
         // Ver el mensaje y marcar como visto
         const isRead = await db.mensaje.update({
-          where: { mensaje_id },
+          where: { mensaje_id: mensajeId },
           data: { mensaje_isRead: true },
         })
         revalidatePath('/misIdeas')
@@ -144,9 +181,19 @@ export async function readMessage(prevState: FormState | undefined, formData: Fo
       return {}
     } else {
       // Obtener todos los response_id enviados (pueden ser varios)
-      const responseIds = formData.getAll('response_id').map(Number);
+      const rawData = {
+        responseIds: formData.getAll(FORM_FIELDS.IS_READ.RESPONSE_ID).map(Number),
+      }
+      const result = patchMessageStatusSchema.safeParse(rawData)
 
-      if (responseIds.length < 0) return { error: 'No se encontraron las respuestas' }
+      if (!result.success) {
+        const errors = result.error.flatten().fieldErrors;
+        return {
+          error: errors.responseIds?.[0] || "Datos inválidos",
+        };
+      }
+
+      const { responseIds } = result.data;
 
       const responses = await db.response.findMany({
         where: { response_id: { in: responseIds } }
@@ -177,20 +224,21 @@ export async function readMessage(prevState: FormState | undefined, formData: Fo
 //Lógica para las respuestas, mover a otro archivo recordatorio
 export async function createResponse(prevState: FormState | undefined, formData: FormData): Promise<FormState> {
   try {
-    const message = formData.get('mensaje_id') as string
-    const response = formData.get('response_description') as string
-
-    console.log(message)
-    console.log(response)
-
-    // Validación básica
-    if (!response) {
-      return { error: 'Todos los campos son requeridos' }
+    const rawData = {
+      mensajeId: formData.get(FORM_FIELDS.RESPONSE.MENSAJE_ID),
+      response: formData.get(FORM_FIELDS.RESPONSE.DESCRIPTION),
     }
-    if (!message) {
-      return { error: 'Todos los campos son requeridos' }
+
+    const result = createResponseSchema.safeParse(rawData)
+
+    if (!result.success) {
+      const errors = result.error.flatten().fieldErrors;
+      return {
+        error: errors.mensajeId?.[0] || errors.response?.[0] || "Datos inválidos",
+      };
     }
-    console.log(message)
+
+    const { mensajeId, response } = result.data;
 
     const session = await authSession()
     if (!session) {
@@ -208,7 +256,7 @@ export async function createResponse(prevState: FormState | undefined, formData:
     const newResponse = await db.response.create({
       data: {
         userId: Number(userId),
-        mensajeId: Number(message),
+        mensajeId: mensajeId,
         response_description: response,
       },
     })
@@ -224,15 +272,21 @@ export async function createResponse(prevState: FormState | undefined, formData:
 }
 
 export async function deleteResponse(prevState: FormState | undefined, formData: FormData) {
-
   try {
-    const responseId = Number(formData.get("response_id"))
-
-    // Validación básica
-    if (!responseId) {
-      return { error: 'Todos los campos son requeridos' }
+    const rawData = {
+      responseId: formData.get(FORM_FIELDS.DELETE_RESPONSE.RESPONSE_ID),
     }
-    console.log(responseId)
+
+    const result = deleteResponseSchema.safeParse(rawData)
+
+    if (!result.success) {
+      const errors = result.error.flatten().fieldErrors;
+      return {
+        error: errors.responseId?.[0] || "Datos inválidos",
+      };
+    }
+
+    const { responseId } = result.data;
 
     const session = await authSession()
     if (!session) {
@@ -246,7 +300,7 @@ export async function deleteResponse(prevState: FormState | undefined, formData:
     // Remover respuesta de la base de datos
     const deleteRes = await db.response.delete({
       where: {
-        response_id: Number(responseId)
+        response_id: responseId
       }
     })
 

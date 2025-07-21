@@ -7,6 +7,7 @@ import { createResponse } from "@/app/actions/contact/contact-actions";
 import { SendIcon, ThumbsUpIcon } from "lucide-react";
 import type { MensajeWithUser } from "@/types/mensaje";
 import { Button } from "@/components/ui/button";
+import { FORM_FIELDS } from "@/app/helpers/form-fields";
 
 interface FormState {
   error?: string;
@@ -50,7 +51,7 @@ export default function ResponseForm({
     <form action={formAction} className="border-t pt-6 ">
       <input
         type="hidden"
-        name="mensaje_id"
+        name={FORM_FIELDS.RESPONSE.MENSAJE_ID}
         value={selectedMessage?.mensaje_id}
       />
       <label htmlFor="reply" className="text-base font-medium">
@@ -59,7 +60,7 @@ export default function ResponseForm({
       <div className="mt-3 space-y-4">
         <Textarea
           id="reply"
-          name="response_description"
+          name={FORM_FIELDS.RESPONSE.DESCRIPTION}
           placeholder="Escribe tu respuesta..."
           value={replyText}
           onChange={(e) => setReplyText(e.target.value)}

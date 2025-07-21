@@ -21,6 +21,7 @@ import confetti from "canvas-confetti";
 import GoogleButton from "./GoogleButtonSignIn";
 import { FormState } from "@/types/formState";
 import { useRouter } from "next/navigation";
+import { FORM_FIELDS } from "../helpers/form-fields";
 
 interface ContactInfo {
   icon: React.ReactNode;
@@ -267,7 +268,7 @@ export default function Contact() {
                   >
                     <Label htmlFor="title">Título</Label>
                     <Input
-                      name="title"
+                      name={FORM_FIELDS.CONTACT.TITLE}
                       id="title"
                       placeholder="Título de mi idea"
                       className="h-12"
@@ -286,12 +287,12 @@ export default function Contact() {
                   >
                     <Label htmlFor="message">Mensaje</Label>
                     <Textarea
-                      name="message"
+                      name={FORM_FIELDS.CONTACT.DESCRIPTION}
                       required
                       id="message"
                       placeholder="Cuéntame más..."
                       className="min-h-[150px]"
-                      maxLength={500}
+                      maxLength={200}
                       minLength={10}
                     />
                   </motion.div>

@@ -84,9 +84,9 @@ function Projects() {
       title: "Mi Portafolio",
       icon: <User />,
       preview:
-        "Mi espacio digital con carrusel 3D, mensajería en tiempo real y panel de control. Tecnología de punta con un toque personal.",
+        "Mi portafolio profesional interactivo con sistema de mensajería y panel de administración.",
       content:
-        "Portafolio profesional desarrollado con Next.js 14 y TypeScript. Incluye gestión de ideas y mensajería, autenticación con NextAuth, panel de administración, diseño responsive, modo oscuro y animaciones con Framer Motion. Destaca por su carrusel 3D interactivo y la aplicación está optimizada para SEO.",
+        "Portafolio profesional desarrollado con Next.js 14 y TypeScript. Incluye gestión de ideas y mensajería, autenticación con NextAuth, panel de administración, diseño responsive, modo oscuro y animaciones con Framer Motion, utiliza Zod para validaciones y la aplicación está optimizada para SEO.",
       imageUrl: "/img/portfolio.jpg",
       technologies: [
         "Next.js",
@@ -94,6 +94,7 @@ function Projects() {
         "Tailwind CSS",
         "Framer Motion",
         "NextAuth",
+        "Zod",
         "Prisma",
         "PostgreSQL",
       ],

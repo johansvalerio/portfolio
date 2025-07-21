@@ -61,6 +61,7 @@ const technologies: string[] = [
   "Entity Framework",
   "Git/GitHub",
   "Vercel",
+  "Zod",
 ];
 
 export default function Skills() {

@@ -12,6 +12,7 @@ import {
   ThumbsUpIcon,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { FORM_FIELDS } from "@/app/helpers/form-fields";
 
 interface FormState {
   error?: string;
@@ -67,7 +68,11 @@ export default function StatusChangeForm({
   }, [state, router]); // Solo se ejecutará cuando state cambie o router cambie
   return (
     <form action={formAction} className="mt-auto">
-      <input type="hidden" name="mensaje_id" value={message.mensaje_id} />
+      <input
+        type="hidden"
+        name={FORM_FIELDS.MESSAGE_STATUS.MENSAJE_ID}
+        value={message.mensaje_id}
+      />
       <div className="flex justify-end">
         <button
           onClick={(e) => {

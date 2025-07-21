@@ -1,6 +1,10 @@
 // src/lib/db.ts
-import { neon } from '@neondatabase/serverless';
+import { neon, neonConfig } from '@neondatabase/serverless';
 import { PrismaClient } from '@prisma/client';
+import ws from 'ws';
+
+// Configuración de WebSocket para Neon DB
+neonConfig.webSocketConstructor = ws;
 
 const isProduction = process.env.NODE_ENV === 'production';
 

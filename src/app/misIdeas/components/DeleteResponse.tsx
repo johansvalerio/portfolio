@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { deleteResponse } from "@/app/actions/contact/contact-actions";
 import { Session } from "next-auth";
 import { FormState } from "@/types/formState";
+import { FORM_FIELDS } from "@/app/helpers/form-fields";
 
 export default function DeleteResponse({
   responseId,
@@ -45,7 +46,11 @@ export default function DeleteResponse({
   if (roleSession) {
     return (
       <form action={formAction}>
-        <input type="hidden" name="response_id" value={responseId} />
+        <input
+          type="hidden"
+          name={FORM_FIELDS.DELETE_RESPONSE.RESPONSE_ID}
+          value={responseId}
+        />
         <Button
           type="submit"
           variant="ghost"

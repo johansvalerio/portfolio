@@ -11,6 +11,7 @@ import { useInView } from "react-intersection-observer";
 import { FormState } from "@/types/formState";
 import { readMessage } from "@/app/actions/contact/contact-actions";
 import { useRouter } from "next/navigation";
+import { FORM_FIELDS } from "@/app/helpers/form-fields";
 
 interface MessageListProps {
   filteredMessages: MensajeWithUser[];
@@ -118,7 +119,7 @@ export default function MessageList({
               >
                 <input
                   type="hidden"
-                  name="mensaje_id"
+                  name={FORM_FIELDS.IS_READ.MENSAJE_ID}
                   value={message.mensaje_id}
                 />
                 {Array.isArray(message.response) &&
@@ -128,7 +129,7 @@ export default function MessageList({
                       <input
                         key={res.response_id}
                         type="hidden"
-                        name="response_id"
+                        name={FORM_FIELDS.IS_READ.RESPONSE_ID}
                         value={res.response_id}
                       />
                     ))}
