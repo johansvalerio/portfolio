@@ -5,59 +5,59 @@ import StatusWay from "./StatusWay";
 import ResponseCard from "./ResponseCard";
 import Link from "next/link";
 import { LightbulbIcon } from "lucide-react";
-import { useState, useEffect, useMemo } from "react";
-import { MensajeWithUser } from "@/types/mensaje";
-import { useSocket } from "@/app/providers/SocketProvider";
-import { getMessages } from "@/app/actions/contact/contact-actions";
+import { useState, useMemo, useEffect } from "react";
 import Loading from "./Loading";
+import useMessageStore from "@/lib/messageStore";
+import { useSocket } from "@/app/providers/SocketProvider";
+import type { MensajeWithUser } from "@/types/mensaje";
 
 export default function MessagesPlayGround({
   session,
 }: {
   session: Session | null;
 }) {
-  const [messages, setMessages] = useState<MensajeWithUser[]>([]);
-  const [loading, setLoading] = useState(true);
   const [messageId, setMessageId] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [activeFilter, setActiveFilter] = useState<
     "unread" | "unanswered" | "responded" | null
   >(null);
+  const messages = useMessageStore((state) => state.messages);
+  const loading = useMessageStore((state) => state.loading);
+  const fetchMessages = useMessageStore((state) => state.fetchMessages);
+  const addMessage = useMessageStore((state) => state.addMessage);
   const { socket, isConnected } = useSocket();
 
-  // Cargar mensajes iniciales
+  // Efecto para cargar mensajes al montar el componente
+  //viene de zustand
   useEffect(() => {
-    const loadMessages = async () => {
-      try {
-        const initialMessages = await getMessages();
-        setMessages(initialMessages);
-      } catch (error) {
-        console.error("Error al cargar mensajes:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadMessages();
-  }, []);
+    fetchMessages();
+  }, [fetchMessages]);
 
   // Escuchar nuevos mensajes en tiempo real
+  //viene de socket.io
+  // Este efecto se ejecuta cada vez que el socket está listo y conectado
   useEffect(() => {
-    console.log("🟡 useEffect de socket ejecutado");
+    console.log("🟡 Esperando socket...");
 
-    if (!socket || !isConnected) {
+    if (!socket || !isConnected || !session) {
       console.log("🚫 No hay socket aún o no está conectado");
       return;
     }
 
     console.log("✅ Socket listo para escuchar eventos");
 
+    //Identificarse en el cliente
+    socket.emit("identify", {
+      id: session.user.id,
+      role: session.user.role,
+    });
+
+    // Escuchar nuevos mensajes
     const handleNewMessage = (newMessage: MensajeWithUser) => {
       console.log("📥 Evento recibido en cliente:", newMessage);
-      // Actualizamos el estado, añadiendo el nuevo mensaje AL PRINCIPIO de la lista.
-      setMessages((prev) => {
-        const exists = prev.some(msg => msg.mensaje_id === newMessage.mensaje_id);
-        return exists ? prev : [newMessage, ...prev];
-      });
+      // Actualizamos el estado de los mensajes en el store con el nuevo mensaje
+      console.log("🔄 Actualizando mensajes en el store");
+      addMessage(newMessage);
       // Opcional pero recomendado: Resetea el filtro para que el nuevo mensaje sea visible.
       setActiveFilter(null);
       setSearchTerm("");
@@ -68,11 +68,20 @@ export default function MessagesPlayGround({
     return () => {
       socket.off("newMessage", handleNewMessage);
     };
-  }, [socket, isConnected]);
+  }, [socket, isConnected, addMessage, session]);
+
+  //mensajes por usuario
+  const userMessages = useMemo(() => {
+    if (!session) return [];
+    if (session.user.role === 1) return messages;
+    return messages.filter(
+      (msg) => msg.user?.user_id === Number(session?.user.id)
+    );
+  }, [messages, session]);
 
   // Lógica de filtrado que antes estaba en FilterMessages
   const filteredMessages = useMemo(() => {
-    let result = messages;
+    let result = userMessages;
 
     if (activeFilter === "unread") {
       result = result.filter((msg) => !msg.mensaje_isRead);
@@ -95,11 +104,14 @@ export default function MessagesPlayGround({
     return result.filter(
       (msg) =>
         msg.mensaje_title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        msg.mensaje_description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (msg.user?.user_name?.toLowerCase() || "").includes(searchTerm.toLowerCase())
+        msg.mensaje_description
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
+        (msg.user?.user_name?.toLowerCase() || "").includes(
+          searchTerm.toLowerCase()
+        )
     );
-  }, [messages, searchTerm, activeFilter]);
-
+  }, [userMessages, searchTerm, activeFilter]);
 
   if (loading) {
     return (
@@ -140,7 +152,7 @@ export default function MessagesPlayGround({
           {/* Lista de mensajes */}
           <div className="lg:col-span-1">
             <FilterMessages
-              allMessages={messages} // Pasamos la lista completa para los contadores
+              allMessages={userMessages} // Pasamos la lista completa para los contadores
               filteredMessages={filteredMessages} // Pasamos la lista ya filtrada para renderizar
               messageId={messageId}
               setMessageId={setMessageId}
@@ -157,7 +169,6 @@ export default function MessagesPlayGround({
               <ResponseCard
                 messageId={messageId} //1 solo objeto con id del mensaje
                 setMessageId={setMessageId} //para abrir o cerrar la vista de respuestas
-                messages={messages} //todos los mensajes, filtramos con el selectMessage que tiene id
                 session={session} //sesión del usuario
               />
             ) : (

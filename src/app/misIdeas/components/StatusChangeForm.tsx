@@ -3,7 +3,7 @@ import type { Session } from "next-auth";
 import { type MensajeWithUser } from "@/types/mensaje";
 import { useActionState, useEffect } from "react";
 
-import { patchStatus } from "@/app/actions/contact/contact-actions";
+import { patchStatus } from "@/app/actions/contact/message-actions";
 import { toast } from "sonner";
 import {
   CheckCheckIcon,

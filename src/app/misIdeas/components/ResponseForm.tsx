@@ -1,9 +1,8 @@
 "use client";
-import { useRouter } from "next/navigation";
 import { Textarea } from "@/components/ui/textarea";
 import { useActionState, useEffect, useState } from "react";
 import { toast } from "sonner";
-import { createResponse } from "@/app/actions/contact/contact-actions";
+import { createResponse } from "@/app/actions/contact/response-actions";
 import { SendIcon, ThumbsUpIcon } from "lucide-react";
 import type { MensajeWithUser } from "@/types/mensaje";
 import { Button } from "@/components/ui/button";
@@ -20,7 +19,6 @@ export default function ResponseForm({
   selectedMessage: MensajeWithUser | null;
 }) {
   const [replyText, setReplyText] = useState("");
-  const router = useRouter();
   const initialState = {};
   const [state, formAction] = useActionState<FormState, FormData>(
     createResponse,
@@ -42,10 +40,9 @@ export default function ResponseForm({
           width: "full",
         },
       });
-      router.refresh(); // Refresca la página para ver los cambios
       setReplyText("");
     }
-  }, [state, router]); // Solo se ejecutará cuando state cambie o router cambie
+  }, [state]); // Solo se ejecutará cuando state cambie o router cambie
 
   return (
     <form action={formAction} className="border-t pt-6 ">

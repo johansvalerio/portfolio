@@ -4,7 +4,7 @@ import { ThumbsUpIcon, TrashIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
-import { deleteResponse } from "@/app/actions/contact/contact-actions";
+import { deleteResponse } from "@/app/actions/contact/response-actions";
 import { Session } from "next-auth";
 import { FormState } from "@/types/formState";
 import { FORM_FIELDS } from "@/app/helpers/form-fields";

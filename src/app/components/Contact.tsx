@@ -13,7 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Mail, MessageCircle, PhoneIncoming } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { createContact } from "@/app/actions/contact/contact-actions";
+import { createContact } from "@/app/actions/contact/message-actions";
 import PedingButton from "./PedingButton";
 import { useActionState, useEffect } from "react";
 import { toast } from "sonner";

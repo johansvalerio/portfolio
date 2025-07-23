@@ -1,3 +1,4 @@
+"use client";
 import { formatDate } from "@/app/helpers/formatDate";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
@@ -5,24 +6,22 @@ import { ArrowLeft, Calendar } from "lucide-react";
 import ResponseForm from "./ResponseForm";
 import ResponseList from "./ResponseList";
 import type { Session } from "next-auth";
-import { MensajeWithUser } from "@/types/mensaje";
 import StatusChangeForm from "./StatusChangeForm";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import useMessageStore from "@/lib/messageStore";
 
 interface MessageDetailsProps {
   messageId: number | null;
   setMessageId: (messageId: number | null) => void;
   session: Session | null;
-  messages: MensajeWithUser[] | null;
 }
 
 export default function MessageDetails({
   messageId,
   setMessageId,
   session,
-  messages,
 }: MessageDetailsProps) {
-  if (!messageId) return null;
+  const messages = useMessageStore((state) => state.messages);
 
   const selectedMessage = messages?.find((msg) => msg.mensaje_id === messageId);
 
@@ -83,7 +82,10 @@ export default function MessageDetails({
             </div>
           </div>
           {/* Respuestas */}
-          <ResponseList selectedMessage={selectedMessage} session={session} />
+          <ResponseList
+            session={session}
+            messageId={selectedMessage.mensaje_id}
+          />
         </div>
         {session && session.user.role === 1 && (
           <ResponseForm selectedMessage={selectedMessage} />

@@ -11,7 +11,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
         return res.status(405).json({ error: "Método no permitido" });
     }
 
-    const { title, message, userId } = req.body;
+    const { response, userId, messageId } = req.body;
 
     if (!res.socket.server.io) {
         console.log("❌ Socket.IO aún no inicializado");
@@ -19,24 +19,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
     }
 
     try {
-        const newMessage = await db.mensaje.create({
+        const newResponse = await db.response.create({
             data: {
-                userId,
-                mensaje_title: title,
-                mensaje_description: message,
+                userId: Number(userId),
+                mensajeId: Number(messageId),
+                response_description: response,
             },
             include: {
-                user: true,
-                response: true
-            },
+                mensaje: true
+            }
         });
 
-        console.log("⚡ Emitiendo mensaje vía socket.io:", newMessage);
-        res.socket.server.io.emit("newMessage", newMessage);
+        console.log("⚡ Emitiendo mensaje vía socket.io:", newResponse);
+        res.socket.server.io.emit("newResponse", newResponse);
 
-        return res.status(201).json(newMessage);
+        return res.status(201).json(newResponse);
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ error: "Error al crear mensaje" });
+        return res.status(500).json({ error: "Error al crear respuesta" });
     }
 }
