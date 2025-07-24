@@ -2,12 +2,12 @@ import { create } from "zustand"
 import { type  Response } from "@prisma/client";
 import { getResponses } from "@/app/actions/contact/response-actions";
 
-
 interface ResponseState {
     responses: Response[];
     loading: boolean;
     addResponse: (response: Response) => void;
     fetchResponses: (messageId: number) => Promise<void>;
+    deleteResponse: (responseId: number) => void;
 }
 
 const useResponseStore = create<ResponseState>((set) => ({
@@ -25,6 +25,10 @@ const useResponseStore = create<ResponseState>((set) => ({
         loading: false,
       });
     },
+    deleteResponse: (responseId) =>
+      set((state)=> ({
+        responses: state.responses.filter((response) => response.response_id !== responseId)
+      }))
   }));
 export default useResponseStore
 

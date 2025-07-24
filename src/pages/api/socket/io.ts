@@ -55,12 +55,30 @@ const ioHandler = (req: NextApiRequest, res: NextApiResponseServerIO) => {
         }
       })
 
+      //manejo patch status
+      socket.on("patchStatus", (msg: MensajeWithUser) => {
+        console.log("📥 Servidor recibió 'patchStatus':", msg);
+        io.to("admin-room").emit("patchStatus", msg);
+        if(msg.userId){
+          io.to(`user-${msg.userId}`).emit("patchStatus", msg);
+        }
+      })
+
       //manejo de respuestas
       socket.on("newResponse", (res: ResponseWithUser) => {
         console.log("📥 Servidor recibió 'newResponse':", res);
         io.to("admin-room").emit("newResponse", res);
         if(res.userId){
           io.to(`user-${res.mensaje?.userId}`).emit("newResponse", res);
+        }
+      })
+
+      //manejo de delete response
+      socket.on("deleteResponse", (res: ResponseWithUser) => {
+        console.log("📥 Servidor recibió 'deleteResponse':", res);
+        io.to("admin-room").emit("deleteResponse", res);
+        if(res.userId){
+          io.to(`user-${res.mensaje?.userId}`).emit("deleteResponse", res);
         }
       })
 

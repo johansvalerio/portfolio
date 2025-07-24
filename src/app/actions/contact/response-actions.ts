@@ -115,14 +115,25 @@ export async function createResponse(prevState: FormState | undefined, formData:
         return { error: 'No tienes permiso para realizar esta acción' }
       }
   
-      // Remover respuesta de la base de datos
-      const deleteRes = await db.response.delete({
-        where: {
-          response_id: responseId
-        }
-      })
-  
-      console.log('Respuesta eliminada', deleteRes)
+
+      // Llamar al API Route que crea el mensaje y emite el evento
+     const res = await fetch(`${process.env.NEXTAUTH_URL || "http://localhost:3000"}/api/responses/delete`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ responseId}),
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json();
+      return { error: errorData.error || "Error al eliminar respuesta" };
+    } 
+
+    // Si quieres, puedes obtener el mensaje creado
+    const deletedResponse = await res.json();
+    console.log('Respuesta eliminada:', deletedResponse);
+    
   
       return { success: 'Respuesta eliminada correctamente' }
     } catch (error) {

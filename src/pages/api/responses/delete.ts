@@ -11,7 +11,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
         return res.status(405).json({ error: "Método no permitido" });
     }
 
-    const { response, userId, messageId } = req.body;
+    const { responseId } = req.body;
 
     if (!res.socket.server.io) {
         console.log("❌ Socket.IO aún no inicializado");
@@ -19,23 +19,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
     }
 
     try {
-        const newResponse = await db.response.create({
-            data: {
-                userId: Number(userId),
-                mensajeId: Number(messageId),
-                response_description: response,
+        const deleteResponse = await db.response.delete({
+            where: {
+                response_id: responseId,
             },
-            include: {
-                mensaje: true
-            }
         });
 
-        console.log("⚡ Emitiendo respuesta vía socket.io:", newResponse);
-        res.socket.server.io.emit("newResponse", newResponse);
+        console.log("⚡ Emitiendo respuesta eliminada vía socket.io:", deleteResponse);
+        res.socket.server.io.emit("deleteResponse", deleteResponse);
 
-        return res.status(201).json(newResponse);
+        return res.status(201).json(deleteResponse);
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ error: "Error al crear respuesta" });
+        return res.status(500).json({ error: "Error al eliminar respuesta" });
     }
 }

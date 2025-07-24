@@ -16,7 +16,6 @@ export default function MessagesPlayGround({
 }: {
   session: Session | null;
 }) {
-  const [messageId, setMessageId] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [activeFilter, setActiveFilter] = useState<
     "unread" | "unanswered" | "responded" | null
@@ -154,8 +153,6 @@ export default function MessagesPlayGround({
             <FilterMessages
               allMessages={userMessages} // Pasamos la lista completa para los contadores
               filteredMessages={filteredMessages} // Pasamos la lista ya filtrada para renderizar
-              messageId={messageId}
-              setMessageId={setMessageId}
               session={session}
               searchTerm={searchTerm}
               setSearchTerm={setSearchTerm}
@@ -165,17 +162,7 @@ export default function MessagesPlayGround({
           </div>
           {/* Vista del mensaje seleccionado y respuestas */}
           <div className="lg:col-span-2">
-            {messageId ? (
-              <ResponseCard
-                messageId={messageId} //1 solo objeto con id del mensaje
-                setMessageId={setMessageId} //para abrir o cerrar la vista de respuestas
-                session={session} //sesión del usuario
-              />
-            ) : (
-              <div className="h-full flex items-center justify-center text-muted-foreground">
-                Selecciona un mensaje para ver el detalle.
-              </div>
-            )}
+            <ResponseCard session={session} />
           </div>
         </div>
       </div>

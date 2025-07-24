@@ -115,7 +115,7 @@ export async function patchStatus(prevState: FormState | undefined, formData: Fo
 
     // Obtener el mensaje_id del formulario
     const rawData = {
-      mensajeId: formData.get(FORM_FIELDS.MESSAGE_STATUS.MENSAJE_ID),
+      mensajeId: Number(formData.get(FORM_FIELDS.MESSAGE_STATUS.MENSAJE_ID)),
     }
 
     // Validar el mensaje_id
@@ -138,12 +138,24 @@ export async function patchStatus(prevState: FormState | undefined, formData: Fo
 
     const nextStatus = statusMap[messageSent?.mensaje_status ?? ''] || 'Enviado';
 
-    const newStatus = await db.mensaje.update({
-      where: { mensaje_id: mensajeId },
-      data: { mensaje_status: nextStatus },
-    });
+// Llamar al API Route que crea el mensaje y emite el evento
+const response = await fetch(`${process.env.NEXTAUTH_URL || "http://localhost:3000"}/api/messages/patch`, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({ messageId: mensajeId, status: nextStatus }),
+});
 
-    revalidatePath('/misIdeas')
+if (!response.ok) {
+  const errorData = await response.json();
+  return { error: errorData.error || "Error al crear mensaje" };
+}
+
+// Si quieres, puedes obtener el statys actualizado
+const newStatus = await response.json();
+console.log('Nuevo status actualizado:', newStatus);
+
     return { success: 'Estado de la idea actualizado {' + newStatus.mensaje_status + '}' }
 
   } catch (error) {

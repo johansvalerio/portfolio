@@ -12,18 +12,15 @@ import { FormState } from "@/types/formState";
 import { readMessage } from "@/app/actions/contact/message-actions";
 import { useRouter } from "next/navigation";
 import { FORM_FIELDS } from "@/app/helpers/form-fields";
+import useMessageStore from "@/lib/messageStore";
 
 interface MessageListProps {
   filteredMessages: MensajeWithUser[];
-  messageId: number | null;
-  setMessageId: (messageId: number | null) => void;
   session: Session | null;
 }
 
 export default function MessageList({
   filteredMessages,
-  messageId,
-  setMessageId,
   session,
 }: MessageListProps) {
   const formRefs = useRef<{ [key: number]: HTMLFormElement | null }>({});
@@ -39,15 +36,21 @@ export default function MessageList({
     triggerOnce: false,
   });
 
+  const messageId = useMessageStore((state) => state.messageId);
+  const setMessageId = useMessageStore((state) => state.setMessageId);
+
+  //id viene del map msg.mensaje_id el de la db
   const handleIsOpen = (id: number) => {
-    if (messageId === id) {
-      setMessageId(null); // Cierra si ya está abierto
-      formRefs.current[id]?.requestSubmit(); // Marca como leído
+    const isClosing = messageId === id;
+
+    if (isClosing) {
+      setMessageId(null);
+      formRefs.current[id]?.requestSubmit();
       console.log("Cerrando mensaje con ID:", id);
     } else {
+      setMessageId(id);
+      formRefs.current[id]?.requestSubmit();
       console.log("Abriendo mensaje con ID:", id);
-      setMessageId(id); // Abre el nuevo mensaje
-      formRefs.current[id]?.requestSubmit(); // Marca como leído
     }
   };
 
@@ -58,9 +61,9 @@ export default function MessageList({
   const getResponseCountByMessageId = useMemo(() => {
     // Creamos un mapa mensaje_id => cantidad de respuestas
     const map: Record<number, number> = {};
-    filteredMessages?.forEach((message) => {
-      map[message.mensaje_id] = Array.isArray(message.response)
-        ? message.response.length
+    filteredMessages?.forEach((msg) => {
+      map[msg.mensaje_id] = Array.isArray(msg.response)
+        ? msg.response.length
         : 0;
     });
     return (mensaje_id: number) => map[mensaje_id] || 0;
@@ -89,6 +92,7 @@ export default function MessageList({
       ) : (
         filteredMessages?.slice(0, cantNotiShown).map((message) => {
           const isMessageNotSeen = !message.mensaje_isRead;
+
           // //para solo un objeto
           // const isResponseNotSeen = message.response?.filter((res) => !res.response_isRead)
           const isResponseNotSeen =
@@ -109,7 +113,9 @@ export default function MessageList({
                                              : "hover:bg-primary/10 border-transparent dark:hover:bg-muted/50 dark:bg-muted"
                                      }
             `}
-              onClick={() => handleIsOpen(message.mensaje_id)}
+              onClick={() => {
+                handleIsOpen(message.mensaje_id);
+              }}
             >
               <form
                 ref={(el) => {
@@ -160,7 +166,11 @@ export default function MessageList({
 
                 {/* cambiar el estado del mensaje */}
                 <div>
-                  <StatusChangeForm message={message} session={session} />
+                  <StatusChangeForm
+                    messageId={message.mensaje_id}
+                    status={message.mensaje_status}
+                    session={session}
+                  />
                 </div>
               </div>
               <p className="font-medium text-sm mb-1 line-clamp-1">

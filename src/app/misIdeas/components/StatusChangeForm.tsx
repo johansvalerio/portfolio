@@ -1,8 +1,7 @@
 "use client";
 import type { Session } from "next-auth";
-import { type MensajeWithUser } from "@/types/mensaje";
 import { useActionState, useEffect } from "react";
-
+import useMessageStore from "@/lib/messageStore";
 import { patchStatus } from "@/app/actions/contact/message-actions";
 import { toast } from "sonner";
 import {
@@ -11,8 +10,9 @@ import {
   SparkleIcon,
   ThumbsUpIcon,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { FORM_FIELDS } from "@/app/helpers/form-fields";
+import { useSocket } from "@/app/providers/SocketProvider";
+import { MensajeWithUser } from "@/types/mensaje";
 
 interface FormState {
   error?: string;
@@ -20,18 +20,59 @@ interface FormState {
 }
 
 export default function StatusChangeForm({
-  message,
+  messageId,
+  status,
   session,
 }: {
-  message: MensajeWithUser;
+  messageId: number;
+  status: string;
   session: Session | null;
 }) {
-  const router = useRouter();
+  const patchMessageStatus = useMessageStore(
+    (state) => state.patchMessageStatus
+  );
   const initialState: FormState = {};
   const [state, formAction] = useActionState<FormState, FormData>(
     patchStatus,
     initialState
   );
+  const { socket, isConnected } = useSocket();
+
+  // Escuchar nuevos mensajes en tiempo real
+  //viene de socket.io
+  // Este efecto se ejecuta cada vez que el socket está listo y conectado
+  useEffect(() => {
+    console.log("🟡 Esperando socket...");
+
+    if (!socket || !isConnected || !session) {
+      console.log("🚫 No hay socket aún o no está conectado");
+      return;
+    }
+
+    console.log("✅ Socket listo para escuchar eventos");
+
+    //Identificarse en el cliente
+    socket.emit("identify", {
+      id: session.user.id,
+      role: session.user.role,
+    });
+
+    // Escuchar nuevos mensajes
+    const handlePatchStatus = (patchStatus: MensajeWithUser) => {
+      console.log("📥 Evento recibido en cliente:", patchStatus);
+      // Actualizamos el estado de los mensajes en el store con el nuevo mensaje
+      console.log("🔄 Actualizando mensajes en el store");
+      patchMessageStatus(patchStatus.mensaje_id, patchStatus.mensaje_status);
+    };
+
+    socket.on("patchStatus", handlePatchStatus);
+
+    return () => {
+      socket.off("patchStatus", handlePatchStatus);
+    };
+  }, [socket, isConnected, patchMessageStatus, session]);
+
+  console.log("Mensaje: ", messageId, "Status: ", status);
   const checks = (status: string) => {
     switch (status) {
       case "Enviado":
@@ -53,7 +94,6 @@ export default function StatusChangeForm({
     if (state?.error) {
       toast.error(state.error);
     } else if (state?.success) {
-      router.refresh(); // Refresca la página para ver los cambios
       toast(state.success, {
         icon: <ThumbsUpIcon className="w-5 h-5" />,
         style: {
@@ -65,13 +105,13 @@ export default function StatusChangeForm({
         },
       });
     }
-  }, [state, router]); // Solo se ejecutará cuando state cambie o router cambie
+  }, [state]); // Solo se ejecutará cuando state cambie o router cambie
   return (
     <form action={formAction} className="mt-auto">
       <input
         type="hidden"
         name={FORM_FIELDS.MESSAGE_STATUS.MENSAJE_ID}
-        value={message.mensaje_id}
+        value={messageId}
       />
       <div className="flex justify-end">
         <button
@@ -84,7 +124,7 @@ export default function StatusChangeForm({
                                     ${session?.user.role === 1 ? "cursor-pointer hover:bg-primary/20" : "cursor-default"}
   `}
         >
-          {checks(message.mensaje_status)}
+          {checks(status)}
         </button>
       </div>
     </form>

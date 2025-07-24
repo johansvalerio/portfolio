@@ -19,8 +19,6 @@ type ActiveFilter = "unread" | "unanswered" | "responded" | null;
 interface FilterMessagesProps {
   allMessages: MensajeWithUser[];
   filteredMessages: MensajeWithUser[];
-  messageId: number | null;
-  setMessageId: (messageId: number | null) => void;
   session: Session | null;
   searchTerm: string;
   setSearchTerm: (term: string) => void;
@@ -31,8 +29,6 @@ interface FilterMessagesProps {
 export default function FilterMessages({
   allMessages,
   filteredMessages,
-  messageId,
-  setMessageId,
   session,
   searchTerm,
   setSearchTerm,
@@ -84,7 +80,7 @@ export default function FilterMessages({
     >
       {/* El buscador de ideas */}
       <CardHeader className="pb-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
+        <div className="grid grid-cols-2 gap-4 mt-2">
           {/* Nuevas ideas */}
           <div
             className={`cursor-pointer flex items-center justify-between bg-blue-100 dark:bg-indigo-900/30 p-3 rounded-xl
@@ -221,12 +217,7 @@ export default function FilterMessages({
         className={`flex-1 p-0 overflow-y-auto
                 `}
       >
-        <MessageList
-          filteredMessages={filteredMessages}
-          messageId={messageId}
-          setMessageId={setMessageId}
-          session={session}
-        />
+        <MessageList filteredMessages={filteredMessages} session={session} />
       </CardContent>
       {/* Mostramos los mensajes */}
     </Card>

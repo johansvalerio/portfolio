@@ -10,19 +10,17 @@ import Loading from "./Loading";
 import { useSocket } from "@/app/providers/SocketProvider";
 import { ResponseWithUser } from "@/types/response";
 import { useEffect } from "react";
+import useMessageStore from "@/lib/messageStore";
 
-export default function ResponseList({
-  session,
-  messageId,
-}: {
-  session: Session | null;
-  messageId: number;
-}) {
+export default function ResponseList({ session }: { session: Session | null }) {
   const responses = useResponseStore((state) => state.responses);
   const loading = useResponseStore((state) => state.loading);
   const addResponse = useResponseStore((state) => state.addResponse);
   const fetchResponses = useResponseStore((state) => state.fetchResponses);
+  const deleteResponse = useResponseStore((state) => state.deleteResponse);
+  const messageId = useMessageStore((state) => state.messageId);
   const { socket, isConnected } = useSocket();
+  const isA = session?.user.role === 1;
 
   // Efecto para cargar mensajes al montar el componente
   //viene de zustand
@@ -50,7 +48,7 @@ export default function ResponseList({
       role: session.user.role,
     });
 
-    // Escuchar nuevos mensajes
+    // Escuchar nuevas respuestas
     const handleNewResponse = (newResponse: ResponseWithUser) => {
       console.log("📥 Evento recibido en cliente:", newResponse);
       // Actualizamos el estado de los mensajes en el store con el nuevo mensaje
@@ -58,12 +56,21 @@ export default function ResponseList({
       addResponse(newResponse);
     };
 
+    const handleDeleteResponse = (deletedResponse: ResponseWithUser) => {
+      console.log("📥 Evento recibido en cliente:", deletedResponse);
+      // Actualizamos el estado de los mensajes en el store con el nuevo mensaje
+      console.log("🔄 Actualizando mensajes en el store");
+      deleteResponse(deletedResponse.response_id);
+    };
+
     socket.on("newResponse", handleNewResponse);
+    socket.on("deleteResponse", handleDeleteResponse);
 
     return () => {
       socket.off("newResponse", handleNewResponse);
+      socket.off("deleteResponse", handleDeleteResponse);
     };
-  }, [socket, isConnected, addResponse, session]);
+  }, [socket, isConnected, addResponse, session, deleteResponse]);
 
   if (!responses || responses.length <= 0) {
     return (
@@ -85,8 +92,12 @@ export default function ResponseList({
     <>
       <h4 className="font-bold mb-2">Respuestas</h4>
       <div
-        className={`mt-4
-                 ${responses.length <= 1 ? "h-auto overflow-y-auto" : "h-[30vh] overflow-y-auto"}  `}
+        className={`mt-4 
+                 ${
+                   responses.length <= 1 || !isA
+                     ? "h-auto overflow-y-auto"
+                     : "md:h-[30vh] h-[26vh]  overflow-y-auto"
+                 }  `}
       >
         {responses.map((res, idx, arr) => (
           <div key={res.response_id}>

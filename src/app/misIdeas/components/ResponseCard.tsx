@@ -10,22 +10,20 @@ import StatusChangeForm from "./StatusChangeForm";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import useMessageStore from "@/lib/messageStore";
 
-interface MessageDetailsProps {
-  messageId: number | null;
-  setMessageId: (messageId: number | null) => void;
-  session: Session | null;
-}
-
-export default function MessageDetails({
-  messageId,
-  setMessageId,
-  session,
-}: MessageDetailsProps) {
+export default function ResponseCard({ session }: { session: Session | null }) {
   const messages = useMessageStore((state) => state.messages);
+  const messageId = useMessageStore((state) => state.messageId);
+  const setMessageId = useMessageStore((state) => state.setMessageId);
 
   const selectedMessage = messages?.find((msg) => msg.mensaje_id === messageId);
 
-  if (!selectedMessage) return null;
+  if (!selectedMessage) {
+    return (
+      <div className="h-full flex items-center justify-center text-muted-foreground">
+        Selecciona un mensaje para ver el detalle.
+      </div>
+    );
+  }
 
   return (
     <Card
@@ -66,10 +64,14 @@ export default function MessageDetails({
         </div>
 
         <div>
-          <StatusChangeForm message={selectedMessage} session={session} />
+          <StatusChangeForm
+            messageId={selectedMessage.mensaje_id}
+            status={selectedMessage.mensaje_status}
+            session={session}
+          />
         </div>
       </CardHeader>
-      <CardContent className="flex-1 flex flex-col p-6">
+      <CardContent className="flex-1 flex flex-col">
         <div className="flex-1 mb-6">
           <h2 className="text-lg font-medium px-4">
             {selectedMessage.mensaje_title}
@@ -82,10 +84,7 @@ export default function MessageDetails({
             </div>
           </div>
           {/* Respuestas */}
-          <ResponseList
-            session={session}
-            messageId={selectedMessage.mensaje_id}
-          />
+          <ResponseList session={session} />
         </div>
         {session && session.user.role === 1 && (
           <ResponseForm selectedMessage={selectedMessage} />
