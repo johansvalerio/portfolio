@@ -28,15 +28,8 @@ const ioHandler = (req: NextApiRequest, res: NextApiResponseServerIO) => {
     io.on("connection", (socket) => {
       console.log('✅ Cliente conectado:', socket.id);
 
-      //Escuchar nuevos mensajes y emitirlos a todos los clientes conectados
-      // socket.on("newMessage", (msg) => {
-      //   console.log("📥 Servidor recibió 'newMessage':", msg);
-      //   socket.broadcast.emit("newMessage", msg);
-      // });
-
-
       //identificar usuarios
-      socket.on("identify", (userData : {id: string, role: number}) => {
+      socket.on("identify", (userData: { id: string, role: number }) => {
         //Unir al admin a la room
         if (userData.role === 1) {
           socket.join(`admin-room}`)
@@ -50,7 +43,7 @@ const ioHandler = (req: NextApiRequest, res: NextApiResponseServerIO) => {
       socket.on("newMessage", (msg: MensajeWithUser) => {
         console.log("📥 Servidor recibió 'newMessage':", msg);
         io.to("admin-room").emit("newMessage", msg);
-        if(msg.userId){
+        if (msg.userId) {
           io.to(`user-${msg.userId}`).emit("newMessage", msg);
         }
       })
@@ -59,16 +52,24 @@ const ioHandler = (req: NextApiRequest, res: NextApiResponseServerIO) => {
       socket.on("patchStatus", (msg: MensajeWithUser) => {
         console.log("📥 Servidor recibió 'patchStatus':", msg);
         io.to("admin-room").emit("patchStatus", msg);
-        if(msg.userId){
+        if (msg.userId) {
           io.to(`user-${msg.userId}`).emit("patchStatus", msg);
         }
       })
 
+      //manejo de lectura de mensajes
+      socket.on("readMessageResponse", (msg: MensajeWithUser) => {
+        console.log("📥 Servidor recibió 'readMessageResponse':", msg);
+        io.to("admin-room").emit("readMessageResponse", msg);
+        if (msg.userId) {
+          io.to(`user-${msg.userId}`).emit("readMessageResponse", msg);
+        }
+      })
       //manejo de respuestas
       socket.on("newResponse", (res: ResponseWithUser) => {
         console.log("📥 Servidor recibió 'newResponse':", res);
         io.to("admin-room").emit("newResponse", res);
-        if(res.userId){
+        if (res.userId) {
           io.to(`user-${res.mensaje?.userId}`).emit("newResponse", res);
         }
       })
@@ -77,8 +78,9 @@ const ioHandler = (req: NextApiRequest, res: NextApiResponseServerIO) => {
       socket.on("deleteResponse", (res: ResponseWithUser) => {
         console.log("📥 Servidor recibió 'deleteResponse':", res);
         io.to("admin-room").emit("deleteResponse", res);
-        if(res.userId){
-          io.to(`user-${res.mensaje?.userId}`).emit("deleteResponse", res);
+        if (res.userId) {
+          io.to(`user-${res.mensaje?.userId}`)
+            .emit("deleteResponse", res);
         }
       })
 

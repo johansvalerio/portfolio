@@ -5,6 +5,7 @@ import ws from 'ws';
 
 neonConfig.webSocketConstructor = ws;
 
+
 const isProduction = process.env.NODE_ENV === 'production';
 
 // Extiende el tipo global para permitir la reutilización de PrismaClient

@@ -202,11 +202,10 @@ export default function Contact() {
             {/* Form */}
 
             <div
-              className={`relative group ${
-                !session
+              className={`relative group ${!session
                   ? " hover:px-4 hover:rounded-lg hover:shadow-xl hover:translate-y-[-20px] hover:py-4"
                   : ""
-              } transition-all duration-300 overflow-hidden`}
+                } transition-all duration-300 overflow-hidden`}
             >
               {/* Fondo con blur al hacer hover */}
               {!session && (
@@ -316,7 +315,9 @@ export default function Contact() {
                       }}
                       viewport={{ once: true }}
                     >
-                      <PedingButton />
+                      <PedingButton>
+                        Enviar mi idea
+                      </PedingButton>
                     </motion.div>
                   </motion.div>
                 </motion.div>

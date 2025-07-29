@@ -21,10 +21,19 @@ export async function getResponses(messageId: number) {
             where: {
                 mensajeId: messageId,
             },
+            include: {
+                mensaje: true,
+            },
             orderBy: {
                 response_created_on: 'desc',
             },
         })
+        if (session.user.role !== 1) {
+          return responses.filter(
+            (response) => response.mensaje.userId === Number(session?.user.id)
+          );
+        }
+    
         return responses;
     } catch (error) {
         console.error('Error al obtener las respuestas:', error);

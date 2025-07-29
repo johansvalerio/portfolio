@@ -45,8 +45,6 @@ export function SocketProvider({
     socketInstance.on("connect", () => {
       console.log("✅ Conectado al servidor de sockets", socketInstance.id);
       setIsConnected(true);
-      // 👇 esto lo hace global para debug
-      (window as any).testSocket = socketInstance;
     });
 
     socketInstance.on("disconnect", () => {

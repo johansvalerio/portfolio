@@ -1,7 +1,6 @@
 'use server'
 import { db } from '@/lib/db'
 import authSession from '@/app/providers/auth-session';
-import { revalidatePath } from 'next/cache';
 import { FormState } from '@/types/formState';
 import { createMessageSchema } from '@/app/helpers/validations/createMessageSchema';
 import { patchMessageStatusSchema } from '@/app/helpers/validations/patchMessageStatusSchema';
@@ -66,7 +65,7 @@ export async function getMessages() {
   if (!session) {
     return [];
   }
-  
+
   try {
     const messages = await db.mensaje.findMany({
       include: {
@@ -115,7 +114,8 @@ export async function patchStatus(prevState: FormState | undefined, formData: Fo
 
     // Obtener el mensaje_id del formulario
     const rawData = {
-      mensajeId: Number(formData.get(FORM_FIELDS.MESSAGE_STATUS.MENSAJE_ID)),
+      mensajeId: Number(formData
+        .get(FORM_FIELDS.MESSAGE_STATUS.MENSAJE_ID)),
     }
 
     // Validar el mensaje_id
@@ -138,23 +138,23 @@ export async function patchStatus(prevState: FormState | undefined, formData: Fo
 
     const nextStatus = statusMap[messageSent?.mensaje_status ?? ''] || 'Enviado';
 
-// Llamar al API Route que crea el mensaje y emite el evento
-const response = await fetch(`${process.env.NEXTAUTH_URL || "http://localhost:3000"}/api/messages/patch`, {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-  },
-  body: JSON.stringify({ messageId: mensajeId, status: nextStatus }),
-});
+    // Llamar al API Route que crea el mensaje y emite el evento
+    const response = await fetch(`${process.env.NEXTAUTH_URL || "http://localhost:3000"}/api/messages/patch`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ messageId: mensajeId, status: nextStatus }),
+    });
 
-if (!response.ok) {
-  const errorData = await response.json();
-  return { error: errorData.error || "Error al crear mensaje" };
-}
+    if (!response.ok) {
+      const errorData = await response.json();
+      return { error: errorData.error || "Error al crear mensaje" };
+    }
 
-// Si quieres, puedes obtener el statys actualizado
-const newStatus = await response.json();
-console.log('Nuevo status actualizado:', newStatus);
+    // Si quieres, puedes obtener el statys actualizado
+    const newStatus = await response.json();
+    console.log('Nuevo status actualizado:', newStatus);
 
     return { success: 'Estado de la idea actualizado {' + newStatus.mensaje_status + '}' }
 
@@ -173,6 +173,7 @@ export async function readMessage(prevState: FormState | undefined, formData: Fo
     }
 
     if (session.user.role === 1) {
+      console.log("Admin, actualizando mensaje");
       // Obtener el mensaje_id del formulario
       const rawData = {
         mensajeId: formData.get(FORM_FIELDS.IS_READ.MENSAJE_ID),
@@ -188,28 +189,32 @@ export async function readMessage(prevState: FormState | undefined, formData: Fo
       }
 
       const { mensajeId } = result.data;
+      console.log("Actualizando mensaje con ID:", mensajeId);
 
-      const messageSent = await db.mensaje.findFirst({
-        where: {
-          mensaje_id: mensajeId,
-        }
-      })
+      // Llamar al API Route que actualiza el estado del mensaje
+      const response = await fetch(`${process.env.NEXTAUTH_URL || "http://localhost:3000"}/api/messages/read`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ mensajeId: mensajeId }),
+      });
 
-      if (messageSent?.mensaje_isRead === false) {
-        // Ver el mensaje y marcar como visto
-        const isRead = await db.mensaje.update({
-          where: { mensaje_id: mensajeId },
-          data: { mensaje_isRead: true },
-        })
-        revalidatePath('/misIdeas')
-        return { success: 'Idea vista {' + isRead.mensaje_isRead + '}' }
+      if (!response.ok) {
+        const errorData = await response.json();
+        return { error: errorData.error || "Error al actualizar mensaje" };
       }
-      revalidatePath('/misIdeas')
-      return {}
+
+      // Si quieres, puedes obtener el statys actualizado
+      const updatedMessages = await response.json();
+      console.log('Nuevo mensaje actualizado:', updatedMessages);
+
+      return { success: 'Estado de la idea actualizado {' + updatedMessages.isRead + '}' };
     } else {
+      console.log("Usuario, actualizando respuestas");
       // Obtener todos los response_id enviados (pueden ser varios)
       const rawData = {
-        responseIds: formData.getAll(FORM_FIELDS.IS_READ.RESPONSE_ID).map(Number),
+        responseIds: formData.getAll(FORM_FIELDS.IS_READ.RESPONSE_ID).map(Number)
       }
       const result = patchMessageStatusSchema.safeParse(rawData)
 
@@ -221,24 +226,26 @@ export async function readMessage(prevState: FormState | undefined, formData: Fo
       }
 
       const { responseIds } = result.data;
+      console.log("Actualizando respuestas con IDs:", responseIds);
+      // Llamar al API Route que actualiza el estado del mensaje
+      const response = await fetch(`${process.env.NEXTAUTH_URL || "http://localhost:3000"}/api/messages/read`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ responseIds }),
+      });
 
-      const responses = await db.response.findMany({
-        where: { response_id: { in: responseIds } }
-      })
-
-      const responseIsRead = responses.filter((res) => res.response_isRead)
-
-      if (!responseIsRead) {
-        return {}
-      } else {
-        const update_isRead = await db.response.updateMany({
-          where: { response_id: { in: responseIds } },
-          data: { response_isRead: true }
-        })
-        console.log(update_isRead)
+      if (!response.ok) {
+        const errorData = await response.json();
+        return { error: errorData.error || "Error al actualizar mensaje" };
       }
-      revalidatePath('/misIdeas')
-      return { success: 'Respuestas leídas correctamente' }
+
+      // Si quieres, puedes obtener el statys actualizado
+      const updatedResponses = await response.json();
+      console.log('Nuevo mensaje actualizado:', updatedResponses);
+
+      return { success: 'Estado de la idea actualizado {' + updatedResponses.isRead + '}' };
     }
 
   } catch (error) {

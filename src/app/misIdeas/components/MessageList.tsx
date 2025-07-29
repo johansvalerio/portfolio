@@ -10,7 +10,6 @@ import { useActionState, useEffect, useMemo, useRef, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { FormState } from "@/types/formState";
 import { readMessage } from "@/app/actions/contact/message-actions";
-import { useRouter } from "next/navigation";
 import { FORM_FIELDS } from "@/app/helpers/form-fields";
 import useMessageStore from "@/lib/messageStore";
 
@@ -25,8 +24,8 @@ export default function MessageList({
 }: MessageListProps) {
   const formRefs = useRef<{ [key: number]: HTMLFormElement | null }>({});
   const [cantNotiShown, setCantNotiShown] = useState(2);
-  const router = useRouter();
   const initialState = {};
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [state, formAction] = useActionState<FormState, FormData>(
     readMessage,
     initialState
@@ -74,13 +73,6 @@ export default function MessageList({
       setCantNotiShown((prev) => prev + 1);
     }
   }, [inView]);
-
-  // useEffect para mostrar las respuestas actualizadas y el state error y éxito
-  useEffect(() => {
-    if (state?.success) {
-      router.refresh();
-    }
-  }, [state, router]); // Solo se ejecutará cuando state cambie o router cambie
 
   return (
     <div className="space-y-1">

@@ -1,7 +1,4 @@
 "use client";
-import { MensajeWithUser } from "@/types/mensaje";
-import { Card, CardHeader, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import MessageList from "./MessageList";
 import {
   LightbulbIcon,
@@ -10,58 +7,159 @@ import {
   CheckCircleIcon,
   SearchIcon,
 } from "lucide-react";
-import { useMemo, type Dispatch, type SetStateAction } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { Session } from "next-auth";
 import { Badge } from "@/components/ui/badge";
-
-type ActiveFilter = "unread" | "unanswered" | "responded" | null;
+import useMessageStore from "@/lib/messageStore";
+import Loading from "./Loading";
+import { MensajeWithUser } from "@/types/mensaje";
+import { useSocket } from "@/app/providers/SocketProvider";
+import useResponseStore from "@/lib/responseStore";
+import { ResponseWithUser } from "@/types/response";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 
 interface FilterMessagesProps {
-  allMessages: MensajeWithUser[];
-  filteredMessages: MensajeWithUser[];
   session: Session | null;
-  searchTerm: string;
-  setSearchTerm: (term: string) => void;
-  activeFilter: ActiveFilter;
-  setActiveFilter: Dispatch<SetStateAction<ActiveFilter>>;
 }
 
-export default function FilterMessages({
-  allMessages,
-  filteredMessages,
-  session,
-  searchTerm,
-  setSearchTerm,
-  activeFilter,
-  setActiveFilter,
-}: FilterMessagesProps) {
-  //Total de mensajes sin ver
-  const cantMessageNotSeen = useMemo(
-    () => allMessages.filter((message) => !message.mensaje_isRead).length,
-    [allMessages]
+export default function FilterMessages({ session }: FilterMessagesProps) {
+  const messages = useMessageStore((state) => state.messages);
+  const loading = useMessageStore((state) => state.loading);
+  const fetchMessages = useMessageStore((state) => state.fetchMessages);
+  const { addMessage, readMessageResponse } = useMessageStore();
+  const { addResponse, deleteResponse } = useResponseStore();
+  const cantResponseMessages = useMessageStore((state) =>
+    state.cantResponseMessages()
+  );
+  const cantResponseNotSeen = useMessageStore((state) =>
+    state.cantResponseNotSeen()
+  );
+  const cantMessageNotSeen = useMessageStore((state) =>
+    state.cantMessageNotSeen()
   );
 
-  //las respuesta pueden ser varias a un mismo mensaje, por eso verificamos si la
-  //respuesta es un Array y también si la cantidad de respuesta es mayor a 0
-  //Esta es la cantidad de mensajes que han sido respondidos
-  const cantResponseMessages = useMemo(
-    () =>
-      allMessages.filter(
-        (message) =>
-          Array.isArray(message.response) && message.response.length > 0
-      ).length,
-    [allMessages]
+  // Estados locales
+  const [searchTerm, setSearchTerm] = useState("");
+  const [activeFilter, setActiveFilter] = useState<
+    "unread" | "unanswered" | "responded" | null
+  >(null);
+
+  // Fetch inicial
+  useEffect(() => {
+    fetchMessages();
+  }, [fetchMessages]);
+
+  const { socket, isConnected } = useSocket();
+  //Memoizar la función de identificación
+  const identifyData = useMemo(
+    () => ({
+      id: session?.user.id,
+      role: session?.user.role,
+    }),
+    [session?.user.id, session?.user.role]
   );
-  //Total de respuestas sin ver
-  const cantResponseNotSeen = useMemo(
-    () =>
-      allMessages.filter(
-        (message) =>
-          Array.isArray(message.response) &&
-          message.response.some((res) => res.response_isRead === false)
-      ).length,
-    [allMessages]
-  );
+
+  // Efecto para manejar la conexión del socket
+  useEffect(() => {
+    if (!socket || !isConnected || !identifyData.id) return;
+
+    console.log("🟡 Conectando socket...");
+
+    // Identificarse en el servidor
+    socket.emit("identify", identifyData);
+
+    // Manejador de nuevos mensajes
+    const handleNewMessage = (newMessage: MensajeWithUser) => {
+      console.log("📥 Nuevo mensaje recibido:", newMessage);
+      addMessage(newMessage);
+    };
+
+    // Manejador de nuevos mensajes respondidos
+    const handleNewResponse = (newResponse: ResponseWithUser) => {
+      console.log("📥 Nueva respuesta recibida:", newResponse);
+      addResponse(newResponse);
+    };
+
+    // Manejador de lectura de mensajes
+    const handleReadMessageResponse = (
+      msg: MensajeWithUser | ResponseWithUser[]
+    ) => {
+      console.log("📥 Servidor recibió 'readMessageResponse':", msg);
+      if (Array.isArray(msg)) {
+        const responseIds = msg.map((res) => res.response_id);
+        readMessageResponse(undefined, responseIds);
+      } else {
+        readMessageResponse(msg.mensaje_id);
+      }
+    };
+
+    // Manejador de eliminación de respuestas
+    const handleDeleteResponse = (deletedResponse: ResponseWithUser) => {
+      console.log("🗑️ Respuesta eliminada:", deletedResponse);
+      // Actualiza el store local usando el ID de la respuesta
+      deleteResponse(deletedResponse.response_id);
+    };
+
+    // Suscribirse al evento
+    socket.on("newMessage", handleNewMessage);
+    socket.on("newResponse", handleNewResponse);
+    socket.on("readMessageResponse", handleReadMessageResponse);
+    socket.on("deleteResponse", handleDeleteResponse);
+
+    // Limpieza al desmontar
+    return () => {
+      socket.off("newMessage", handleNewMessage);
+      socket.off("newResponse", handleNewResponse);
+      socket.off("readMessageResponse", handleReadMessageResponse);
+      socket.off("deleteResponse", handleDeleteResponse);
+    };
+  }, [
+    socket,
+    isConnected,
+    identifyData,
+    addMessage,
+    addResponse,
+    deleteResponse,
+    readMessageResponse,
+  ]);
+
+  // Lógica de filtrado
+  const filteredMessages = useMemo(() => {
+    let result = [...messages];
+
+    if (activeFilter === "unread") {
+      result = result.filter((msg) => !msg.mensaje_isRead);
+    }
+
+    if (activeFilter === "unanswered") {
+      result = result.filter(
+        (msg) =>
+          Array.isArray(msg.response) &&
+          msg.response.some((res) => !res.response_isRead)
+      );
+    }
+
+    if (activeFilter === "responded") {
+      result = result.filter(
+        (msg) => Array.isArray(msg.response) && msg.response.length > 0
+      );
+    }
+
+    return result.filter(
+      (msg) =>
+        msg.mensaje_title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        msg.mensaje_description
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
+        (msg.user?.user_name?.toLowerCase() || "").includes(
+          searchTerm.toLowerCase()
+        ) ||
+        (msg.user?.user_email?.toLowerCase() || "").includes(
+          searchTerm.toLowerCase()
+        )
+    );
+  }, [messages, activeFilter, searchTerm]);
   // //El total de todas las respuestas de todos los mensajes
   // const allResponseMessages = useMemo(() =>
   //     allMessages.reduce(
@@ -71,6 +169,13 @@ export default function FilterMessages({
   //     ),
   //     [userMessages]
   // );
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loading />
+      </div>
+    );
+  }
 
   return (
     <Card
@@ -170,9 +275,9 @@ export default function FilterMessages({
             </div>
             <Badge
               className="bg-slate-500 text-white px-2 py-1 text-xs rounded-full"
-              title={`${allMessages.length} ideas totales`}
+              title={`${messages.length} ideas totales`}
             >
-              {allMessages.length}
+              {messages.length}
             </Badge>
           </div>
         </div>

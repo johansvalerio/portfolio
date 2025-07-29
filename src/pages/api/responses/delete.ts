@@ -19,14 +19,35 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
     }
 
     try {
+        // Primero obtenemos la respuesta con su mensaje asociado
+        const response = await db.response.findUnique({
+            where: {
+                response_id: responseId,
+            },
+            include: {
+                mensaje: true
+            }
+        });
+
+        if (!response) {
+            return res.status(404).json({ error: "Respuesta no encontrada" });
+        }
+
+        // Luego la eliminamos
         const deleteResponse = await db.response.delete({
             where: {
                 response_id: responseId,
             },
         });
 
-        console.log("⚡ Emitiendo respuesta eliminada vía socket.io:", deleteResponse);
-        res.socket.server.io.emit("deleteResponse", deleteResponse);
+        // Emitimos con la información completa
+        const responseWithMessage = {
+            ...deleteResponse,
+            mensaje: response.mensaje
+        };
+
+        console.log("⚡ Emitiendo respuesta eliminada vía socket.io:", responseWithMessage);
+        res.socket.server.io.emit("deleteResponse", responseWithMessage);
 
         return res.status(201).json(deleteResponse);
     } catch (error) {

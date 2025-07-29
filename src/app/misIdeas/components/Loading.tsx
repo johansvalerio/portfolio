@@ -1,6 +1,9 @@
-export default function Loading() {
+interface LoadingProps {
+    text?: string;
+}
+export default function Loading({ text = '' }: LoadingProps) {
     return (
-        <div className="flex flex-col items-center justify-center gap-2" role="status">
+        <div className="flex items-center justify-center gap-2" role="status">
             <svg
                 aria-hidden="true"
                 className="h-8 w-8 animate-spin fill-blue-600 text-gray-200 dark:text-gray-600"
@@ -17,7 +20,7 @@ export default function Loading() {
                     fill="currentFill"
                 />
             </svg>
-            <span className="text-primary/50">Cargando...</span>
+            <span className="text-white dark:text-black">{text}</span>
         </div>
     );
 }

@@ -13,21 +13,23 @@ import { useEffect } from "react";
 import useMessageStore from "@/lib/messageStore";
 
 export default function ResponseList({ session }: { session: Session | null }) {
-  const responses = useResponseStore((state) => state.responses);
+  const messageId = useMessageStore((state) => state.messageId)
   const loading = useResponseStore((state) => state.loading);
   const addResponse = useResponseStore((state) => state.addResponse);
   const fetchResponses = useResponseStore((state) => state.fetchResponses);
   const deleteResponse = useResponseStore((state) => state.deleteResponse);
-  const messageId = useMessageStore((state) => state.messageId);
   const { socket, isConnected } = useSocket();
   const isA = session?.user.role === 1;
+  const responses = useResponseStore((state) =>
+    state.responses
+  );
 
-  // Efecto para cargar mensajes al montar el componente
-  //viene de zustand
+  // Solo ejecuta fetchResponses cuando messageId cambie y session esté lista
   useEffect(() => {
-    if (!messageId) return;
+    if (!messageId || !session?.user?.id) return;
     fetchResponses(messageId);
-  }, [fetchResponses, messageId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [messageId]);
 
   // Escuchar nuevos mensajes en tiempo real
   //viene de socket.io
@@ -50,10 +52,13 @@ export default function ResponseList({ session }: { session: Session | null }) {
 
     // Escuchar nuevas respuestas
     const handleNewResponse = (newResponse: ResponseWithUser) => {
-      console.log("📥 Evento recibido en cliente:", newResponse);
-      // Actualizamos el estado de los mensajes en el store con el nuevo mensaje
-      console.log("🔄 Actualizando mensajes en el store");
-      addResponse(newResponse);
+      // Solo agrega la respuesta si corresponde al mensaje activo
+      if (newResponse.mensajeId === messageId) {
+        console.log("📥 Evento recibido en cliente (válido):", newResponse);
+        addResponse(newResponse);
+      } else {
+        console.log("📥 Evento recibido en cliente (ignorado, otro mensaje):", newResponse);
+      }
     };
 
     const handleDeleteResponse = (deletedResponse: ResponseWithUser) => {
@@ -70,7 +75,7 @@ export default function ResponseList({ session }: { session: Session | null }) {
       socket.off("newResponse", handleNewResponse);
       socket.off("deleteResponse", handleDeleteResponse);
     };
-  }, [socket, isConnected, addResponse, session, deleteResponse]);
+  }, [socket, isConnected, addResponse, session, deleteResponse, messageId]);
 
   if (!responses || responses.length <= 0) {
     return (
@@ -93,11 +98,10 @@ export default function ResponseList({ session }: { session: Session | null }) {
       <h4 className="font-bold mb-2">Respuestas</h4>
       <div
         className={`mt-4 
-                 ${
-                   responses.length <= 1 || !isA
-                     ? "h-auto overflow-y-auto"
-                     : "md:h-[30vh] h-[26vh]  overflow-y-auto"
-                 }  `}
+                 ${responses.length <= 1 || !isA
+            ? "h-auto overflow-y-auto"
+            : "md:h-[30vh] h-[26vh]  overflow-y-auto"
+          }  `}
       >
         {responses.map((res, idx, arr) => (
           <div key={res.response_id}>

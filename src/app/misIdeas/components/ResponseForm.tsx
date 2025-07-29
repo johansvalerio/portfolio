@@ -3,10 +3,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { useActionState, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { createResponse } from "@/app/actions/contact/response-actions";
-import { SendIcon, ThumbsUpIcon } from "lucide-react";
+import { ThumbsUpIcon } from "lucide-react";
 import type { MensajeWithUser } from "@/types/mensaje";
-import { Button } from "@/components/ui/button";
 import { FORM_FIELDS } from "@/app/helpers/form-fields";
+import PendingButton from "@/app/components/PedingButton";
 
 interface FormState {
   error?: string;
@@ -65,10 +65,9 @@ export default function ResponseForm({
           className="overflow-y-auto resize-none h-28"
         />
         <div className="flex gap-3">
-          <Button type="submit" className="flex-1">
-            <SendIcon />
+          <PendingButton>
             Enviar respuesta
-          </Button>
+          </PendingButton>
         </div>
       </div>
     </form>
