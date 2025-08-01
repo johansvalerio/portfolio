@@ -11,6 +11,7 @@ export interface CarouselCard {
     technologies?: string[];
     githubUrl?: string;
     liveUrl?: string;
+    featured?: boolean;
 }
 export interface Carousel3DProps {
     cards: CarouselCard[];

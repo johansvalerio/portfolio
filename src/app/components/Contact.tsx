@@ -87,7 +87,7 @@ export default function Contact() {
         >
           <div className="flex flex-col items-center text-center mb-16">
             <motion.h2
-              className="text-3xl sm:text-4xl font-bold mb-4"
+              className="text-3xl sm:text-5xl font-bold mb-6"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{
                 opacity: 1,
@@ -97,12 +97,11 @@ export default function Contact() {
               viewport={{ once: true }}
             >
               Hablemos de tu{" "}
-              <span className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-purple-400 via-indigo-500 to-blue-600 bg-clip-text text-transparent">
                 proyecto
               </span>
             </motion.h2>
             <motion.p
-              className="text-muted-foreground text-lg mb-4"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{
                 opacity: 1,
@@ -110,6 +109,7 @@ export default function Contact() {
                 transition: { duration: 0.5, delay: 0.2 },
               }}
               viewport={{ once: true }}
+              className="text-muted-foreground text-xl max-w-3xl mx-auto leading-relaxed"
             >
               ¿Tienes una idea? Me encantaría escucharla y ayudarte a hacerla
               realidad
@@ -202,10 +202,11 @@ export default function Contact() {
             {/* Form */}
 
             <div
-              className={`relative group ${!session
+              className={`relative group ${
+                !session
                   ? " hover:px-4 hover:rounded-lg hover:shadow-xl hover:translate-y-[-20px] hover:py-4"
                   : ""
-                } transition-all duration-300 overflow-hidden`}
+              } transition-all duration-300 overflow-hidden`}
             >
               {/* Fondo con blur al hacer hover */}
               {!session && (
@@ -315,9 +316,7 @@ export default function Contact() {
                       }}
                       viewport={{ once: true }}
                     >
-                      <PedingButton>
-                        Enviar mi idea
-                      </PedingButton>
+                      <PedingButton>Enviar mi idea</PedingButton>
                     </motion.div>
                   </motion.div>
                 </motion.div>

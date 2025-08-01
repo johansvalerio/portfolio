@@ -448,7 +448,7 @@ const Carousel3D: React.FC<Carousel3DProps> = ({
               >
                 {/* Frente de la tarjeta */}
                 <div
-                  className="absolute w-full h-full rounded-2xl overflow-hidden shadow-2xl dark:shadow-gray-500/30"
+                  className={`absolute w-full h-full rounded-2xl overflow-hidden shadow-2xl  ${card.featured ? "dark:shadow-purple-500/30" : "dark:shadow-gray-500/30"}`}
                   style={{
                     backfaceVisibility: "hidden",
                     background: "var(--card)",

@@ -28,6 +28,7 @@ function Projects() {
       ],
       githubUrl: "https://github.com/johansvalerio/comidas-tipicas",
       liveUrl: "https://eltamalito.vercel.app",
+      featured: true,
     },
     {
       id: "p2",
@@ -49,6 +50,7 @@ function Projects() {
       ],
       githubUrl: "https://github.com/johansvalerio/beauty-space",
       liveUrl: "https://xsbelstudio.vercel.app/",
+      featured: true,
     },
     {
       id: "p3",
@@ -63,6 +65,7 @@ function Projects() {
       technologies: ["Astro", "Svelte", "Tailwind CSS", "IA"],
       githubUrl: "https://github.com/johansvalerio/chatpdf",
       liveUrl: "#",
+      featured: false,
     },
     {
       id: "p4",
@@ -77,6 +80,7 @@ function Projects() {
       technologies: ["C#", "Razor", "SQL Server", "Bootstrap"],
       githubUrl: "https://github.com/johansvalerio/asotagua",
       liveUrl: "#",
+      featured: false,
     },
     {
       id: "p5",
@@ -100,6 +104,7 @@ function Projects() {
       ],
       githubUrl: "https://github.com/johansvalerio/portfolio",
       liveUrl: "https://johansvalerio.vercel.app",
+      featured: true,
     },
   ];
 

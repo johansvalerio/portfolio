@@ -77,7 +77,7 @@ export default function Studies() {
       <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDQwIDQwIj48cmVjdCB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2QxZDVkOSIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtZGFzaGFycmF5PSIxIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48L3N2Zz4=')] opacity-50 dark:opacity-5" />
 
       {/* Gradiente de acento */}
-      <div className="absolute -left-1/4 -bottom-1/4 w-1/2 h-1/2 bg-sky-500/20 dark:bg-sky-500/10 rounded-full mix-blend-multiply dark:mix-blend-screen blur-3xl" />
+      <div className="absolute -left-1/4 -bottom-1/4 w-1/2 h-1/2 bg-indigo-500/20 dark:bg-indigo-500/10 rounded-full mix-blend-multiply dark:mix-blend-screen blur-3xl" />
       {/* Gradiente de acento */}
       <div className="absolute -right-1/4 -top-1/4 w-1/2 h-1/2 bg-blue-500/20 dark:bg-blue-500/10 rounded-full mix-blend-multiply dark:mix-blend-screen blur-3xl" />
 
@@ -92,10 +92,10 @@ export default function Studies() {
                 transition: { duration: 0.5, delay: 0.2 },
               }}
               viewport={{ once: true }}
-              className="text-3xl sm:text-4xl font-bold mb-4"
+              className="text-3xl sm:text-5xl font-bold mb-6"
             >
               Mi{" "}
-              <span className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-purple-400 via-indigo-500 to-blue-600 bg-clip-text text-transparent">
                 Educación
               </span>
             </motion.h2>
@@ -107,7 +107,7 @@ export default function Studies() {
                 transition: { duration: 0.5, delay: 0.3 },
               }}
               viewport={{ once: true }}
-              className="text-muted-foreground text-lg"
+              className="text-muted-foreground text-xl max-w-3xl mx-auto leading-relaxed"
             >
               Mi formación académica y certificaciones profesionales
             </motion.p>

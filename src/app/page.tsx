@@ -4,7 +4,7 @@ import About from "./components/About";
 import Skills from "./components/Skills";
 import Contact from "./components/Contact";
 import Studies from "./components/Studies";
-import Projects from "./components/Projects";
+import Pro from "./components/Pro";
 
 export default function Home() {
   return (
@@ -16,7 +16,7 @@ export default function Home() {
       <About />
 
       {/* 3. Proyectos Destacados */}
-      <Projects />
+      <Pro />
 
       {/* 4. Habilidades Principales */}
       <Skills />
