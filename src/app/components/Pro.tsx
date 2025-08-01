@@ -33,7 +33,7 @@ const projects: Project[] = [
     category: "APLICACIÓN PARA PEDIDO DE COMIDAS",
     title: "El Tamalito",
     preview:
-      "Plataforma de pedidos de comida típica con autenticación, catálogo interactivo y seguimiento en tiempo real. ¡Sabores auténticos a un clic de distancia!",
+      "Plataforma de pedidos de comida típica con autenticación, catálogo interactivo y seguimiento en tiempo real. ¡Sabores auténticos a un clic!",
     content:
       "Aplicación web moderna que permite explorar y pedir comidas típicas. Incluye autenticación de usuarios, catálogo interactivo y sistema de pedidos, todo con un diseño responsive. Construida con TypeScript y Prisma para un rendimiento óptimo y fácil escalamiento.",
     imageUrl: "/img/eltamalito.jpg",
@@ -111,7 +111,7 @@ const projects: Project[] = [
     category: "APLICACION CON CONTROL DE MENSAJES",
     title: "Mi Portafolio",
     preview:
-      "Mi portafolio profesional interactivo con sistema de mensajería y panel de administración.",
+      "Mi portafolio profesional interactivo con sistema de mensajería en tiempo real y panel de administración.",
     content:
       "Portafolio profesional desarrollado con Next.js 14 y TypeScript. Incluye gestión de ideas y mensajería, autenticación con NextAuth, panel de administración, diseño responsive, modo oscuro y animaciones con Framer Motion, utiliza Zod para validaciones y la aplicación está optimizada para SEO.",
     imageUrl: "/img/portfolio.jpg",
