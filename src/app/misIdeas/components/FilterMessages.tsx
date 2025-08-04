@@ -12,12 +12,9 @@ import type { Session } from "next-auth";
 import { Badge } from "@/components/ui/badge";
 import useMessageStore from "@/lib/messageStore";
 import Loading from "./Loading";
-import { MensajeWithUser } from "@/types/mensaje";
-import { useSocket } from "@/app/providers/SocketProvider";
-import useResponseStore from "@/lib/responseStore";
-import { ResponseWithUser } from "@/types/response";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { useSocketHandler } from "@/app/hooks/useSocketMessage";
 
 interface FilterMessagesProps {
   session: Session | null;
@@ -27,8 +24,6 @@ export default function FilterMessages({ session }: FilterMessagesProps) {
   const messages = useMessageStore((state) => state.messages);
   const loading = useMessageStore((state) => state.loading);
   const fetchMessages = useMessageStore((state) => state.fetchMessages);
-  const { addMessage, readMessageResponse } = useMessageStore();
-  const { addResponse, deleteResponse } = useResponseStore();
   const cantResponseMessages = useMessageStore((state) =>
     state.cantResponseMessages()
   );
@@ -50,80 +45,7 @@ export default function FilterMessages({ session }: FilterMessagesProps) {
     fetchMessages();
   }, [fetchMessages]);
 
-  const { socket, isConnected } = useSocket();
-  //Memoizar la función de identificación
-  const identifyData = useMemo(
-    () => ({
-      id: session?.user.id,
-      role: session?.user.role,
-    }),
-    [session?.user.id, session?.user.role]
-  );
-
-  // Efecto para manejar la conexión del socket
-  useEffect(() => {
-    if (!socket || !isConnected || !identifyData.id) return;
-
-    console.log("🟡 Conectando socket...");
-
-    // Identificarse en el servidor
-    socket.emit("identify", identifyData);
-
-    // Manejador de nuevos mensajes
-    const handleNewMessage = (newMessage: MensajeWithUser) => {
-      console.log("📥 Nuevo mensaje recibido:", newMessage);
-      addMessage(newMessage);
-    };
-
-    // Manejador de nuevos mensajes respondidos
-    const handleNewResponse = (newResponse: ResponseWithUser) => {
-      console.log("📥 Nueva respuesta recibida:", newResponse);
-      addResponse(newResponse);
-    };
-
-    // Manejador de lectura de mensajes
-    const handleReadMessageResponse = (
-      msg: MensajeWithUser | ResponseWithUser[]
-    ) => {
-      console.log("📥 Servidor recibió 'readMessageResponse':", msg);
-      if (Array.isArray(msg)) {
-        const responseIds = msg.map((res) => res.response_id);
-        readMessageResponse(undefined, responseIds);
-      } else {
-        readMessageResponse(msg.mensaje_id);
-      }
-    };
-
-    // Manejador de eliminación de respuestas
-    const handleDeleteResponse = (deletedResponse: ResponseWithUser) => {
-      console.log("🗑️ Respuesta eliminada:", deletedResponse);
-      // Actualiza el store local usando el ID de la respuesta
-      deleteResponse(deletedResponse.response_id);
-    };
-
-    // Suscribirse al evento
-    socket.on("newMessage", handleNewMessage);
-    socket.on("newResponse", handleNewResponse);
-    socket.on("readMessageResponse", handleReadMessageResponse);
-    socket.on("deleteResponse", handleDeleteResponse);
-
-    // Limpieza al desmontar
-    return () => {
-      socket.off("newMessage", handleNewMessage);
-      socket.off("newResponse", handleNewResponse);
-      socket.off("readMessageResponse", handleReadMessageResponse);
-      socket.off("deleteResponse", handleDeleteResponse);
-    };
-  }, [
-    socket,
-    isConnected,
-    identifyData,
-    addMessage,
-    addResponse,
-    deleteResponse,
-    readMessageResponse,
-  ]);
-
+  useSocketHandler(session);
   // Lógica de filtrado
   const filteredMessages = useMemo(() => {
     let result = [...messages];

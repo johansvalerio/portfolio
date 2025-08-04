@@ -4,6 +4,7 @@ import { getResponses } from "@/app/actions/contact/response-actions";
 import useMessageStore from './messageStore';
 
 // Crea un selector para acceder a las acciones del messageStore
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const useMessageActions = () => useMessageStore(
   (state) => ({
     addResponseToMessage: state.addResponseToMessage,

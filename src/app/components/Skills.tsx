@@ -327,9 +327,15 @@ export default function Skills() {
   return (
     <section
       id="skills"
-      className="py-20 w-full relative overflow-hidden bg-gradient-to-br from-background via-background to-muted/20 dark:from-gray-900 dark:via-black dark:to-gray-900"
+      className="py-20 w-full relative overflow-hidden bg-gradient-to-br from-background/95 via-background/90 to-muted/10 dark:from-gray-900/95 dark:via-gray-900/95 dark:to-gray-900/95"
     >
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Efectos de fondo mejorados */}
+      <div className="absolute inset-0 bg-[radial-gradient(#6b7280_1px,transparent_1px)] dark:bg-[radial-gradient(#9ca3af_1px,transparent_1px)] [background-size:32px_32px] opacity-10 dark:opacity-5" />
+      <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-gradient-to-br from-indigo-500/5 to-purple-600/5 rounded-full blur-3xl opacity-70" />
+      <div className="absolute bottom-0 left-0 w-1/2 h-1/2 bg-gradient-to-tr from-blue-500/5 to-cyan-500/5 rounded-full blur-3xl opacity-70" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1/2 h-1/2 bg-gradient-to-r from-violet-500/3 to-fuchsia-500/3 rounded-full blur-3xl opacity-50" />
+
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="text-center mb-16">

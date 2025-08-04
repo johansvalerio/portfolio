@@ -8,15 +8,25 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Badge } from "@/components/ui/badge";
 import { LogOut, LightbulbIcon } from "lucide-react";
 import { redirect } from "next/navigation";
 import { Session } from "next-auth";
 import { useRouter } from "next/navigation";
+import useMessageStore from "@/lib/messageStore";
+import { useEffect } from "react";
+import { useSocketHandler } from "@/app/hooks/useSocketMessage";
 
 export default function UserDropdown({ session }: { session: Session | null }) {
   const router = useRouter();
-  if (!session) return null;
-
+  const fetchMessages = useMessageStore((state) => state.fetchMessages);
+  const cantResponseNotSeen = useMessageStore((state) =>
+    state.cantResponseNotSeen()
+  );
+  const cantMessageNotSeen = useMessageStore((state) =>
+    state.cantMessageNotSeen()
+  );
+  const userRole = session?.user?.role !== 1;
   const userName = session?.user?.name || "";
   const userEmail = session?.user?.email || "";
   const userImage = session?.user?.image || "";
@@ -33,6 +43,15 @@ export default function UserDropdown({ session }: { session: Session | null }) {
     }
   };
 
+  // Agregar este efecto para depuración
+  useEffect(() => {
+    fetchMessages();
+  }, [fetchMessages]);
+
+  useSocketHandler(session);
+
+  if (!session) return null;
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -44,6 +63,22 @@ export default function UserDropdown({ session }: { session: Session | null }) {
           <AvatarFallback className="bg-primary text-primary-foreground">
             {userName.substring(0, 2).toUpperCase()}
           </AvatarFallback>
+          {userRole && cantResponseNotSeen > 0 && (
+            <Badge
+              variant="outline"
+              className="text-xs px-2 py-1 rounded-full bg-red-500 text-white"
+            >
+              {cantResponseNotSeen}
+            </Badge>
+          )}
+          {!userRole && cantMessageNotSeen > 0 && (
+            <Badge
+              variant="outline"
+              className="text-xs px-2 py-1 rounded-full bg-red-500 text-white"
+            >
+              {cantMessageNotSeen}
+            </Badge>
+          )}
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56" role="menu">
@@ -66,7 +101,23 @@ export default function UserDropdown({ session }: { session: Session | null }) {
           className="cursor-pointer"
         >
           <LightbulbIcon className="h-4 w-4 mr-2" />
-          <span className="text-sm font-medium">Mis ideas</span>
+          <span className="text-sm font-medium mr-2">Mis ideas</span>
+          {userRole && cantResponseNotSeen > 0 && (
+            <Badge
+              variant="outline"
+              className="text-xs px-2 py-1 rounded-full bg-red-500 text-white"
+            >
+              {cantResponseNotSeen}
+            </Badge>
+          )}
+          {!userRole && cantMessageNotSeen > 0 && (
+            <Badge
+              variant="outline"
+              className="text-xs px-2 py-1 rounded-full bg-red-500 text-white"
+            >
+              {cantMessageNotSeen}
+            </Badge>
+          )}
         </DropdownMenuItem>
         <DropdownMenuItem
           role="menuitem"

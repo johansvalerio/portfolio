@@ -76,22 +76,6 @@ const projects: Project[] = [
   },
   {
     id: "p3",
-    category: "APLICACIÓN INTERACTIVA CON IA",
-    title: "Chat PDF",
-    preview:
-      "Revoluciona cómo interactúas con documentos. Haz preguntas y obtén respuestas precisas de cualquier PDF usando IA avanzada.",
-    content:
-      "Aplicación interactiva con IA para hacerle consultas a tus PDFs. Permite subir documentos PDF y hacer preguntas sobre su contenido utilizando inteligencia artificial para proporcionar respuestas precisas.",
-    imageUrl: "/img/chatpdf.jpg",
-    technologies: ["Astro", "IA", "Tailwind CSS", "Svelte"],
-    githubUrl: "https://github.com/johansvalerio/chatpdf",
-    liveUrl: "#",
-    featured: false,
-    gradient: "from-blue-500 via-cyan-400 to-teal-400",
-    shape: "cube",
-  },
-  {
-    id: "p4",
     category: "APLICACIÓN PARA SERVICIOS DE TAXI",
     title: "ASOTAGUA",
     preview:
@@ -105,6 +89,22 @@ const projects: Project[] = [
     featured: false,
     gradient: "from-yellow-500 via-orange-400 to-red-400",
     shape: "sphere",
+  },
+  {
+    id: "p4",
+    category: "APLICACIÓN INTERACTIVA CON IA",
+    title: "Chat PDF",
+    preview:
+      "Revoluciona cómo interactúas con documentos. Haz preguntas y obtén respuestas precisas de cualquier PDF usando IA avanzada.",
+    content:
+      "Aplicación interactiva con IA para hacerle consultas a tus PDFs. Permite subir documentos PDF y hacer preguntas sobre su contenido utilizando inteligencia artificial para proporcionar respuestas precisas.",
+    imageUrl: "/img/chatpdf.jpg",
+    technologies: ["Astro", "IA", "Tailwind CSS", "Svelte"],
+    githubUrl: "https://github.com/johansvalerio/chatpdf",
+    liveUrl: "#",
+    featured: false,
+    gradient: "from-blue-500 via-cyan-400 to-teal-400",
+    shape: "cube",
   },
   {
     id: "p5",
@@ -349,6 +349,11 @@ export default function ProjectsCarousel() {
     [containerWidth, nextSlide, prevSlide, x]
   );
 
+  //ordenar por featured
+  const projectByFeatured = [...projects].sort(
+    (a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0)
+  );
+
   return (
     <section
       id="projects"
@@ -440,7 +445,7 @@ export default function ProjectsCarousel() {
                   damping: 30,
                 }}
               >
-                {projects.map((project) => (
+                {projectByFeatured.map((project) => (
                   <div
                     key={project.id}
                     className="px-3 flex-shrink-0 py-6 select-none"

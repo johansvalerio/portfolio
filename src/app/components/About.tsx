@@ -14,7 +14,10 @@ import {
   Users,
   Target,
   Sparkles,
+  Zap,
+  ArrowRight,
 } from "lucide-react";
+import Link from "next/link";
 
 // --- Datos y Constantes ---
 const highlights: string[] = [
@@ -192,6 +195,7 @@ const AnimatedStats = () => (
 );
 
 export default function About() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [activeInterest, setActiveInterest] = useState<number | null>(null);
   return (
     <section
@@ -206,6 +210,18 @@ export default function About() {
         <div className="max-w-4xl mx-auto">
           {/* Header */}
           <div className="text-center mb-16">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-purple-500/10 via-indigo-500/10 to-blue-500/10 border border-purple-500/20 mb-8"
+            >
+              <span className="text-sm font-medium text-purple-600 dark:text-purple-400">
+                Desarrollador Full-Stack
+              </span>
+              <Zap className="w-4 h-4 text-blue-400" />
+            </motion.div>
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -286,13 +302,23 @@ export default function About() {
                   </div>
                   <h3 className="text-2xl font-bold">Quién Soy</h3>
                 </div>
-                <div className="text-lg leading-relaxed text-muted-foreground space-y-4">
+                <div className="space-y-6 text-lg leading-relaxed text-muted-foreground">
                   <p>
                     Soy Johans Valerio, ingeniero informático con una pasión por
                     crear soluciones digitales innovadoras. Mi formación
                     académica me ha dado una base sólida en desarrollo de
-                    software, especializado en tecnologías modernas como React,
-                    Next.js, TypeScript y PostgreSQL.
+                    software, especializado en tecnologías modernas como{" "}
+                    <span className="text-blue-400 font-medium">React</span>,{" "}
+                    <span className="text-purple-400 font-medium">Next.js</span>
+                    ,{" "}
+                    <span className="text-indigo-400 font-medium">
+                      TypeScript
+                    </span>{" "}
+                    y{" "}
+                    <span className="text-emerald-400 font-medium">
+                      PostgreSQL
+                    </span>
+                    .
                   </p>
                   <p>
                     Siempre busco oportunidades para expandir mis conocimientos
@@ -300,6 +326,14 @@ export default function About() {
                     compartir y aprender en comunidad, así como mentorizar y
                     colaborar con otros desarrolladores.
                   </p>
+                  <div className="flex items-center gap-2 pt-4">
+                    <span className="text-foreground font-medium">
+                      ¿Listo para colaborar?
+                    </span>
+                    <Link href="#contact" className="text-foreground">
+                      <ArrowRight className="w-4 h-4 text-purple-400" />
+                    </Link>
+                  </div>
                 </div>
               </section>
               {/* Grid de logros/intereses */}
