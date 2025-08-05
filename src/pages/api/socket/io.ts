@@ -14,13 +14,19 @@ export const config = {
 
 const ioHandler = (req: NextApiRequest, res: NextApiResponseServerIO) => {
   if (!res.socket.server.io) {
-    console.log('*First use, starting socket.io');
+    console.log('*Iniciando servidor de socket.io');
 
     const httpServer: NetServer = res.socket.server;
     const io = new SocketIOServer(httpServer, {
       path: '/api/socket/io',
+      addTrailingSlash: false,
+      cors: {
+        origin: process.env.NODE_ENV === 'production' 
+          ? process.env.NEXT_PUBLIC_APP_URL 
+          : 'http://localhost:3000',
+        methods: ['GET', 'POST']
+      }
     });
-
 
     // Guardar en res para evitar inicializar más veces
     res.socket.server.io = io;
@@ -28,25 +34,42 @@ const ioHandler = (req: NextApiRequest, res: NextApiResponseServerIO) => {
     io.on("connection", (socket) => {
       console.log('✅ Cliente conectado:', socket.id);
 
-      //identificar usuarios
+      // Identificar usuarios
       socket.on("identify", (userData: { id: string, role: number }) => {
-        //Unir al admin a la room
-        if (userData.role === 1) {
-          socket.join(`admin-room}`)
+        try {
+          // Unir al admin a la room
+          if (userData.role === 1) {
+            socket.join('admin-room');
+            console.log(`👨‍💼 Admin ${userData.id} se unió a admin-room`);
+          }
+          
+          // Unir al usuario a su room
+          const userRoom = `user-${userData.id}`;
+          socket.join(userRoom);
+          console.log(`👤 Usuario ${userData.id} se unió a ${userRoom}`);
+          
+          // Confirmar identificación
+          socket.emit('identification_success', { room: userRoom });
+        } catch (error) {
+          console.error('Error en identificación de socket:', error);
         }
-        //Unir al usuario a su room
-        socket.join(`user-${userData.id}}`)
-        console.log("✅ Usuario identificado:", userData.id);
-      })
+      });
 
-      //manejo de mensajes
+      // Manejo de mensajes
       socket.on("newMessage", (msg: MensajeWithUser) => {
-        console.log("📥 Servidor recibió 'newMessage':", msg);
-        io.to("admin-room").emit("newMessage", msg);
-        if (msg.userId) {
-          io.to(`user-${msg.userId}`).emit("newMessage", msg);
+        try {
+          console.log("📥 Servidor recibió 'newMessage':", msg);
+          // Notificar a la sala de admin
+          io.to('admin-room').emit('newMessage', msg);
+          
+          // Notificar al usuario específico si tiene ID
+          if (msg.userId) {
+            io.to(`user-${msg.userId}`).emit('newMessage', msg);
+          }
+        } catch (error) {
+          console.error('Error en newMessage:', error);
         }
-      })
+      });
 
       //manejo patch status
       socket.on("patchStatus", (msg: MensajeWithUser) => {
