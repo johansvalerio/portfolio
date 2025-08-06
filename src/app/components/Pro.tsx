@@ -128,7 +128,7 @@ const projects: Project[] = [
       "PostgreSQL",
     ],
     githubUrl: "https://github.com/johansvalerio/portfolio",
-    liveUrl: "https://johansvalerio.vercel.app",
+    liveUrl: "https://johansvalerio.up.railway.app",
     featured: true,
     gradient: "from-emerald-500 via-teal-400 to-cyan-400",
     shape: "cube",
