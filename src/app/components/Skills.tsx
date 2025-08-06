@@ -29,9 +29,9 @@ const skillCategories: SkillCategories[] = [
     yearsExp: 2,
     skills: [
       { name: "React / Next.js", level: 85 },
-      { name: "TypeScript", level: 85 },
-      { name: "UI/UX (Tailwind CSS, Shadcn UI)", level: 85 },
-      { name: "Animations (Framer Motion)", level: 80 },
+      { name: "TypeScript", level: 80 },
+      { name: "UI/UX (Tailwind CSS, Shadcn UI)", level: 80 },
+      { name: "Animations (Framer Motion)", level: 70 },
     ],
   },
   {
@@ -41,10 +41,10 @@ const skillCategories: SkillCategories[] = [
     totalProjects: 5,
     yearsExp: 2,
     skills: [
-      { name: "APIs RESTful (TypeScript/Node.js, C#/.NET)", level: 85 },
-      { name: "Bases de Datos (PostgreSQL, SQL Server)", level: 85 },
-      { name: "ORMs (Prisma, Entity Framework)", level: 85 },
-      { name: "Autenticación (NextAuth.js, OAuth, JWT)", level: 80 },
+      { name: "APIs RESTful (TypeScript, C#/.NET)", level: 80 },
+      { name: "Bases de Datos (PostgreSQL, SQL Server)", level: 80 },
+      { name: "ORMs (Prisma, Entity Framework)", level: 80 },
+      { name: "Autenticación (NextAuth.js, OAuth, JWT)", level: 75 },
     ],
   },
   {
@@ -54,10 +54,10 @@ const skillCategories: SkillCategories[] = [
     totalProjects: 3,
     yearsExp: 1,
     skills: [
-      { name: "CI/CD y Despliegue (Vercel)", level: 85 },
+      { name: "CI/CD y Despliegue (Vercel, Railway)", level: 85 },
       { name: "Control de Versiones (Git, GitHub)", level: 80 },
       { name: "Calidad de código (ESLint, Prettier)", level: 85 },
-      { name: "Testing básico (Jest, React Testing Library)", level: 70 },
+      { name: "Testing básico (Jest, React Testing Library)", level: 60 },
     ],
   },
 ];
@@ -66,94 +66,153 @@ interface Technology {
   name: string;
   category: string;
   color: string;
+  shadow: string;
 }
 
 const technologies: Technology[] = [
   // Frontend
-  { name: "React", category: "Frontend", color: "from-blue-400 to-cyan-500" },
+  {
+    name: "React",
+    category: "Frontend",
+    color: "from-cyan-400 to-blue-500 dark:from-cyan-500 dark:to-blue-600",
+    shadow: "shadow-cyan-500/20 hover:shadow-cyan-500/40",
+  },
   {
     name: "Zustand",
     category: "Frontend",
-    color: "from-purple-400 to-pink-500",
+    color:
+      "from-purple-500 to-indigo-600 dark:from-purple-600 dark:to-indigo-700",
+    shadow: "shadow-purple-500/20 hover:shadow-purple-500/40",
   },
   {
     name: "TypeScript",
     category: "Frontend",
-    color: "from-blue-500 to-indigo-600",
+    color: "from-blue-500 to-indigo-600 dark:from-blue-600 dark:to-indigo-700",
+    shadow: "shadow-blue-500/20 hover:shadow-blue-500/40",
   },
   {
     name: "Socket.io",
     category: "Frontend",
-    color: "from-gray-600 to-gray-900",
+    color: "from-gray-500 to-gray-700 dark:from-gray-600 dark:to-gray-800",
+    shadow: "shadow-gray-500/20 hover:shadow-gray-500/40",
   },
   {
     name: "Tailwind CSS",
     category: "Frontend",
-    color: "from-cyan-400 to-blue-500",
+    color: "from-cyan-400 to-sky-500 dark:from-cyan-500 dark:to-sky-600",
+    shadow: "shadow-cyan-400/20 hover:shadow-cyan-400/40",
   },
   {
     name: "Shadcn UI",
     category: "Frontend",
-    color: "from-emerald-500 to-teal-600",
+    color:
+      "from-emerald-500 to-teal-600 dark:from-emerald-600 dark:to-teal-700",
+    shadow: "shadow-emerald-500/20 hover:shadow-emerald-500/40",
   },
   {
     name: "Framer Motion",
     category: "Frontend",
-    color: "from-pink-500 to-rose-600",
+    color:
+      "from-fuchsia-500 to-purple-600 dark:from-fuchsia-600 dark:to-purple-700",
+    shadow: "shadow-fuchsia-500/20 hover:shadow-fuchsia-500/40",
   },
-  { name: "Next.js", category: "Frontend", color: "from-gray-700 to-gray-900" },
+  {
+    name: "Next.js",
+    category: "Frontend",
+    color: "from-slate-800 to-slate-900 dark:from-slate-700 dark:to-slate-900",
+    shadow: "shadow-slate-800/20 hover:shadow-slate-800/40",
+  },
 
   // Backend
   {
     name: "JWT/OAuth",
     category: "Backend",
-    color: "from-amber-500 to-orange-500",
+    color:
+      "from-amber-500 to-orange-500 dark:from-amber-600 dark:to-orange-600",
+    shadow: "shadow-amber-500/20 hover:shadow-amber-500/40",
   },
-  { name: "Zod", category: "Backend", color: "from-blue-600 to-cyan-600" },
+  {
+    name: "Zod",
+    category: "Backend",
+    color: "from-blue-600 to-cyan-600 dark:from-blue-700 dark:to-cyan-700",
+    shadow: "shadow-blue-600/20 hover:shadow-blue-600/40",
+  },
   {
     name: "PostgreSQL",
     category: "Backend",
-    color: "from-blue-500 to-indigo-600",
+    color: "from-blue-500 to-indigo-600 dark:from-blue-600 dark:to-indigo-700",
+    shadow: "shadow-blue-500/20 hover:shadow-blue-500/40",
   },
   {
     name: "Prisma ORM",
     category: "Backend",
-    color: "from-indigo-500 to-purple-600",
+    color: "from-cyan-500 to-blue-600 dark:from-cyan-600 dark:to-blue-700",
+    shadow: "shadow-cyan-500/20 hover:shadow-cyan-500/40",
   },
-  { name: "C#", category: "Backend", color: "from-purple-600 to-indigo-700" },
-  { name: "Razor", category: "Backend", color: "from-blue-400 to-purple-500" },
-  { name: ".NET", category: "Backend", color: "from-indigo-600 to-purple-700" },
+  {
+    name: "C#",
+    category: "Backend",
+    color:
+      "from-purple-600 to-indigo-700 dark:from-purple-700 dark:to-indigo-800",
+    shadow: "shadow-purple-600/20 hover:shadow-purple-600/40",
+  },
+  {
+    name: "Razor",
+    category: "Backend",
+    color: "from-blue-500 to-purple-600 dark:from-blue-600 dark:to-purple-700",
+    shadow: "shadow-blue-500/20 hover:shadow-blue-500/40",
+  },
+  {
+    name: ".NET",
+    category: "Backend",
+    color:
+      "from-indigo-600 to-purple-700 dark:from-indigo-700 dark:to-purple-800",
+    shadow: "shadow-indigo-600/20 hover:shadow-indigo-600/40",
+  },
   {
     name: "SQL Server",
     category: "Backend",
-    color: "from-red-500 to-orange-600",
+    color: "from-red-500 to-orange-600 dark:from-red-600 dark:to-orange-700",
+    shadow: "shadow-red-500/20 hover:shadow-red-500/40",
   },
   {
     name: "Entity Framework",
     category: "Backend",
-    color: "from-purple-500 to-pink-600",
+    color: "from-purple-500 to-pink-600 dark:from-purple-600 dark:to-pink-700",
+    shadow: "shadow-purple-500/20 hover:shadow-purple-500/40",
   },
 
   // DevOps & Tools
   {
     name: "Git/GitHub",
     category: "DevOps & Tools",
-    color: "from-gray-700 to-gray-900",
+    color: "from-slate-700 to-slate-900 dark:from-slate-600 dark:to-slate-800",
+    shadow: "shadow-slate-700/20 hover:shadow-slate-700/40",
   },
   {
     name: "Jest",
     category: "DevOps & Tools",
-    color: "from-gray-700 to-gray-900",
+    color: "from-red-600 to-pink-700 dark:from-red-700 dark:to-pink-800",
+    shadow: "shadow-red-600/20 hover:shadow-red-600/40",
   },
   {
     name: "React Testing Library",
     category: "DevOps & Tools",
-    color: "from-rose-500 to-pink-600",
+    color: "from-rose-500 to-pink-600 dark:from-rose-600 dark:to-pink-700",
+    shadow: "shadow-rose-500/20 hover:shadow-rose-500/40",
   },
   {
     name: "Vercel",
     category: "DevOps & Tools",
-    color: "from-black to-gray-800",
+    color: "from-black to-gray-900 dark:from-gray-900 dark:to-black",
+    shadow: "shadow-gray-900/20 hover:shadow-gray-900/40",
+  },
+  {
+    name: "Railway",
+    category: "DevOps & Tools",
+    color:
+      "from-purple-500 to-indigo-600 dark:from-purple-600 dark:to-indigo-700",
+    shadow: "shadow-purple-500/20 hover:shadow-purple-500/40",
   },
 ];
 
@@ -223,9 +282,9 @@ const CircularProgress = ({
           transition={{ duration: 2, ease: "easeInOut", delay: 0.5 }}
         />
       </svg>
-      <div className="absolute inset-0 flex items-center justify-center">
+      {/* <div className="absolute inset-0 flex items-center justify-center">
         <span className="text-2xl font-bold">{percentage}%</span>
-      </div>
+      </div> */}
     </div>
   );
 };
@@ -281,10 +340,10 @@ const MovingTechRow = ({
                 variant="secondary"
                 className={`
                   justify-center text-center py-3 px-4 text-sm font-semibold
-                  bg-gradient-to-r ${tech.color} text-white
-                  border-0 shadow-lg hover:shadow-xl
+bg-gradient-to-r ${tech.color} text-white
+                  border-0 shadow-lg ${tech.shadow}
                   transition-all duration-300 cursor-default
-                  group-hover:shadow-2xl whitespace-nowrap
+                  group-hover:shadow-xl group-hover:scale-105 whitespace-nowrap
                 `}
               >
                 {tech.name}
@@ -293,9 +352,9 @@ const MovingTechRow = ({
               {/* Glow Effect */}
               <div
                 className={`
-                  absolute inset-0 bg-gradient-to-r ${tech.color} 
-                  opacity-0 group-hover:opacity-20 
-                  transition-opacity duration-300 rounded-md blur-md -z-10
+absolute inset-0 bg-gradient-to-r ${tech.color}
+                  opacity-0 group-hover:opacity-30
+                  transition-all duration-500 rounded-md blur-lg -z-10
                 `}
               />
             </div>
@@ -322,7 +381,7 @@ export default function Skills() {
   );
 
   // Crear filas de tecnologías (7 por fila para pantallas grandes)
-  const techRows = createTechRows(technologies, 7);
+  const techRows = createTechRows(technologies, 8);
 
   return (
     <section
@@ -511,9 +570,9 @@ export default function Skills() {
                                     className={`h-full bg-gradient-to-r ${category.gradient} rounded-full`}
                                   />
                                 </div>
-                                <span className="text-xs text-muted-foreground w-8">
+                                {/* <span className="text-xs text-muted-foreground w-8">
                                   {skill.level}%
-                                </span>
+                                </span> */}
                               </div>
                             </div>
                           ))}
