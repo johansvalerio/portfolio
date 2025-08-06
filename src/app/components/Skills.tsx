@@ -29,9 +29,9 @@ const skillCategories: SkillCategories[] = [
     yearsExp: 2,
     skills: [
       { name: "React / Next.js", level: 85 },
-      { name: "TypeScript", level: 85 },
-      { name: "UI/UX (Tailwind CSS, Shadcn UI)", level: 85 },
-      { name: "Animations (Framer Motion)", level: 80 },
+      { name: "TypeScript", level: 80 },
+      { name: "UI/UX (Tailwind CSS, Shadcn UI)", level: 80 },
+      { name: "Animations (Framer Motion)", level: 70 },
     ],
   },
   {
@@ -41,10 +41,10 @@ const skillCategories: SkillCategories[] = [
     totalProjects: 5,
     yearsExp: 2,
     skills: [
-      { name: "APIs RESTful (TypeScript/Node.js, C#/.NET)", level: 85 },
-      { name: "Bases de Datos (PostgreSQL, SQL Server)", level: 85 },
-      { name: "ORMs (Prisma, Entity Framework)", level: 85 },
-      { name: "Autenticación (NextAuth.js, OAuth, JWT)", level: 80 },
+      { name: "APIs RESTful (TypeScript, C#/.NET)", level: 80 },
+      { name: "Bases de Datos (PostgreSQL, SQL Server)", level: 80 },
+      { name: "ORMs (Prisma, Entity Framework)", level: 75 },
+      { name: "Autenticación (NextAuth.js, OAuth, JWT)", level: 75 },
     ],
   },
   {
@@ -54,10 +54,10 @@ const skillCategories: SkillCategories[] = [
     totalProjects: 3,
     yearsExp: 1,
     skills: [
-      { name: "CI/CD y Despliegue (Vercel)", level: 85 },
+      { name: "CI/CD y Despliegue (Vercel, Railway)", level: 85 },
       { name: "Control de Versiones (Git, GitHub)", level: 80 },
-      { name: "Calidad de código (ESLint, Prettier)", level: 85 },
-      { name: "Testing básico (Jest, React Testing Library)", level: 70 },
+      { name: "Calidad de código (ESLint, Prettier)", level: 80 },
+      { name: "Testing básico (Jest, React Testing Library)", level: 60 },
     ],
   },
 ];
@@ -155,6 +155,11 @@ const technologies: Technology[] = [
     category: "DevOps & Tools",
     color: "from-black to-gray-800",
   },
+  {
+    name: "Railway",
+    category: "DevOps & Tools",
+    color: "from-black to-gray-800",
+  },
 ];
 
 const CircularProgress = ({
@@ -223,9 +228,9 @@ const CircularProgress = ({
           transition={{ duration: 2, ease: "easeInOut", delay: 0.5 }}
         />
       </svg>
-      <div className="absolute inset-0 flex items-center justify-center">
+      {/* <div className="absolute inset-0 flex items-center justify-center">
         <span className="text-2xl font-bold">{percentage}%</span>
-      </div>
+      </div> */}
     </div>
   );
 };
@@ -511,9 +516,9 @@ export default function Skills() {
                                     className={`h-full bg-gradient-to-r ${category.gradient} rounded-full`}
                                   />
                                 </div>
-                                <span className="text-xs text-muted-foreground w-8">
+                                {/* <span className="text-xs text-muted-foreground w-8">
                                   {skill.level}%
-                                </span>
+                                </span> */}
                               </div>
                             </div>
                           ))}
