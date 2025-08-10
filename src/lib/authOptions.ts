@@ -52,7 +52,7 @@ export const authOptions: NextAuthOptions = {
             }
             return session;
         },
-        async jwt({ token, user }: { token: JWT, user?: Session["user"] }) {
+        async jwt({ token, user }: { token: JWT, user?: User | AdapterUser }) {
             if (token.email) {
                 const dbUser = await db.user.findUnique({
                     where: { user_email: token.email },

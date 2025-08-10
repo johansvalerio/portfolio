@@ -5,24 +5,17 @@ import { Reply } from "lucide-react";
 import DeleteResponse from "./DeleteResponse";
 import { Session } from "next-auth";
 import useResponseStore from "@/lib/responseStore";
-//import { useEffect } from "react";
 import Loading from "./Loading";
-import { useSocket } from "@/app/providers/SocketProvider";
-import { ResponseWithUser } from "@/types/response";
 import { useEffect } from "react";
 import useMessageStore from "@/lib/messageStore";
+import { useSocketHandler } from "@/app/hooks/useSocketMessage";
 
 export default function ResponseList({ session }: { session: Session | null }) {
-  const messageId = useMessageStore((state) => state.messageId)
+  const messageId = useMessageStore((state) => state.messageId);
   const loading = useResponseStore((state) => state.loading);
-  const addResponse = useResponseStore((state) => state.addResponse);
   const fetchResponses = useResponseStore((state) => state.fetchResponses);
-  const deleteResponse = useResponseStore((state) => state.deleteResponse);
-  const { socket, isConnected } = useSocket();
   const isA = session?.user.role === 1;
-  const responses = useResponseStore((state) =>
-    state.responses
-  );
+  const responses = useResponseStore((state) => state.responses);
 
   // Solo ejecuta fetchResponses cuando messageId cambie y session esté lista
   useEffect(() => {
@@ -31,51 +24,7 @@ export default function ResponseList({ session }: { session: Session | null }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messageId]);
 
-  // Escuchar nuevos mensajes en tiempo real
-  //viene de socket.io
-  // Este efecto se ejecuta cada vez que el socket está listo y conectado
-  useEffect(() => {
-    console.log("🟡 Esperando socket...");
-
-    if (!socket || !isConnected || !session) {
-      console.log("🚫 No hay socket aún o no está conectado");
-      return;
-    }
-
-    console.log("✅ Socket listo para escuchar eventos");
-
-    //Identificarse en el cliente
-    socket.emit("identify", {
-      id: session.user.id,
-      role: session.user.role,
-    });
-
-    // Escuchar nuevas respuestas
-    const handleNewResponse = (newResponse: ResponseWithUser) => {
-      // Solo agrega la respuesta si corresponde al mensaje activo
-      if (newResponse.mensajeId === messageId) {
-        console.log("📥 Evento recibido en cliente (válido):", newResponse);
-        addResponse(newResponse);
-      } else {
-        console.log("📥 Evento recibido en cliente (ignorado, otro mensaje):", newResponse);
-      }
-    };
-
-    const handleDeleteResponse = (deletedResponse: ResponseWithUser) => {
-      console.log("📥 Evento recibido en cliente:", deletedResponse);
-      // Actualizamos el estado de los mensajes en el store con el nuevo mensaje
-      console.log("🔄 Actualizando mensajes en el store");
-      deleteResponse(deletedResponse.response_id);
-    };
-
-    socket.on("newResponse", handleNewResponse);
-    socket.on("deleteResponse", handleDeleteResponse);
-
-    return () => {
-      socket.off("newResponse", handleNewResponse);
-      socket.off("deleteResponse", handleDeleteResponse);
-    };
-  }, [socket, isConnected, addResponse, session, deleteResponse, messageId]);
+  useSocketHandler(session);
 
   if (!responses || responses.length <= 0) {
     return (
@@ -98,10 +47,11 @@ export default function ResponseList({ session }: { session: Session | null }) {
       <h4 className="font-bold mb-2">Respuestas</h4>
       <div
         className={`mt-4 
-                 ${responses.length <= 1 || !isA
-            ? "h-auto overflow-y-auto"
-            : "md:h-[30vh] h-[26vh]  overflow-y-auto"
-          }  `}
+                 ${
+                   responses.length <= 1 || !isA
+                     ? "h-auto overflow-y-auto"
+                     : "md:h-[30vh] h-[26vh]  overflow-y-auto"
+                 }  `}
       >
         {responses.map((res, idx, arr) => (
           <div key={res.response_id}>

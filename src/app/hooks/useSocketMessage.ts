@@ -9,8 +9,10 @@ import { Session } from 'next-auth';
 
 export function useSocketHandler(session: Session|null) {
   const { socket, isConnected } = useSocket();
-  const { addMessage, readMessageResponse, patchMessageStatus } = useMessageStore();
+  const { addMessage, readMessageResponse, patchMessageStatus, addResponseToMessage, deleteResponseFromMessage } = useMessageStore();
   const { addResponse, deleteResponse } = useResponseStore();
+
+  const messageId = useMessageStore((state) => state.messageId);
 
   useEffect(() => {
     if (!socket || !isConnected || !session?.user?.id) return;
@@ -21,15 +23,25 @@ export function useSocketHandler(session: Session|null) {
       role: session.user.role
     });
 
-    // Manejadores de eventos
+    // Manejadores de eventos Mensaje
     const handleNewMessage = (newMessage: MensajeWithUser) => {
       addMessage(newMessage);
     };
 
+    // Manejadores de eventos Respuesta
     const handleNewResponse = (newResponse: ResponseWithUser) => {
-      addResponse(newResponse);
+      if (newResponse.mensajeId === messageId) {
+        // Mensaje abierto: actualiza panel de respuestas + mensaje
+        addResponse(newResponse); // esta ya llama addResponseToMessage internamente
+      } else {
+        // Mensaje no abierto: actualiza SOLO el mensaje (badges/contador)
+        // Importa y usa del messageStore su acción directa:
+        // useMessageStore.getState().addResponseToMessage(newResponse)
+        addResponseToMessage(newResponse); // <-- usa la acción del messageStore
+      }
     };
 
+    // Manejadores de eventos Mensaje y Respuesta
     const handleReadMessageResponse = (msg: MensajeWithUser | ResponseWithUser[]) => {
       if (Array.isArray(msg)) {
         const responseIds = msg.map((res) => res.response_id);
@@ -39,10 +51,17 @@ export function useSocketHandler(session: Session|null) {
       }
     };
 
+    // Manejadores de eventos Respuesta
     const handleDeleteResponse = (deletedResponse: ResponseWithUser) => {
-      deleteResponse(deletedResponse.response_id);
+      if (deletedResponse.mensajeId === messageId) {
+        deleteResponse(deletedResponse.response_id); // ya sincroniza messageStore
+      } else {
+        // Quita del mensaje en la lista sin tocar responseStore
+        deleteResponseFromMessage(deletedResponse.response_id); // acción del messageStore
+      }
     };
 
+    // Manejadores de eventos Mensaje
     const handlePatchStatus = (patchStatus: MensajeWithUser) => {
       patchMessageStatus(patchStatus.mensaje_id, patchStatus.mensaje_status);
     };
@@ -62,5 +81,5 @@ export function useSocketHandler(session: Session|null) {
       socket.off('deleteResponse', handleDeleteResponse);
       socket.off('patchStatus', handlePatchStatus);
     };
-  }, [socket, isConnected, session, addMessage, addResponse, readMessageResponse, deleteResponse, patchMessageStatus]);
+  }, [socket, isConnected, session, addMessage, addResponse, readMessageResponse, deleteResponse, patchMessageStatus, addResponseToMessage, deleteResponseFromMessage, messageId]);
 }

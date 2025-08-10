@@ -32,10 +32,10 @@ const ioHandler = (req: NextApiRequest, res: NextApiResponseServerIO) => {
       socket.on("identify", (userData: { id: string, role: number }) => {
         //Unir al admin a la room
         if (userData.role === 1) {
-          socket.join(`admin-room}`)
+          socket.join(`admin-room`)
         }
         //Unir al usuario a su room
-        socket.join(`user-${userData.id}}`)
+        socket.join(`user-${userData.id}`)
         console.log("✅ Usuario identificado:", userData.id);
       })
 

@@ -26,7 +26,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
       
 
         console.log("⚡ Emitiendo mensaje vía socket.io:", patchStatus);
-        res.socket.server.io.emit("patchStatus", patchStatus);
+        res.socket.server.io.to(`user-${patchStatus.userId}`).emit("patchStatus", patchStatus);
+        res.socket.server.io.to("admin-room").emit("patchStatus", patchStatus);
 
         return res.status(201).json(patchStatus);
     } catch (error) {

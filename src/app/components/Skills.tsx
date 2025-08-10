@@ -216,6 +216,7 @@ const technologies: Technology[] = [
   },
 ];
 
+// CircularProgress Component
 const CircularProgress = ({
   percentage,
   size = 120,

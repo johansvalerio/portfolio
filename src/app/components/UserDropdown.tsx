@@ -43,7 +43,7 @@ export default function UserDropdown({ session }: { session: Session | null }) {
     }
   };
 
-  // Agregar este efecto para depuración
+  // Agregar este efecto para el socket
   useEffect(() => {
     fetchMessages();
   }, [fetchMessages]);
@@ -55,35 +55,39 @@ export default function UserDropdown({ session }: { session: Session | null }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Avatar
-          data-testid="user-dropdown-menu"
-          className="h-9 w-9 cursor-pointer border border-border hover:opacity-80 transition-opacity"
-        >
-          <AvatarImage src={userImage} alt={userName} />
-          <AvatarFallback className="bg-primary text-primary-foreground">
-            {userName.substring(0, 2).toUpperCase()}
-          </AvatarFallback>
-          {userRole && cantResponseNotSeen > 0 && (
-            <Badge
-              variant="outline"
-              className="text-xs px-2 py-1 rounded-full bg-red-500 text-white"
-            >
-              {cantResponseNotSeen}
-            </Badge>
-          )}
-          {!userRole && cantMessageNotSeen > 0 && (
-            <Badge
-              variant="outline"
-              className="text-xs px-2 py-1 rounded-full bg-red-500 text-white"
-            >
-              {cantMessageNotSeen}
-            </Badge>
-          )}
-        </Avatar>
+        <div className="relative">
+          <Avatar
+            data-testid="user-dropdown-menu"
+            className="h-9 w-9 cursor-pointer border border-border hover:opacity-80 transition-opacity"
+          >
+            <AvatarImage src={userImage} alt={userName} />
+            <AvatarFallback className="bg-primary text-primary-foreground">
+              {userName.substring(0, 2).toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
+          <div className="absolute -top-2 -right-2">
+            {userRole && cantResponseNotSeen > 0 && (
+              <Badge
+                variant="outline"
+                className="text-xs px-1.5 py-0.5 rounded-full bg-red-500 text-white"
+              >
+                {cantResponseNotSeen}
+              </Badge>
+            )}
+            {!userRole && cantMessageNotSeen > 0 && (
+              <Badge
+                variant="outline"
+                className="text-xs px-1.5 py-0.5 rounded-full bg-red-500 text-white"
+              >
+                {cantMessageNotSeen}
+              </Badge>
+            )}
+          </div>
+        </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56" role="menu">
         <div className="flex items-center justify-start gap-2 p-2">
-          <Avatar className="h-8 w-8">
+          <Avatar className="h-8 w-8 relative">
             <AvatarImage src={userImage} alt={userName} />
             <AvatarFallback className="bg-primary text-primary-foreground">
               {userName.substring(0, 2).toUpperCase()}
@@ -98,24 +102,26 @@ export default function UserDropdown({ session }: { session: Session | null }) {
         <DropdownMenuItem
           role="menuitem"
           onClick={() => redirect("/misIdeas")}
-          className="cursor-pointer"
+          className="cursor-pointer flex items-center justify-between"
         >
-          <LightbulbIcon className="h-4 w-4 mr-2" />
-          <span className="text-sm font-medium mr-2">Mis ideas</span>
+          <div className="flex items-center gap-2">
+            <LightbulbIcon className="h-4 w-4 mr-2" />
+            <span className="text-sm font-medium">Mis ideas</span>
+          </div>
           {userRole && cantResponseNotSeen > 0 && (
             <Badge
               variant="outline"
-              className="text-xs px-2 py-1 rounded-full bg-red-500 text-white"
+              className="text-xs px-1.5 py-0.5 rounded-full bg-red-500 text-white animate-pulse"
             >
-              {cantResponseNotSeen}
+              Nuevo
             </Badge>
           )}
           {!userRole && cantMessageNotSeen > 0 && (
             <Badge
               variant="outline"
-              className="text-xs px-2 py-1 rounded-full bg-red-500 text-white"
+              className="text-xs px-1.5 py-0.5 rounded-full bg-red-500 text-white animate-pulse"
             >
-              {cantMessageNotSeen}
+              Nuevo
             </Badge>
           )}
         </DropdownMenuItem>

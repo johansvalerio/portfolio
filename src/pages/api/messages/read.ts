@@ -44,7 +44,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
 
                 // Emitimos el evento de actualización del mensaje
                 console.log("⚡ Emitiendo mensaje leído vía socket.io:", readMessageResponse);
-                res.socket.server.io.emit("readMessageResponse", readMessageResponse);
+                res.socket.server.io.to(`user-${message.userId}`).emit("readMessageResponse", readMessageResponse);
+                res.socket.server.io.to("admin-room").emit("readMessageResponse", readMessageResponse);
 
                 return res.status(200).json(readMessageResponse);
             }
@@ -68,7 +69,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
             console.log("Respuestas actualizadas:", readMessageResponse);
             // Emitimos el evento de actualización del mensaje
             console.log("⚡ Emitiendo respuestas leídas vía socket.io:", responses);
-            res.socket.server.io.emit("readMessageResponse", responses);
+            res.socket.server.io.to(`user-${responses[0].mensaje.userId}`).emit("readMessageResponse", responses);
+            res.socket.server.io.to("admin-room").emit("readMessageResponse", responses);
 
             return res.status(200).json(responses);
         }

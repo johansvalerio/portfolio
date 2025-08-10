@@ -1,19 +1,32 @@
 "use client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { LightbulbIcon, LogOut } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Session } from "next-auth";
+import useMessageStore from "@/lib/messageStore";
+import { useEffect } from "react";
+import { useSocketHandler } from "@/app/hooks/useSocketMessage";
 
-export default function UserMobileDropdown({ session }: { session: Session | null }) {
+export default function UserMobileDropdown({
+  session,
+}: {
+  session: Session | null;
+}) {
   const router = useRouter();
-
-  if (!session) return null;
-
-  const userName = session.user?.name || "";
-  const userEmail = session.user?.email || "";
-  const userImage = session.user?.image || "";
+  const fetchMessages = useMessageStore((state) => state.fetchMessages);
+  const cantResponseNotSeen = useMessageStore((state) =>
+    state.cantResponseNotSeen()
+  );
+  const cantMessageNotSeen = useMessageStore((state) =>
+    state.cantMessageNotSeen()
+  );
+  const userRole = session?.user?.role !== 1;
+  const userName = session?.user?.name || "";
+  const userEmail = session?.user?.email || "";
+  const userImage = session?.user?.image || "";
 
   const handleSignOut = async () => {
     try {
@@ -25,6 +38,15 @@ export default function UserMobileDropdown({ session }: { session: Session | nul
       console.error("Error al cerrar sesión:", error);
     }
   };
+
+  // Agregar este efecto para el socket
+  useEffect(() => {
+    fetchMessages();
+  }, [fetchMessages]);
+
+  useSocketHandler(session);
+
+  if (!session) return null;
 
   return (
     <>
@@ -52,13 +74,29 @@ export default function UserMobileDropdown({ session }: { session: Session | nul
       </div>
       <div className="mt-4">
         <a
-          className="flex items-center px-3 py-2 text-muted-foreground hover:text-foreground transition-colors duration-200"
+          className="flex items-center justify-between px-3 py-2 text-muted-foreground hover:text-foreground transition-colors duration-200"
           href="/misIdeas"
         >
-          <span className="flex items-center gap-2">
-            <LightbulbIcon className="h-4 w-4" />
-            Mis ideas
-          </span>
+          <div className="flex items-center gap-2">
+            <LightbulbIcon className="h-4 w-4 mr-2" />
+            <span className="text-sm font-medium">Mis ideas</span>
+          </div>
+          {userRole && cantResponseNotSeen > 0 && (
+            <Badge
+              variant="outline"
+              className="text-xs px-1.5 py-0.5 rounded-full bg-red-500 text-white animate-pulse"
+            >
+              Nuevo
+            </Badge>
+          )}
+          {!userRole && cantMessageNotSeen > 0 && (
+            <Badge
+              variant="outline"
+              className="text-xs px-1.5 py-0.5 rounded-full bg-red-500 text-white animate-pulse"
+            >
+              Nuevo
+            </Badge>
+          )}
         </a>
       </div>
     </>

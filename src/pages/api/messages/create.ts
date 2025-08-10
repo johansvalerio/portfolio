@@ -32,7 +32,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
         });
 
         console.log("⚡ Emitiendo mensaje vía socket.io:", newMessage);
-        res.socket.server.io.emit("newMessage", newMessage);
+        res.socket.server.io.to(`user-${newMessage.userId}`).emit("newMessage", newMessage);
+        res.socket.server.io.to("admin-room").emit("newMessage", newMessage);
 
         return res.status(201).json(newMessage);
     } catch (error) {

@@ -47,7 +47,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
         };
 
         console.log("⚡ Emitiendo respuesta eliminada vía socket.io:", responseWithMessage);
-        res.socket.server.io.emit("deleteResponse", responseWithMessage);
+        res.socket.server.io.to(`user-${responseWithMessage.mensaje.userId}`).emit("deleteResponse", responseWithMessage);
+        res.socket.server.io.to("admin-room").emit("deleteResponse", responseWithMessage);
 
         return res.status(201).json(deleteResponse);
     } catch (error) {
