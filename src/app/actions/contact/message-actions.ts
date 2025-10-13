@@ -152,7 +152,7 @@ export async function patchStatus(prevState: FormState | undefined, formData: Fo
       return { error: errorData.error || "Error al crear mensaje" };
     }
 
-    // Si quieres, puedes obtener el statys actualizado
+    // get status updated
     const newStatus = await response.json();
     console.log('Nuevo status actualizado:', newStatus);
 

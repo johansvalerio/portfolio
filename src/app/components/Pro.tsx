@@ -111,7 +111,7 @@ const projects: Project[] = [
     category: "APLICACION CON CONTROL DE MENSAJES",
     title: "Mi Portafolio",
     preview:
-      "Mi portafolio profesional interactivo con sistema de mensajería en tiempo real y panel de administración.",
+      "Mi portafolio profesional interactivo con sistema de mensajería en tiempo real y gestión de relaciones con el cliente.",
     content:
       "Portafolio profesional desarrollado con Next.js 14 y TypeScript. Incluye gestión de ideas y mensajería, autenticación con NextAuth, panel de administración, diseño responsive, modo oscuro y animaciones con Framer Motion, utiliza Zod para validaciones y la aplicación está optimizada para SEO.",
     imageUrl: "/img/portfolio.jpg",
