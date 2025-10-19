@@ -95,7 +95,7 @@ export default function Hero() {
               className="text-lg px-8 py-6 gap-2 group border-2 hover:bg-primary/5 transition-colors"
               asChild
             >
-              <a href="/CV-JohansValerio.pdf" download="CV-JohansValerio.pdf">
+              <a href="/CV-Johans-Valerio.pdf" download="CV-Johans-Valerio.pdf">
                 <DownloadIcon className="h-5 w-5 group-hover:animate-bounce" />
                 Descargar CV
               </a>
