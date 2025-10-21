@@ -575,7 +575,7 @@ export default function ProjectsCarousel() {
                             </Button>
                             <Button
                               size="sm"
-                              className={`${!project.featured && "hidden"}
+                              className={`cursor-pointer ${!project.featured && "hidden"}
                                 flex-1 text-white border-0 shadow-lg transition-all text-xs sm:text-sm ${
                                   project.featured
                                     ? "bg-gradient-to-r from-violet-600 via-indigo-600 to-blue-600 hover:from-violet-700 hover:via-indigo-700 hover:to-blue-700 shadow-violet-500/25"
