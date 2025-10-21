@@ -47,7 +47,7 @@ const interests = [
 
 const achievements = [
   {
-    number: "5+",
+    number: "3+",
     label: "Proyectos Completados",
     gradient: "from-purple-400 to-indigo-500",
   },
@@ -122,7 +122,7 @@ const ProfileImage = () => {
           whileHover={{ scale: 1.08 }}
         >
           <img
-            src="/img/johans.jpg"
+            src="/img/johans3.jpg"
             alt="Foto de Johans Valerio"
             className="w-full h-full object-cover transition-none"
           />
@@ -218,7 +218,7 @@ export default function About() {
               className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-purple-500/10 via-indigo-500/10 to-blue-500/10 border border-purple-500/20 mb-8"
             >
               <span className="text-sm font-medium text-purple-600 dark:text-purple-400">
-                Desarrollador Full-Stack
+                ¿Quieres saber más?
               </span>
               <Zap className="w-4 h-4 text-blue-400" />
             </motion.div>

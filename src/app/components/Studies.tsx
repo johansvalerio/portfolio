@@ -17,7 +17,7 @@ const studiesData: StudiesData[] = [
   {
     id: 1,
     institution: "Universidad Hispanoamericana",
-    degree: "Ingeniería Informática (Bachillerato)",
+    degree: "Ingeniería Informática",
     year: "2023",
     type: "education",
     description: "Enfoque en desarrollo de software y sistemas de información.",
